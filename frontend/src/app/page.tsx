@@ -1,152 +1,80 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Globe2, HeartHandshake, Layers3, Navigation, ShieldCheck, Sparkles } from 'lucide-react';
 import ChatAgent from '@/components/ChatAgent';
 import ItineraryTimeline from '@/components/ItineraryTimeline';
-import TravelUtilitiesHub from '@/components/TravelUtilitiesHub';
 import ReplanModal from '@/components/ReplanModal';
-import { Globe, Sparkles, Navigation, Layers, ShieldCheck, HeartHandshake } from 'lucide-react';
+import TravelUtilitiesHub from '@/components/TravelUtilitiesHub';
 
 export default function Home() {
   const [tripData, setTripData] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isReplanOpen, setIsReplanOpen] = useState(false);
-  const [versionHistories, setVersionHistories] = useState<{ [version: number]: any[] }>({});
-  const [currentVersion, setCurrentVersion] = useState<number>(1);
+  const [versions, setVersions] = useState<Record<number, any[]>>({});
+  const [currentVersion, setCurrentVersion] = useState(1);
 
   const handleItineraryGenerated = (data: any) => {
     setTripData(data);
-    const ver = data.version || 1;
-    setCurrentVersion(ver);
-    if (data.itinerary) {
-      setVersionHistories({ [ver]: data.itinerary });
-    }
+    const version = data.version || 1;
+    setCurrentVersion(version);
+    if (data.itinerary?.length) setVersions({ [version]: data.itinerary });
   };
 
-  const handleEditItem = (item: any) => {
-    setSelectedItem(item);
-    setIsReplanOpen(true);
+  const handleReplanSuccess = (itinerary: any[], version?: number, totalCost?: number) => {
+    const nextVersion = version || currentVersion + 1;
+    setVersions((previous) => ({ ...previous, [nextVersion]: itinerary }));
+    setCurrentVersion(nextVersion);
+    setTripData((previous: any) => previous ? { ...previous, itinerary, version: nextVersion, total_cost: totalCost ?? previous.total_cost } : previous);
   };
 
-  const handleReplanSuccess = (newItinerary: any, newVersion?: number, newTotalCost?: number) => {
-    const nextVer = newVersion || (tripData?.version || 1) + 1;
-    setCurrentVersion(nextVer);
-    setVersionHistories((prev) => ({
-      ...prev,
-      [nextVer]: newItinerary,
-    }));
-
-    if (tripData) {
-      setTripData({
-        ...tripData,
-        itinerary: newItinerary,
-        version: nextVer,
-        total_cost: newTotalCost !== undefined ? newTotalCost : tripData.total_cost,
-      });
-    }
+  const selectVersion = (version: number) => {
+    if (!tripData || !versions[version]) return;
+    setCurrentVersion(version);
+    setTripData({ ...tripData, itinerary: versions[version], version });
   };
-
-  const handleVersionSelect = (ver: number) => {
-    setCurrentVersion(ver);
-    if (versionHistories[ver] && tripData) {
-      setTripData({
-        ...tripData,
-        itinerary: versionHistories[ver],
-        version: ver,
-      });
-    }
-  };
-
-  const destinationCurrency = tripData?.destination_analysis?.currency || 'EUR';
-  const destinationCountry = tripData?.destination_analysis?.country || '';
 
   return (
-    <div className="space-y-6">
-      {/* Platform Banner */}
-      <div className="bg-gradient-to-r from-sky-700 via-indigo-700 to-sky-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-sky-800/40 relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-10">
-          <Globe className="w-80 h-80 text-white" />
-        </div>
-
-        <div className="relative z-10 max-w-4xl">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-sky-200 border border-white/20 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Universal AI Travel Planning Platform • Toàn Cầu Hoá 100%</span>
+    <div className="space-y-6 pb-2">
+      <section className="hero-surface relative overflow-hidden px-6 py-7 sm:px-8 sm:py-9">
+        <div className="hero-orb -right-8 -top-10 h-52 w-52" style={{ animationDelay: '0s' }} />
+        <div className="hero-orb -bottom-28 left-1/3 h-60 w-60 opacity-30" style={{ animationDelay: '2s' }} />
+        <div className="hero-orb top-1/2 right-1/4 h-40 w-40 opacity-20" style={{ animationDelay: '4s' }} />
+        <div className="relative max-w-4xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-sky-100 backdrop-blur shadow-lg">
+            <Sparkles className="h-3.5 w-3.5 text-amber-200 animate-pulse" /> Lập kế hoạch thông minh · Tối ưu theo nhu cầu
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
-            Hệ Thống Travel Agent AI Tự Lập Kế Hoạch & Đồng Hành Toàn Cầu
+          <h1 className="mt-4 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl animate-in fade-in slide-in-from-left-4 duration-700">
+            Chuyến đi được thiết kế theo cách của bạn.
           </h1>
-          <p className="mt-2 text-sky-100 text-xs sm:text-sm leading-relaxed max-w-3xl">
-            Tự động tiếp nhận bất kỳ quốc gia, thành phố hay ngôi làng nào trên thế giới qua ngôn ngữ tự nhiên. 
-            Tích hợp định vị OpenStreetMap, tỷ giá thực tế Frankfurter API, tối ưu lộ trình Haversine TSP và bộ công cụ du lịch trực tuyến.
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-sky-100 sm:text-base animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
+            Nhập mong muốn bằng ngôn ngữ tự nhiên. TravelAgent AI sẽ phân tích điểm đến, ngân sách và sở thích để tạo lịch trình rõ ràng, dễ điều chỉnh.
           </p>
-
-          <div className="mt-4 flex flex-wrap gap-2 sm:gap-4 text-[11px] sm:text-xs font-medium text-sky-200">
-            <span className="flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Zero-Hallucination Tools</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <Navigation className="w-3.5 h-3.5 text-amber-300" />
-              <span>Đệm Di Chuyển 30 Phút</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <Layers className="w-3.5 h-3.5 text-sky-300" />
-              <span>Dynamic Re-planning & Versioning</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <HeartHandshake className="w-3.5 h-3.5 text-rose-300" />
-              <span>Human-in-the-Loop Bookings</span>
-            </span>
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-sky-100 animate-in fade-in slide-in-from-left-4 duration-700 delay-200">
+            <span className="feature-chip hover-lift"><ShieldCheck className="h-3.5 w-3.5 text-emerald-300" /> Dữ liệu có trạng thái rõ ràng</span>
+            <span className="feature-chip hover-lift"><Navigation className="h-3.5 w-3.5 text-amber-200" /> Tối ưu hành trình</span>
+            <span className="feature-chip hover-lift"><Layers3 className="h-3.5 w-3.5 text-violet-200" /> Điều chỉnh phiên bản</span>
+            <span className="feature-chip hover-lift"><HeartHandshake className="h-3.5 w-3.5 text-rose-200" /> Hỗ trợ xuyên suốt</span>
           </div>
         </div>
-      </div>
+        <Globe2 className="absolute -right-4 -bottom-10 h-52 w-52 text-white/10 sm:right-8 animate-pulse" />
+      </section>
 
-      {/* 3-Panel Synchronized Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Panel 1: AI Planner Chatbot (Left - 32%) */}
-        <div className="lg:col-span-4 h-full">
-          <ChatAgent onItineraryGenerated={handleItineraryGenerated} />
-        </div>
-
-        {/* Panel 2: Interactive Itinerary & Timeline (Center - 44%) */}
-        <div className="lg:col-span-5 h-full">
-          <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-xl border border-slate-200 min-h-[750px]">
-            <ItineraryTimeline
-              tripId={tripData?.trip_id}
-              destinationAnalysis={tripData?.destination_analysis}
-              destinationName={tripData?.destination}
-              totalCost={tripData?.total_cost}
-              version={currentVersion}
-              availableVersions={Object.keys(versionHistories).map(Number)}
-              onVersionSelect={handleVersionSelect}
-              days={tripData?.itinerary || []}
-              onEditItem={handleEditItem}
-            />
-          </div>
-        </div>
-
-        {/* Panel 3: Universal Travel Utilities Hub (Right - 24%) */}
-        <div className="lg:col-span-3 h-full">
+      <section className="grid items-start gap-5 xl:grid-cols-12">
+        <div className="xl:col-span-4 animate-in fade-in slide-in-from-bottom-4 duration-500"><ChatAgent onItineraryGenerated={handleItineraryGenerated} /></div>
+        <div className="xl:col-span-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100"><div className="panel-surface min-h-[720px] p-4 sm:p-5"><ItineraryTimeline tripId={tripData?.trip_id} destinationAnalysis={tripData?.destination_analysis} destinationName={tripData?.destination} totalCost={tripData?.total_cost} version={currentVersion} availableVersions={Object.keys(versions).map(Number)} onVersionSelect={selectVersion} days={tripData?.itinerary || []} onEditItem={(item: any) => { setSelectedItem(item); setIsReplanOpen(true); }} /></div></div>
+        <div className="xl:col-span-3 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <TravelUtilitiesHub
             tripId={tripData?.trip_id || 1}
-            destinationCurrency={destinationCurrency}
-            destinationCountry={destinationCountry}
-            onBookingUpdated={() => {
-              // Proactively refresh if needed
-            }}
+            destinationCurrency={tripData?.destination_analysis?.currency || 'VND'}
+            destinationCountry={tripData?.destination_analysis?.country}
+            destination={tripData?.destination || 'Tokyo, Nhật Bản'}
+            origin={tripData?.origin || 'TP. Hồ Chí Minh, Việt Nam'}
           />
         </div>
-      </div>
+      </section>
 
-      {/* Dynamic Re-planner Modal */}
-      <ReplanModal
-        isOpen={isReplanOpen}
-        onClose={() => setIsReplanOpen(false)}
-        tripId={tripData?.trip_id || 1}
-        item={selectedItem}
-        onReplanSuccess={handleReplanSuccess}
-      />
+      <ReplanModal isOpen={isReplanOpen} onClose={() => setIsReplanOpen(false)} tripId={tripData?.trip_id || 1} item={selectedItem} onReplanSuccess={handleReplanSuccess} />
     </div>
   );
 }
