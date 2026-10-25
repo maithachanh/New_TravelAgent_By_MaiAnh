@@ -1,273 +1,207 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Send,
-  Sparkles,
-  MapPin,
-  DollarSign,
-  Calendar,
-  RefreshCw,
-  FileDown,
-  Globe2,
-  Navigation,
-  Compass,
-  CheckCircle2,
-  Plane
+  Calendar, Compass, FileDown, Globe2, LoaderCircle, MapPin,
+  Plane, Send, Sparkles, WalletCards,
 } from 'lucide-react';
-import { planTripWithAI, exportTripPDF } from '@/lib/api';
+import { exportTripPDF, planTripWithAI, askInTripSupport } from '@/lib/api';
 
 interface Message {
+  id: string;
   sender: 'user' | 'ai';
   text: string;
   data?: any;
 }
 
+const suggestions = [
+  { label: 'Hallstatt', text: 'Lên lịch Hallstatt, Áo 3 ngày 2 đêm cho 2 người, ngân sách 1.500 EUR, thích hồ và ẩm thực địa phương.' },
+  { label: 'Seoul', text: 'Đi Seoul 4 ngày 3 đêm cho 2 người từ Hà Nội, ngân sách 35 triệu VND, thích ẩm thực và mua sắm.' },
+  { label: 'Đà Nẵng', text: 'Lập kế hoạch Đà Nẵng 3 ngày 2 đêm cho gia đình 4 người, ngân sách 18 triệu, thích biển và đồ ăn.' },
+];
+
 export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerated?: (data: any) => void }) {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState<string>('');
+  const [currentStep, setCurrentStep] = useState('Đang phân tích yêu cầu của bạn…');
+  const [error, setError] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
+      id: 'welcome',
       sender: 'ai',
-      text: 'Xin chào! Tôi là Travel Agent AI toàn cầu. Bạn có thể yêu cầu đi BẤT KỲ quốc gia, thành phố hay ngôi làng nào trên thế giới (Ví dụ: Làng cổ Hallstatt Áo, Zermatt Thụy Sĩ, Seoul Hàn Quốc, Sa Pa Việt Nam, Tokyo Nhật Bản...). Tôi sẽ tự động geocoding vị trí, tra cứu tỷ giá ngoại tệ, tính khoảng cách và lập lịch trình chuẩn xác nhất cho bạn!',
+      text: 'Chào bạn! Mình sẽ giúp bạn tạo lịch trình rõ ràng, phù hợp ngân sách và sở thích. Hãy cho mình biết điểm đến, số ngày, số người và ngân sách.',
     },
   ]);
   const [currentTripData, setCurrentTripData] = useState<any>(null);
+  const requestIdRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const samplePrompts = [
-    {
-      label: '🇦🇹 Làng Hallstatt (Áo)',
-      text: 'Tôi muốn đi thăm làng cổ Hallstatt ở Áo 3 ngày 2 đêm, thích ngắm hồ thiên nhiên và ẩm thực địa phương, ngân sách 1,500 EUR cho 2 người'
-    },
-    {
-      label: '🇨🇭 Núi Zermatt (Thụy Sĩ)',
-      text: 'Lập kế hoạch du lịch Zermatt Thụy Sĩ 4 ngày 3 đêm ngắm đỉnh Matterhorn, thích trượt tuyết và đi tàu ngắm cảnh'
-    },
-    {
-      label: '🇰🇷 Seoul (Hàn Quốc)',
-      text: 'Tôi muốn đi Seoul Hàn Quốc 4 ngày 3 đêm cho 2 người từ Hà Nội, ngân sách 35 triệu VND, thích ẩm thực Myeongdong và mua sắm Hongdae'
-    },
-    {
-      label: '🇻🇳 Sa Pa (Việt Nam)',
-      text: 'Lập lịch trình khám phá bản Cát Cát và đỉnh Fansipan ở Sa Pa 3 ngày 2 đêm cho gia đình 2 người'
-    },
-    {
-      label: '🇯🇵 Tokyo (Nhật Bản)',
-      text: 'Gợi ý lịch trình du lịch Tokyo 5 ngày 4 đêm, trải nghiệm công nghệ Akihabara, ngắm tháp Tokyo và ẩm thực Shinjuku'
-    },
-    {
-      label: '🇫🇷 Paris (Pháp)',
-      text: 'Du lịch Paris Pháp 4 ngày 3 đêm, tham quan bảo tàng Louvre, tháp Eiffel và du thuyền sông Seine'
-    }
-  ];
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [messages, loading]);
 
-  const handleSend = async (customPrompt?: string) => {
-    const textToSend = customPrompt || prompt;
-    if (!textToSend.trim() || loading) return;
+  useEffect(() => () => abortRef.current?.abort(), []);
 
-    const newMessages: Message[] = [...messages, { sender: 'user', text: textToSend }];
-    setMessages(newMessages);
-    if (!customPrompt) setPrompt('');
+  const appendMessage = (message: Message) => setMessages((previous) => [...previous, message]);
+
+  const handleSend = async (textOverride?: string) => {
+    const text = (textOverride ?? prompt).trim();
+    if (!text || loading) return;
+
+    const requestId = ++requestIdRef.current;
+    const controller = new AbortController();
+    abortRef.current?.abort();
+    abortRef.current = controller;
+
+    appendMessage({ id: `user-${requestId}`, sender: 'user', text });
+    setPrompt('');
     setLoading(true);
-    setCurrentStep('Phân tích ngôn ngữ & Geocoding vị trí toàn cầu...');
+    setCurrentStep('Đang phân tích điểm đến, thời gian và ngân sách…');
 
-    const stepTimer1 = setTimeout(() => {
-      setCurrentStep('Tra cứu tỷ giá tiền tệ thực tế & sân bay gần nhất...');
+    const progressTimer = window.setTimeout(() => {
+      if (requestIdRef.current === requestId) {
+        setCurrentStep('Đang tối ưu lịch trình và kiểm tra chi phí…');
+      }
     }, 1200);
 
-    const stepTimer2 = setTimeout(() => {
-      setCurrentStep('Chạy thuật toán tối ưu đa mục tiêu & lộ trình Haversine TSP...');
-    }, 2500);
-
     try {
-      const res = await planTripWithAI(textToSend);
-      clearTimeout(stepTimer1);
-      clearTimeout(stepTimer2);
-      setCurrentStep('');
+      // Check if this is a support question (not a new trip request)
+      const isSupportQuestion = /^(thời tiết|ăn|nhà hàng|đi lại|ga tàu|bus|taxi|tiền tệ|tỷ giá|dịch thuật|cứu hộ|khẩn cấp)/i.test(text);
 
-      setMessages([
-        ...newMessages,
-        {
+      if (isSupportQuestion && currentTripData) {
+        // For support questions, don't regenerate itinerary
+        const supportResponse = await askInTripSupport(currentTripData.trip_id, text);
+        appendMessage({
+          id: `ai-${requestId}`,
           sender: 'ai',
-          text: res.agent_response || 'Đã tạo lịch trình thành công!',
-          data: res,
-        },
-      ]);
-      setCurrentTripData(res);
-      if (onItineraryGenerated) onItineraryGenerated(res);
-    } catch (err: any) {
-      clearTimeout(stepTimer1);
-      clearTimeout(stepTimer2);
-      setCurrentStep('');
-      setMessages([
-        ...newMessages,
-        {
+          text: supportResponse.agent_response || 'Câu trả lời của trợ lý hành trình.',
+        });
+      } else {
+        // For new trip requests, regenerate itinerary
+        const result = await planTripWithAI(text, 'vi', 'VND', controller.signal);
+        if (requestIdRef.current !== requestId) return;
+
+        appendMessage({
+          id: `ai-${requestId}`,
           sender: 'ai',
-          text: 'Rất tiếc, đã có lỗi kết nối tới AI Agent Server. Bạn vui lòng kiểm tra kết nối và thử lại!',
-        },
-      ]);
+          text: result.agent_response || 'Mình đã hoàn tất đề xuất cho chuyến đi của bạn.',
+          data: result,
+        });
+        setCurrentTripData(result);
+        onItineraryGenerated?.(result);
+      }
+    } catch (error: any) {
+      if (error?.code === 'ERR_CANCELED' || requestIdRef.current !== requestId) return;
+      const errorMsg = error?.response?.data?.detail || error?.message || 'Không thể kết nối tới Travel Agent lúc này. Hãy kiểm tra backend đang chạy tại cổng 8000 rồi thử lại.';
+      setError(errorMsg);
+      appendMessage({
+        id: `error-${requestId}`,
+        sender: 'ai',
+        text: errorMsg,
+      });
     } finally {
-      setLoading(false);
+      window.clearTimeout(progressTimer);
+      if (requestIdRef.current === requestId) {
+        setLoading(false);
+        setCurrentStep('');
+      }
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[750px]">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-700 text-white p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20">
-            <Sparkles className="w-5 h-5 text-amber-300" />
+    <section className="panel-surface flex h-[720px] flex-col overflow-hidden">
+      <div className="relative overflow-hidden bg-gradient-to-br from-sky-700 via-indigo-700 to-violet-800 px-5 py-4 text-white">
+        <div className="absolute -right-7 -top-9 h-32 w-32 rounded-full bg-white/10 blur-2xl animate-pulse" />
+        <div className="relative flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl border border-white/20 bg-white/15 p-2.5 shadow-lg backdrop-blur animate-pulse">
+              <Sparkles className="h-5 w-5 text-amber-200" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="font-bold">Trợ lý lập kế hoạch</h2>
+                <span className="rounded-full border border-emerald-200/30 bg-emerald-400/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-100 animate-pulse">Sẵn sàng</span>
+              </div>
+              <p className="mt-0.5 flex items-center gap-1 text-xs text-sky-100"><Globe2 className="h-3.5 w-3.5" /> Lịch trình được kiểm tra theo yêu cầu của bạn</p>
+            </div>
           </div>
-          <div>
-            <h2 className="font-bold text-base sm:text-lg flex items-center space-x-2">
-              <span>Universal Travel Agent</span>
-              <span className="text-[10px] bg-sky-400/20 text-sky-200 px-2 py-0.5 rounded-full border border-sky-300/30">
-                14-Stage DAG
-              </span>
-            </h2>
-            <p className="text-xs text-sky-100 flex items-center space-x-1">
-              <Globe2 className="w-3.5 h-3.5" />
-              <span>Hỗ trợ mọi ngôi làng, thành phố trên toàn thế giới</span>
-            </p>
-          </div>
+          {currentTripData?.trip_id && (
+            <button onClick={() => exportTripPDF(currentTripData.trip_id)} className="inline-flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-3 py-2 text-xs font-semibold transition-all duration-200 hover:bg-white/20 hover:scale-105 active:scale-95">
+              <FileDown className="h-3.5 w-3.5" /> PDF
+            </button>
+          )}
         </div>
-
-        {currentTripData?.trip_id && (
-          <button
-            onClick={() => exportTripPDF(currentTripData.trip_id)}
-            className="flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-xs px-3 py-1.5 rounded-lg transition font-medium border border-white/30"
-          >
-            <FileDown className="w-4 h-4" />
-            <span>Xuất PDF</span>
-          </button>
-        )}
       </div>
 
-      {/* Suggested Destination Prompts */}
-      <div className="p-2.5 bg-slate-50 border-b border-slate-200 flex items-center space-x-2 overflow-x-auto text-xs no-scrollbar">
-        <span className="font-bold text-slate-500 shrink-0 flex items-center space-x-1">
-          <Compass className="w-3.5 h-3.5 text-sky-600" />
-          <span>Gợi ý:</span>
-        </span>
-        {samplePrompts.map((p, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleSend(p.text)}
-            className="shrink-0 bg-white border border-slate-200 hover:border-sky-500 hover:text-sky-600 hover:bg-sky-50/50 text-slate-700 px-3 py-1 rounded-full transition shadow-sm font-medium"
-          >
-            {p.label}
+      <div className="flex gap-2 overflow-x-auto border-b border-slate-100 bg-slate-50/80 px-4 py-2.5 no-scrollbar">
+        <span className="flex shrink-0 items-center gap-1 pt-1 text-xs font-semibold text-slate-500"><Compass className="h-3.5 w-3.5 text-sky-600" /> Gợi ý</span>
+        {suggestions.map((suggestion) => (
+          <button key={suggestion.label} disabled={loading} onClick={() => void handleSend(suggestion.text)} className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-all duration-200 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100">
+            {suggestion.label}
           </button>
         ))}
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[90%] rounded-2xl p-4 shadow-sm ${
-                msg.sender === 'user'
-                  ? 'bg-sky-600 text-white rounded-br-none'
-                  : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200'
-              }`}
-            >
-              <p className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>
-
-              {/* Render Destination & Route Summary Card */}
-              {msg.data?.destination_analysis && (
-                <div className="mt-3 pt-3 border-t border-slate-200/80 bg-white text-slate-900 rounded-xl p-3 shadow-inner">
-                  <div className="flex items-center justify-between text-xs font-bold text-sky-800 mb-2">
-                    <span className="flex items-center space-x-1">
-                      <MapPin className="w-3.5 h-3.5 text-rose-500" />
-                      <span>{msg.data.destination || msg.data.destination_analysis?.city_or_village}</span>
-                    </span>
-                    <span className="text-emerald-700 font-extrabold flex items-center space-x-0.5">
-                      <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{msg.data.total_cost?.toLocaleString()} VND</span>
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                    <div>
-                      <span className="font-semibold text-slate-700">Sân bay lân cận:</span>{' '}
-                      <span className="font-mono text-sky-700">
-                        {msg.data.destination_analysis?.nearest_airport?.iata || 'N/A'} (
-                        {msg.data.destination_analysis?.nearest_airport?.distance_km}km)
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-slate-700">Tiền tệ:</span>{' '}
-                      <span className="font-mono text-emerald-700">
-                        {msg.data.destination_analysis?.currency || 'EUR'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Days snapshot */}
-                  <div className="space-y-1.5">
-                    {msg.data.itinerary?.map((day: any, dIdx: number) => (
-                      <div key={dIdx} className="bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs">
-                        <div className="font-bold text-slate-800 flex items-center justify-between">
-                          <span className="flex items-center space-x-1">
-                            <Calendar className="w-3 h-3 text-sky-500" />
-                            <span>Ngày {day.day_number} ({day.date})</span>
-                          </span>
-                          <span className="text-[10px] text-slate-500">{day.items?.length || 0} hoạt động</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5" aria-live="polite">
+        {messages.map((message, index) => (
+          <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`} style={{ animationDelay: `${index * 50}ms` }}>
+            <article className={`max-w-[92%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm transition-all duration-200 hover:shadow-md ${message.sender === 'user' ? 'rounded-br-md bg-gradient-to-br from-sky-600 to-indigo-600 text-white' : 'rounded-bl-md border border-slate-200 bg-white text-slate-700'}`}>
+              <p className="whitespace-pre-line">{message.text}</p>
+              {message.data?.destination_analysis && (
+                <div className="mt-3 grid gap-2 border-t border-slate-200 pt-3 text-xs text-slate-600 sm:grid-cols-2">
+                  <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-rose-500" /> {message.data.destination}</span>
+                  <span className="flex items-center gap-1.5"><WalletCards className="h-3.5 w-3.5 text-emerald-600" /> {Number(message.data.total_cost || 0).toLocaleString('vi-VN')} VND</span>
+                  <span className="flex items-center gap-1.5"><Plane className="h-3.5 w-3.5 text-sky-600" /> {message.data.destination_analysis?.nearest_airport?.iata || 'N/A'}</span>
+                  <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5 text-violet-600" /> {message.data.itinerary?.length || 0} ngày</span>
                 </div>
               )}
-            </div>
+            </article>
           </div>
         ))}
-
-        {/* Loading / Pipeline status */}
         {loading && (
-          <div className="flex justify-start">
-            <div className="bg-white border border-sky-200 shadow-md text-slate-700 rounded-2xl rounded-bl-none p-4 max-w-[85%] space-y-2">
-              <div className="flex items-center space-x-2 text-sm font-semibold text-sky-700">
-                <RefreshCw className="w-4 h-4 animate-spin text-sky-600" />
-                <span>LangGraph AI Pipeline đang xử lý...</span>
-              </div>
-              <p className="text-xs text-slate-500 italic pl-6">{currentStep}</p>
+          <div className="flex justify-start animate-in fade-in duration-300">
+            <div className="flex max-w-[88%] items-center gap-2 rounded-2xl rounded-bl-md border border-sky-100 bg-sky-50 px-4 py-3 text-xs font-medium text-sky-800">
+              <LoaderCircle className="h-4 w-4 animate-spin" /> {currentStep}
             </div>
           </div>
         )}
+        {error && (
+          <div className="flex justify-start animate-in fade-in duration-300">
+            <div className="flex max-w-[88%] items-center gap-2 rounded-2xl rounded-bl-md border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-medium text-rose-800">
+              {error}
+              <button onClick={() => setError(null)} className="ml-2 text-rose-600 hover:text-rose-800 font-semibold">✕</button>
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
       </div>
 
-      {/* Input Form */}
-      <div className="p-3 bg-white border-t border-slate-200">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-          className="flex items-center space-x-2"
-        >
-          <input
-            type="text"
+      <form onSubmit={(event) => { event.preventDefault(); void handleSend(); }} className="border-t border-slate-100 bg-white p-4">
+        <label htmlFor="travel-prompt" className="mb-2 block text-xs font-semibold text-slate-600">Bạn muốn đi đâu?</label>
+        <div className="flex items-end gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-2 transition-all duration-200 focus-within:border-sky-400 focus-within:ring-4 focus-within:ring-sky-100 focus-within:shadow-md">
+          <textarea
+            id="travel-prompt"
+            rows={4}
+            maxLength={1000}
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Ví dụ: Đi làng Hallstatt 3 ngày, Zermatt tuyết, Seoul ăn vặt..."
-            className="flex-1 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm"
+            disabled={loading}
+            onChange={(event) => setPrompt(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                void handleSend();
+              }
+            }}
+            placeholder="Ví dụ: Đi Kyoto 4 ngày cho 2 người, ngân sách 30 triệu, thích ẩm thực và văn hóa…"
+            className="min-h-[96px] max-h-[150px] flex-1 resize-y bg-transparent px-2 py-1 text-sm leading-6 text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed"
           />
-          <button
-            type="submit"
-            disabled={loading || !prompt.trim()}
-            className="bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white font-medium px-5 py-2.5 rounded-xl flex items-center space-x-1.5 transition shadow-sm"
-          >
-            <Send className="w-4 h-4" />
-            <span>Lập Tour</span>
+          <button type="submit" disabled={loading || !prompt.trim()} aria-label="Gửi yêu cầu lập kế hoạch" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-600 to-indigo-600 text-white shadow-md transition-all duration-200 hover:brightness-110 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:scale-100">
+            <Send className="h-4 w-4" />
           </button>
-        </form>
-      </div>
-    </div>
+        </div>
+        <p className="mt-2 text-[11px] text-slate-400">Enter để gửi · Shift + Enter để xuống dòng</p>
+      </form>
+    </section>
   );
 }

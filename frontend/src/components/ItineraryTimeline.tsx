@@ -76,6 +76,26 @@ export default function ItineraryTimeline({
         <p className="text-slate-500 text-sm max-w-md leading-relaxed mb-6">
           Hãy nhập yêu cầu điểm đến tại khung chat bên trái (như Hallstatt, Zermatt, Seoul, Sa Pa...) để AI Agent tự động phân tích và tạo lịch trình hoàn chỉnh!
         </p>
+        <div className="flex flex-wrap gap-2 justify-center">
+          <button
+            onClick={() => onEditItem?.({ suggestion: 'Hallstatt, Áo 3 ngày cho 2 người' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+          >
+            Hallstatt, Áo
+          </button>
+          <button
+            onClick={() => onEditItem?.({ suggestion: 'Seoul, Hàn Quốc 4 ngày cho 2 người' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+          >
+            Seoul, Hàn Quốc
+          </button>
+          <button
+            onClick={() => onEditItem?.({ suggestion: 'Đà Nẵng, Việt Nam 3 ngày cho gia đình' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+          >
+            Đà Nẵng, Việt Nam
+          </button>
+        </div>
       </div>
     );
   }
