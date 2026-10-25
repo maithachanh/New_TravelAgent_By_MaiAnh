@@ -310,6 +310,58 @@ export const agentAPI = {
 };
 
 // ---------------------------------------------------------------------------
+
+export interface TripMemberItem {
+  id: number;
+  user_id?: number;
+  email: string;
+  full_name?: string;
+  role: 'OWNER' | 'EDITOR' | 'VIEWER' | string;
+  status: string;
+  is_owner: boolean;
+  created_at?: string;
+}
+
+export interface TripExpenseItem {
+  id: number;
+  payer_name: string;
+  title: string;
+  category: string;
+  amount: number;
+  currency: string;
+  split_members: string[];
+  created_at?: string;
+}
+
+export interface DebtSettlementItem {
+  from: string;
+  to: string;
+  amount: number;
+  currency: string;
+}
+
+export interface TripExpensesResponse {
+  trip_id: number;
+  expenses: TripExpenseItem[];
+  total_spent: number;
+  balances: Record<string, number>;
+  debt_settlements: DebtSettlementItem[];
+}
+
+export interface CheckoutResult {
+  success: boolean;
+  message: string;
+  transaction_id: string;
+  payment_method: string;
+  total_amount: number;
+  currency: string;
+  paid_at: string;
+  voucher_code: string;
+  qr_code_url: string;
+  confirmed_items_count: number;
+  status: string;
+}
+
 // Trips API
 // ---------------------------------------------------------------------------
 export const tripsAPI = {
@@ -339,6 +391,24 @@ export const tripsAPI = {
 
   reorderItem: (tripId: number, day: number, itemId: string, newIndex: number): Promise<TripDetail> =>
     api.patch(`/trips/${tripId}/reorder`, { day, item_id: itemId, new_index: newIndex }).then((r) => r.data),
+
+  getMembers: (tripId: number): Promise<{ trip_id: number; members: TripMemberItem[] }> =>
+    api.get(`/trips/${tripId}/members`).then((r) => r.data),
+
+  inviteMember: (tripId: number, data: { email: string; full_name?: string; role?: string }): Promise<{ success: boolean; message: string; member: TripMemberItem }> =>
+    api.post(`/trips/${tripId}/members`, data).then((r) => r.data),
+
+  removeMember: (tripId: number, memberId: number): Promise<{ success: boolean; message: string }> =>
+    api.delete(`/trips/${tripId}/members/${memberId}`).then((r) => r.data),
+
+  getExpenses: (tripId: number): Promise<TripExpensesResponse> =>
+    api.get(`/trips/${tripId}/expenses`).then((r) => r.data),
+
+  createExpense: (tripId: number, data: { payer_name: string; title: string; category?: string; amount: number; currency?: string; split_members?: string[] }): Promise<{ success: boolean; message: string; expense: TripExpenseItem }> =>
+    api.post(`/trips/${tripId}/expenses`, data).then((r) => r.data),
+
+  deleteExpense: (tripId: number, expenseId: number): Promise<{ success: boolean; message: string }> =>
+    api.delete(`/trips/${tripId}/expenses/${expenseId}`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -434,6 +504,18 @@ export const bookingsAPI = {
     notice: string;
   }> =>
     api.get('/bookings/recommendations', { params: { destination, origin, trip_id } }).then((r) => r.data),
+
+  checkout: (data: {
+    booking_id?: number;
+    booking_ids?: number[];
+    trip_id?: number;
+    payment_method: string;
+    card_number?: string;
+    card_holder?: string;
+    card_expiry?: string;
+    phone_number?: string;
+  }): Promise<CheckoutResult> =>
+    api.post('/bookings/checkout', data).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------

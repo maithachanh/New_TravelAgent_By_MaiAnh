@@ -423,3 +423,62 @@ export const translateTextMobile = async (
   });
   return res.data;
 };
+
+
+// 9. Collaborative Group Travel & Expenses
+export const getTripMembersMobile = async (tripId: number) => {
+  const res = await mobileApi.get(`/trips/${tripId}/members`);
+  return res.data;
+};
+
+export const inviteTripMemberMobile = async (
+  tripId: number,
+  data: { email: string; full_name?: string; role?: string }
+) => {
+  const res = await mobileApi.post(`/trips/${tripId}/members`, data);
+  return res.data;
+};
+
+export const removeTripMemberMobile = async (tripId: number, memberId: number) => {
+  const res = await mobileApi.delete(`/trips/${tripId}/members/${memberId}`);
+  return res.data;
+};
+
+export const getTripExpensesMobile = async (tripId: number) => {
+  const res = await mobileApi.get(`/trips/${tripId}/expenses`);
+  return res.data;
+};
+
+export const createTripExpenseMobile = async (
+  tripId: number,
+  data: {
+    payer_name: string;
+    title: string;
+    category?: string;
+    amount: number;
+    currency?: string;
+    split_members?: string[];
+  }
+) => {
+  const res = await mobileApi.post(`/trips/${tripId}/expenses`, data);
+  return res.data;
+};
+
+export const deleteTripExpenseMobile = async (tripId: number, expenseId: number) => {
+  const res = await mobileApi.delete(`/trips/${tripId}/expenses/${expenseId}`);
+  return res.data;
+};
+
+// 10. Checkout & Electronic QR Voucher
+export const checkoutMobile = async (data: {
+  booking_id?: number;
+  booking_ids?: number[];
+  trip_id?: number;
+  payment_method: string;
+  card_number?: string;
+  card_holder?: string;
+  phone_number?: string;
+}) => {
+  const res = await mobileApi.post('/bookings/checkout', data);
+  return res.data;
+};

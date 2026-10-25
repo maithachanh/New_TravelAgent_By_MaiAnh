@@ -390,8 +390,3 @@ Hệ thống sẽ tự động cấu hình cơ sở dữ liệu, nạp font ch�
    - Nhập thủ công địa chỉ IPv4 máy tính của bạn vào mục **Settings** trên Mobile App.
 
 ---
-
-## 👥 TÁC GIẢ & THÔNG TIN ĐỒ ÁN
-- **Đồ Án Chuyên Sâu**: Xây dựng Trợ lý Du lịch Đa Tác Nhân Thông Minh (Universal AI Travel Agent Platform).
-- **Mục tiêu**: Tự động hóa lập kế hoạch tour, tối ưu hành trình, đặt dịch vụ và đồng hành cùng du khách trong suốt chuyến đi.
-- **Bản quyền**: Dự án mã nguồn mở phục vụ mục đích nghiên cứu, học tập và ứng dụng thực tiễn.

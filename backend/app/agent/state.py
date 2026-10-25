@@ -52,6 +52,9 @@ class TravelAgentState(TypedDict, total=False):
     # 13. Schedule Validator Output
     schedule_validation: Dict[str, Any]
 
+    # 13.5 Critique & Reviewer Output
+    critique_feedback: Dict[str, Any]
+
     # 14. Final Itinerary Output
     final_itinerary: List[Dict[str, Any]]
 
@@ -90,6 +93,7 @@ def initial_state(
         "optimized_daily_routes": [],
         "budget_validation": {},
         "schedule_validation": {},
+        "critique_feedback": {},
         "final_itinerary": [],
         "agent_response": "",
         "suggestions": [],

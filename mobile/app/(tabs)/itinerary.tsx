@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Alert,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -252,7 +253,17 @@ export default function ItineraryScreen() {
                       onPress={() => tripSync.downloadPdf(selectedTrip.id)}
                     >
                       <Ionicons name="cloud-download-outline" size={16} color="#fff" />
-                      <Text style={styles.downloadPdfText}>Tải / Xem File PDF Lịch Trình</Text>
+                      <Text style={styles.downloadPdfText}>Xuất PDF</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.openMapBtn}
+                      onPress={() => {
+                        const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(selectedTrip.destination)}`;
+                        Linking.openURL(url);
+                      }}
+                    >
+                      <Ionicons name="map-outline" size={16} color="#fff" />
+                      <Text style={styles.downloadPdfText}>Bản Đồ Google Maps</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -309,7 +320,21 @@ export default function ItineraryScreen() {
                               </View>
                               <Text style={styles.itemTitle}>{item.title}</Text>
                               {item.location ? (
-                                <Text style={styles.itemLocation}>📍 {item.location}</Text>
+                                <View style={styles.locationContainer}>
+                                  <Text style={styles.itemLocation}>📍 {item.location}</Text>
+                                  <TouchableOpacity
+                                    style={styles.directNavBtn}
+                                    onPress={() => {
+                                      const dest = item.latitude && item.longitude
+                                        ? `${item.latitude},${item.longitude}`
+                                        : encodeURIComponent(item.location || item.title);
+                                      Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${dest}`);
+                                    }}
+                                  >
+                                    <Ionicons name="navigate-outline" size={11} color="#0284C7" />
+                                    <Text style={styles.directNavText}>Chỉ đường</Text>
+                                  </TouchableOpacity>
+                                </View>
                               ) : null}
                               {Number(item.estimated_cost || 0) > 0 ? (
                                 <Text style={styles.itemCost}>
@@ -404,15 +429,16 @@ const styles = StyleSheet.create({
   detailItem: { alignItems: 'center' },
   detailLabel: { color: TEXT_SECONDARY, fontSize: 11, marginBottom: 4 },
   detailValue: { color: TEXT_PRIMARY, fontWeight: '800', fontSize: 14 },
-  pdfDownloadRow: { borderTopWidth: 1, borderTopColor: '#334155', paddingTop: 12 },
+  pdfDownloadRow: { borderTopWidth: 1, borderTopColor: '#334155', paddingTop: 12, flexDirection: 'row', gap: 8 },
   downloadPdfBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: PRIMARY,
     borderRadius: 10,
     paddingVertical: 10,
-    gap: 8,
+    gap: 6,
   },
   downloadPdfText: { color: '#fff', fontWeight: '700', fontSize: 13 },
   daySection: { marginBottom: 12 },
@@ -456,4 +482,37 @@ const styles = StyleSheet.create({
   itemLocation: { color: TEXT_SECONDARY, fontSize: 12 },
   itemCost: { color: SUCCESS, fontSize: 12, fontWeight: '600', marginTop: 2 },
   itemNotes: { color: '#FCD34D', fontSize: 11, fontStyle: 'italic', marginTop: 2 },
+  openMapBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: '#059669',
+    borderRadius: 10,
+    paddingVertical: 10,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 6,
+    marginTop: 3,
+  },
+  directNavBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: 'rgba(2, 132, 199, 0.15)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(2, 132, 199, 0.3)',
+  },
+  directNavText: {
+    color: '#38BDF8',
+    fontSize: 10,
+    fontWeight: '700',
+  },
 });

@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowRightLeft, CalendarCheck, Check, Clipboard, DollarSign, Languages,
   LifeBuoy, LoaderCircle, RefreshCw, Send, Sparkles, Hotel, Plane, Compass,
-  CheckCircle2, XCircle, AlertCircle, Info, ExternalLink
+  CheckCircle2, XCircle, AlertCircle, Info, ExternalLink, Users, CreditCard, QrCode, Plus, Trash2, UserPlus, Receipt, ArrowRight
 } from 'lucide-react';
-import { askInTripSupport, bookingsAPI, BookingItem, currencyAPI, translationAPI } from '@/lib/api';
+import { askInTripSupport, bookingsAPI, BookingItem, currencyAPI, translationAPI, tripsAPI, TripMemberItem, TripExpenseItem, DebtSettlementItem } from '@/lib/api';
 
 interface TravelUtilitiesHubProps {
   tripId?: number;
@@ -19,7 +19,7 @@ interface TravelUtilitiesHubProps {
   onBookingUpdated?: () => void;
 }
 
-type Tab = 'currency' | 'translation' | 'bookings' | 'support';
+type Tab = 'currency' | 'translation' | 'bookings' | 'collab' | 'support';
 
 const currencies = [
   ['VND', 'Việt Nam đồng'], ['USD', 'Đô la Mỹ'], ['EUR', 'Euro'], ['JPY', 'Yên Nhật'],
@@ -320,6 +320,162 @@ export default function TravelUtilitiesHub({
     }
   };
 
+
+  // --- COLLABORATION & EXPENSES STATE ---
+  const [collabSubTab, setCollabSubTab] = useState<'members' | 'expenses'>('members');
+  const [members, setMembers] = useState<TripMemberItem[]>([]);
+  const [expenses, setExpenses] = useState<TripExpenseItem[]>([]);
+  const [debtSettlements, setDebtSettlements] = useState<DebtSettlementItem[]>([]);
+  const [totalSpent, setTotalSpent] = useState<number>(0);
+  const [collabLoading, setCollabLoading] = useState(false);
+  const [collabMsg, setCollabMsg] = useState('');
+
+  // Invite Form
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteName, setInviteName] = useState('');
+  const [inviteRole, setInviteRole] = useState('EDITOR');
+
+  // Expense Form
+  const [expPayer, setExpPayer] = useState('');
+  const [expTitle, setExpTitle] = useState('');
+  const [expAmount, setExpAmount] = useState('');
+  const [expCategory, setExpCategory] = useState('food');
+
+  // Checkout Modal State
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutBooking, setCheckoutBooking] = useState<BookingItem | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'VNPAY' | 'MOMO' | 'STRIPE' | 'CARD'>('VNPAY');
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutResult, setCheckoutResult] = useState<any>(null);
+
+  const loadCollabData = async () => {
+    if (!tripId) return;
+    setCollabLoading(true);
+    try {
+      const [memRes, expRes] = await Promise.all([
+        tripsAPI.getMembers(tripId),
+        tripsAPI.getExpenses(tripId)
+      ]);
+      setMembers(memRes.members || []);
+      setExpenses(expRes.expenses || []);
+      setDebtSettlements(expRes.debt_settlements || []);
+      setTotalSpent(expRes.total_spent || 0);
+      if (!expPayer && memRes.members?.length > 0) {
+        setExpPayer(memRes.members[0].full_name || 'Trưởng đoàn');
+      }
+    } catch {
+      // Fallback
+    } finally {
+      setCollabLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'collab') {
+      void loadCollabData();
+    }
+  }, [activeTab, tripId]);
+
+  const handleInviteMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inviteEmail || !tripId) return;
+    setCollabLoading(true);
+    try {
+      const res = await tripsAPI.inviteMember(tripId, {
+        email: inviteEmail,
+        full_name: inviteName || undefined,
+        role: inviteRole
+      });
+      setCollabMsg(res.message);
+      setInviteEmail('');
+      setInviteName('');
+      await loadCollabData();
+      setTimeout(() => setCollabMsg(''), 3000);
+    } catch (err: any) {
+      setCollabMsg(err?.response?.data?.detail || 'Không thể mời thành viên lúc này.');
+      setTimeout(() => setCollabMsg(''), 4000);
+    } finally {
+      setCollabLoading(false);
+    }
+  };
+
+  const handleRemoveMember = async (memberId: number) => {
+    if (!tripId || memberId === 0) return;
+    setCollabLoading(true);
+    try {
+      await tripsAPI.removeMember(tripId, memberId);
+      await loadCollabData();
+    } catch {
+      // Ignore
+    } finally {
+      setCollabLoading(false);
+    }
+  };
+
+  const handleAddExpense = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!expTitle || !expAmount || !tripId) return;
+    const numAmt = parseFloat(expAmount.replace(/[^0-9.]/g, ''));
+    if (!numAmt || numAmt <= 0) return;
+
+    setCollabLoading(true);
+    try {
+      const res = await tripsAPI.createExpense(tripId, {
+        payer_name: expPayer || (members[0]?.full_name || 'Trưởng đoàn'),
+        title: expTitle,
+        category: expCategory,
+        amount: numAmt,
+        currency: 'VND'
+      });
+      setCollabMsg(res.message);
+      setExpTitle('');
+      setExpAmount('');
+      await loadCollabData();
+      setTimeout(() => setCollabMsg(''), 3000);
+    } catch (err: any) {
+      setCollabMsg(err?.response?.data?.detail || 'Không thể thêm chi tiêu.');
+      setTimeout(() => setCollabMsg(''), 4000);
+    } finally {
+      setCollabLoading(false);
+    }
+  };
+
+  const handleDeleteExpense = async (expenseId: number) => {
+    if (!tripId) return;
+    try {
+      await tripsAPI.deleteExpense(tripId, expenseId);
+      await loadCollabData();
+    } catch {
+      // Ignore
+    }
+  };
+
+  const triggerCheckout = (booking?: BookingItem) => {
+    setCheckoutBooking(booking || null);
+    setCheckoutResult(null);
+    setIsCheckoutOpen(true);
+  };
+
+  const executeCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      const res = await bookingsAPI.checkout({
+        booking_id: checkoutBooking?.id,
+        trip_id: tripId,
+        payment_method: paymentMethod,
+        card_number: '9704228812345678',
+        card_holder: 'TRAVELER DEMO'
+      });
+      setCheckoutResult(res);
+      await loadBookings();
+      onBookingUpdated?.();
+    } catch {
+      // Handle error
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
+
   // --- IN-TRIP SUPPORT STATE ---
   const [supportQuestion, setSupportQuestion] = useState('');
   const [supportAnswer, setSupportAnswer] = useState('');
@@ -344,6 +500,7 @@ export default function TravelUtilitiesHub({
     { id: 'currency', label: 'Đổi tiền', icon: DollarSign },
     { id: 'translation', label: 'Dịch thuật', icon: Languages },
     { id: 'bookings', label: 'Đặt chỗ', icon: CalendarCheck },
+    { id: 'collab', label: 'Nhóm & Chi tiêu', icon: Users },
     { id: 'support', label: 'Hỗ trợ', icon: LifeBuoy },
   ];
 
@@ -740,6 +897,271 @@ export default function TravelUtilitiesHub({
           </div>
         )}
 
+        
+        {/* ================= TAB 4: COLLABORATIVE GROUP & EXPENSES ================= */}
+        {activeTab === 'collab' && (
+          <div className="space-y-4 animate-in fade-in duration-300">
+            {/* Intro Banner */}
+            <div className="rounded-2xl border border-indigo-200 bg-indigo-50/80 p-3.5 text-slate-800 shadow-sm">
+              <div className="flex items-start gap-2.5">
+                <Users className="h-4 w-4 text-indigo-600 shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-xs font-bold text-indigo-900">Du Lịch Theo Nhóm & Chia Tiền Tự Động (Splitwise)</h3>
+                  <p className="mt-1 text-[11px] leading-relaxed text-slate-600">
+                    Mời bạn bè và gia đình cùng lên tour. Mọi khoản chi tiêu chung sẽ được thuật toán tối ưu hóa tự động để biết chính xác ai cần chuyển tiền cho ai với số giao dịch ít nhất.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Collab Toast */}
+            {collabMsg && (
+              <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs font-bold text-emerald-800 flex items-center gap-1.5 animate-in fade-in">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                {collabMsg}
+              </div>
+            )}
+
+            {/* Sub-tab Switcher */}
+            <div className="flex rounded-xl bg-slate-100 p-1 border border-slate-200">
+              <button
+                onClick={() => setCollabSubTab('members')}
+                className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  collabSubTab === 'members'
+                    ? 'bg-white text-indigo-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Users className="h-3.5 w-3.5" />
+                <span>Thành Viên Nhóm ({members.length})</span>
+              </button>
+              <button
+                onClick={() => setCollabSubTab('expenses')}
+                className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  collabSubTab === 'expenses'
+                    ? 'bg-white text-indigo-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Receipt className="h-3.5 w-3.5" />
+                <span>Sổ Chi Tiêu & Quyết Toán ({expenses.length})</span>
+              </button>
+            </div>
+
+            {/* SUBTAB 1: MEMBERS */}
+            {collabSubTab === 'members' && (
+              <div className="space-y-3.5">
+                {/* Invite Form */}
+                <form onSubmit={handleInviteMember} className="rounded-xl border border-slate-200 bg-white p-3 space-y-2.5 shadow-sm">
+                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <UserPlus className="h-4 w-4 text-sky-600" />
+                    <span>Mời Người Đồng Hành</span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="email"
+                      required
+                      placeholder="Email người bạn (vd: hoa@gmail.com)"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Tên hoặc biệt danh (tùy chọn)"
+                      value={inviteName}
+                      onChange={(e) => setInviteName(e.target.value)}
+                      className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <select
+                      value={inviteRole}
+                      onChange={(e) => setInviteRole(e.target.value)}
+                      className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-700 font-semibold bg-white"
+                    >
+                      <option value="EDITOR">Quyền: Biên tập viên (Sửa tour & thêm chi tiêu)</option>
+                      <option value="VIEWER">Quyền: Người xem (Chỉ xem lịch trình)</option>
+                    </select>
+                    <button
+                      type="submit"
+                      disabled={collabLoading}
+                      className="rounded-lg bg-sky-600 hover:bg-sky-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition disabled:opacity-50"
+                    >
+                      Gửi Lời Mời
+                    </button>
+                  </div>
+                </form>
+
+                {/* Members List */}
+                <div className="space-y-2">
+                  <h5 className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Danh Sách Thành Viên</h5>
+                  <div className="space-y-1.5">
+                    {members.map((m) => (
+                      <div key={m.id} className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-black">
+                            {(m.full_name || m.email)[0].toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                              {m.full_name || m.email}
+                              {m.is_owner && (
+                                <span className="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-1.5 py-0.2 rounded-md">
+                                  Trưởng đoàn
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-[11px] text-slate-400 font-mono">{m.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            {m.role === 'OWNER' ? 'Chủ sở hữu' : m.role === 'EDITOR' ? 'Biên tập' : 'Xem'}
+                          </span>
+                          {!m.is_owner && (
+                            <button
+                              onClick={() => void handleRemoveMember(m.id)}
+                              className="p-1 text-slate-400 hover:text-rose-600 rounded transition"
+                              title="Xóa khỏi nhóm"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SUBTAB 2: EXPENSES & SPLITWISE */}
+            {collabSubTab === 'expenses' && (
+              <div className="space-y-3.5">
+                {/* Total Spend & Debt Settlement Card */}
+                <div className="rounded-xl bg-gradient-to-r from-slate-900 to-indigo-950 p-3.5 text-white shadow-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tổng Chi Tiêu Cả Nhóm</span>
+                    <span className="text-base font-black text-emerald-400">{totalSpent.toLocaleString()} VND</span>
+                  </div>
+
+                  {debtSettlements.length > 0 ? (
+                    <div className="mt-2.5 pt-2 border-t border-white/10 space-y-1.5">
+                      <span className="text-[11px] font-bold text-amber-300 block">💡 Quyết toán nợ tối ưu (Ai trả ai):</span>
+                      {debtSettlements.map((s, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-xs bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/10">
+                          <span className="font-semibold text-slate-200">
+                            <span className="text-amber-200 font-bold">{s.from}</span> &rarr; trả cho <span className="text-emerald-300 font-bold">{s.to}</span>
+                          </span>
+                          <span className="font-mono font-bold text-emerald-400">{s.amount.toLocaleString()} VND</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 pt-2 border-t border-white/10 text-[11px] text-slate-400">
+                      Mọi người hiện đang cân bằng chi tiêu, không ai còn dư nợ!
+                    </p>
+                  )}
+                </div>
+
+                {/* Add Expense Form */}
+                <form onSubmit={handleAddExpense} className="rounded-xl border border-slate-200 bg-white p-3 space-y-2 shadow-sm">
+                  <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <Plus className="h-4 w-4 text-emerald-600" />
+                    <span>Ghi Nhận Khoản Chi Mới</span>
+                  </h4>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Người trả tiền:</label>
+                      <select
+                        value={expPayer}
+                        onChange={(e) => setExpPayer(e.target.value)}
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-800 font-medium bg-white"
+                      >
+                        {members.map((m) => (
+                          <option key={m.id} value={m.full_name || m.email}>
+                            {m.full_name || m.email}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Hạng mục:</label>
+                      <select
+                        value={expCategory}
+                        onChange={(e) => setExpCategory(e.target.value)}
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-800 font-medium bg-white"
+                      >
+                        <option value="food">Ẩm thực / Ăn uống</option>
+                        <option value="transit">Xe cộ / Di chuyển</option>
+                        <option value="hotel">Khách sạn / Phòng nghỉ</option>
+                        <option value="ticket">Vé tham quan / Tour</option>
+                        <option value="other">Khoản chi khác</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Nội dung (vd: Lẩu gà lá é)"
+                      value={expTitle}
+                      onChange={(e) => setExpTitle(e.target.value)}
+                      className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                    <input
+                      type="number"
+                      required
+                      placeholder="Số tiền (VND)"
+                      value={expAmount}
+                      onChange={(e) => setExpAmount(e.target.value)}
+                      className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={collabLoading}
+                    className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 py-1.5 text-xs font-bold text-white shadow-sm transition disabled:opacity-50"
+                  >
+                    + Thêm Vào Sổ Chi Tiêu (Chia đều cả nhóm)
+                  </button>
+                </form>
+
+                {/* Expenses History */}
+                <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
+                  {expenses.map((exp) => (
+                    <div key={exp.id} className="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm text-xs">
+                      <div>
+                        <p className="font-bold text-slate-800">{exp.title}</p>
+                        <p className="text-[10px] text-slate-400">
+                          {exp.payer_name} đã thanh toán · Chia cho {exp.split_members?.length || members.length} người
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-extrabold text-slate-900 font-mono">
+                          {Number(exp.amount).toLocaleString()} VND
+                        </span>
+                        <button
+                          onClick={() => void handleDeleteExpense(exp.id)}
+                          className="text-slate-400 hover:text-rose-600 p-1 rounded transition"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ================= TAB 4: IN-TRIP SUPPORT ================= */}
         {activeTab === 'support' && (
           <div className="space-y-4 animate-in fade-in duration-300">
@@ -810,6 +1232,129 @@ export default function TravelUtilitiesHub({
           </div>
         )}
       </div>
+
+      {/* ================= MODAL: PAYMENT CHECKOUT & QR VOUCHER ================= */}
+      {isCheckoutOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl border border-slate-200 text-slate-800">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-sky-600" />
+                <h3 className="text-sm font-bold text-slate-900">Thanh Toán & Xuất Vé Điện Tử</h3>
+              </div>
+              <button
+                onClick={() => setIsCheckoutOpen(false)}
+                className="text-slate-400 hover:text-slate-600 font-bold p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            {!checkoutResult ? (
+              <div className="mt-4 space-y-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block mb-1 font-semibold">Dịch vụ cần thanh toán:</span>
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                    <p className="font-bold text-slate-900">
+                      {checkoutBooking ? checkoutBooking.service_name : 'Toàn bộ dịch vụ đang chờ duyệt của tour'}
+                    </p>
+                    <p className="mt-1 font-extrabold text-emerald-600 text-sm">
+                      {checkoutBooking ? Number(checkoutBooking.price).toLocaleString() : 'Ước tính theo tour'} VND
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-slate-500 block mb-1.5 font-semibold">Chọn cổng thanh toán:</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['VNPAY', 'MOMO', 'STRIPE', 'CARD'] as const).map((method) => (
+                      <button
+                        key={method}
+                        type="button"
+                        onClick={() => setPaymentMethod(method)}
+                        className={`p-2.5 rounded-xl border font-bold text-center transition ${
+                          paymentMethod === method
+                            ? 'bg-sky-50 border-sky-400 text-sky-800 ring-2 ring-sky-300/30'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        {method === 'VNPAY' ? 'VNPay QR' : method === 'MOMO' ? 'Ví MoMo' : method === 'STRIPE' ? 'Stripe Pay' : 'Thẻ Visa/Master'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 flex items-start gap-2">
+                  <QrCode className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <p className="text-[11px] leading-relaxed">
+                    Hệ thống sẽ cấp <strong>Mã Vé / Voucher điện tử</strong> kèm mã QR chuẩn VietQR ngay lập tức sau khi nhấn xác nhận.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    onClick={() => setIsCheckoutOpen(false)}
+                    className="flex-1 rounded-xl border border-slate-200 py-2.5 font-bold text-slate-600 hover:bg-slate-50"
+                  >
+                    Đóng
+                  </button>
+                  <button
+                    onClick={() => void executeCheckout()}
+                    disabled={checkoutLoading}
+                    className="flex-1 rounded-xl bg-sky-600 hover:bg-sky-700 py-2.5 font-bold text-white shadow-md transition disabled:opacity-50"
+                  >
+                    {checkoutLoading ? 'Đang xử lý...' : 'Xác Nhận Thanh Toán'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-4 text-center">
+                <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <Check className="w-6 h-6 stroke-[3]" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-slate-900">Thanh Toán Thành Công!</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">{checkoutResult.message}</p>
+                </div>
+
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-left space-y-1.5 text-xs font-mono">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Mã giao dịch:</span>
+                    <span className="font-bold text-slate-800">{checkoutResult.transaction_id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Mã Voucher:</span>
+                    <span className="font-bold text-emerald-600">{checkoutResult.voucher_code}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Cổng thanh toán:</span>
+                    <span className="font-bold text-slate-800">{checkoutResult.payment_method}</span>
+                  </div>
+                </div>
+
+                {checkoutResult.qr_code_url && (
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 inline-block shadow-sm">
+                    <img
+                      src={checkoutResult.qr_code_url}
+                      alt="Payment QR Voucher"
+                      className="w-36 h-36 mx-auto object-contain"
+                    />
+                    <span className="text-[10px] text-slate-400 font-bold block mt-1">Mã QR Vé Điện Tử</span>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => setIsCheckoutOpen(false)}
+                  className="w-full rounded-xl bg-sky-600 hover:bg-sky-700 py-2.5 text-xs font-bold text-white shadow"
+                >
+                  Hoàn Tất
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }

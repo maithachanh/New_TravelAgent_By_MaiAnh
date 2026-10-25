@@ -1,1 +1,10 @@
-{}
+{
+  "[project]/src/components/InteractiveTripMap.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/components/InteractiveTripMap.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_leaflet_dist_leaflet_1ybdq6v.css",
+      "static/chunks/node_modules_leaflet_dist_leaflet-src_20hmd8h.js",
+      "static/chunks/_0yji6hj._.js"
+    ]
+  }
+}

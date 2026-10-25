@@ -91,6 +91,8 @@ class Trip(Base):
     days = relationship("ItineraryDay", back_populates="trip", cascade="all, delete-orphan", order_by="ItineraryDay.day_number")
     bookings = relationship("Booking", back_populates="trip", cascade="all, delete-orphan")
     versions = relationship("TripVersion", back_populates="trip", cascade="all, delete-orphan", order_by="TripVersion.version")
+    members = relationship("TripMember", back_populates="trip", cascade="all, delete-orphan")
+    expenses = relationship("TripExpense", back_populates="trip", cascade="all, delete-orphan")
 
 class ItineraryDay(Base):
     __tablename__ = "itinerary_days"
@@ -155,3 +157,34 @@ class TripVersion(Base):
 
     trip = relationship("Trip", back_populates="versions")
 
+class TripMember(Base):
+    """Collaborative Group Travel Member: allows inviting friends/family with specific roles."""
+    __tablename__ = "trip_members"
+
+    id = Column(Integer, primary_key=True, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    email = Column(String(255), nullable=False)
+    full_name = Column(String(255), nullable=True)
+    role = Column(String(50), default="EDITOR") # OWNER, EDITOR, VIEWER
+    status = Column(String(50), default="ACCEPTED") # INVITED, ACCEPTED
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    trip = relationship("Trip", back_populates="members")
+
+class TripExpense(Base):
+    """Group Expense Tracker & Splitwise: records shared travel costs and payer information."""
+    __tablename__ = "trip_expenses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id", ondelete="CASCADE"), nullable=False, index=True)
+    payer_id = Column(Integer, nullable=True)
+    payer_name = Column(String(255), nullable=False)
+    title = Column(String(255), nullable=False)
+    category = Column(String(50), default="food") # food, hotel, transit, ticket, other
+    amount = Column(Float, nullable=False)
+    currency = Column(String(10), default="VND")
+    split_members = Column(JSON, default=list) # List of participant names, e.g. ["Alice", "Bob"]
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    trip = relationship("Trip", back_populates="expenses")

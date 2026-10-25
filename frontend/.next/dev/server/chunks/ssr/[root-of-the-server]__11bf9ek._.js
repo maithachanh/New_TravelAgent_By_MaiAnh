@@ -122,13 +122,19 @@ function Home() {
     const [isReplanOpen, setIsReplanOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [versions, setVersions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({});
     const [currentVersion, setCurrentVersion] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(1);
+    const [selectedSuggestion, setSelectedSuggestion] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const handleItineraryGenerated = (data)=>{
-        setTripData(data);
-        const version = data.version || 1;
-        setCurrentVersion(version);
-        if (data.itinerary?.length) setVersions({
-            [version]: data.itinerary
-        });
+        if (!data) return;
+        if (data.itinerary && Array.isArray(data.itinerary) && data.itinerary.length > 0) {
+            setTripData(data);
+            const version = data.version || 1;
+            setCurrentVersion(version);
+            setVersions({
+                [version]: data.itinerary
+            });
+        } else if (!tripData) {
+            setTripData(data);
+        }
     };
     const handleReplanSuccess = (itinerary, version, totalCost)=>{
         const nextVersion = version || currentVersion + 1;
@@ -166,7 +172,7 @@ function Home() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 40,
+                        lineNumber: 46,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -176,7 +182,7 @@ function Home() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 41,
+                        lineNumber: 47,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -186,7 +192,7 @@ function Home() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 42,
+                        lineNumber: 48,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -199,14 +205,14 @@ function Home() {
                                         className: "h-3.5 w-3.5 text-amber-200 animate-pulse"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 45,
+                                        lineNumber: 51,
                                         columnNumber: 13
                                     }, this),
                                     " Lập kế hoạch thông minh · Tối ưu theo nhu cầu"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 44,
+                                lineNumber: 50,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -214,7 +220,7 @@ function Home() {
                                 children: "Chuyến đi được thiết kế theo cách của bạn."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 47,
+                                lineNumber: 53,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -222,7 +228,7 @@ function Home() {
                                 children: "Nhập mong muốn bằng ngôn ngữ tự nhiên. TravelAgent AI sẽ phân tích điểm đến, ngân sách và sở thích để tạo lịch trình rõ ràng, dễ điều chỉnh."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 50,
+                                lineNumber: 56,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -235,14 +241,14 @@ function Home() {
                                                 className: "h-3.5 w-3.5 text-emerald-300"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
-                                                lineNumber: 54,
+                                                lineNumber: 60,
                                                 columnNumber: 55
                                             }, this),
                                             " Dữ liệu có trạng thái rõ ràng"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 54,
+                                        lineNumber: 60,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -252,14 +258,14 @@ function Home() {
                                                 className: "h-3.5 w-3.5 text-amber-200"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
-                                                lineNumber: 55,
+                                                lineNumber: 61,
                                                 columnNumber: 55
                                             }, this),
                                             " Tối ưu hành trình"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 55,
+                                        lineNumber: 61,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -269,14 +275,14 @@ function Home() {
                                                 className: "h-3.5 w-3.5 text-violet-200"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
-                                                lineNumber: 56,
+                                                lineNumber: 62,
                                                 columnNumber: 55
                                             }, this),
                                             " Điều chỉnh phiên bản"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 56,
+                                        lineNumber: 62,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -286,39 +292,39 @@ function Home() {
                                                 className: "h-3.5 w-3.5 text-rose-200"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
-                                                lineNumber: 57,
+                                                lineNumber: 63,
                                                 columnNumber: 55
                                             }, this),
                                             " Hỗ trợ xuyên suốt"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 57,
+                                        lineNumber: 63,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 53,
+                                lineNumber: 59,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 43,
+                        lineNumber: 49,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$earth$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Globe2$3e$__["Globe2"], {
                         className: "absolute -right-4 -bottom-10 h-52 w-52 text-white/10 sm:right-8 animate-pulse"
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 60,
+                        lineNumber: 66,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 39,
+                lineNumber: 45,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -327,15 +333,17 @@ function Home() {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "xl:col-span-4 animate-in fade-in slide-in-from-bottom-4 duration-500",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ChatAgent$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                            onItineraryGenerated: handleItineraryGenerated
+                            onItineraryGenerated: handleItineraryGenerated,
+                            externalPrompt: selectedSuggestion,
+                            onPromptConsumed: ()=>setSelectedSuggestion('')
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 64,
-                            columnNumber: 95
+                            lineNumber: 71,
+                            columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 64,
+                        lineNumber: 70,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -351,23 +359,24 @@ function Home() {
                                 availableVersions: Object.keys(versions).map(Number),
                                 onVersionSelect: selectVersion,
                                 days: tripData?.itinerary || [],
+                                onSelectSuggestion: (s)=>setSelectedSuggestion(s),
                                 onEditItem: (item)=>{
                                     setSelectedItem(item);
                                     setIsReplanOpen(true);
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 65,
-                                columnNumber: 161
+                                lineNumber: 79,
+                                columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 65,
-                            columnNumber: 105
+                            lineNumber: 78,
+                            columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 65,
+                        lineNumber: 77,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -377,21 +386,23 @@ function Home() {
                             destinationCurrency: tripData?.destination_analysis?.currency || 'VND',
                             destinationCountry: tripData?.destination_analysis?.country,
                             destination: tripData?.destination || 'Tokyo, Nhật Bản',
-                            origin: tripData?.origin || 'TP. Hồ Chí Minh, Việt Nam'
+                            origin: tripData?.origin || 'TP. Hồ Chí Minh, Việt Nam',
+                            startDate: tripData?.start_date || tripData?.itinerary?.[0]?.date,
+                            endDate: tripData?.end_date || tripData?.itinerary?.[tripData?.itinerary?.length - 1]?.date
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 67,
+                            lineNumber: 94,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 66,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 63,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ReplanModal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -402,13 +413,13 @@ function Home() {
                 onReplanSuccess: handleReplanSuccess
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 77,
+                lineNumber: 106,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/page.tsx",
-        lineNumber: 38,
+        lineNumber: 44,
         columnNumber: 5
     }, this);
 }
@@ -452,7 +463,7 @@ const suggestions = [
         text: 'Lập kế hoạch Đà Nẵng 3 ngày 2 đêm cho gia đình 4 người, ngân sách 18 triệu, thích biển và đồ ăn.'
     }
 ];
-function ChatAgent({ onItineraryGenerated }) {
+function ChatAgent({ onItineraryGenerated, externalPrompt, onPromptConsumed }) {
     const [prompt, setPrompt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [currentStep, setCurrentStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('Đang phân tích yêu cầu của bạn…');
@@ -478,6 +489,15 @@ function ChatAgent({ onItineraryGenerated }) {
         loading
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>()=>abortRef.current?.abort(), []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (externalPrompt && externalPrompt.trim()) {
+            setPrompt(externalPrompt);
+            void handleSend(externalPrompt);
+            onPromptConsumed?.();
+        }
+    }, [
+        externalPrompt
+    ]);
     const appendMessage = (message)=>setMessages((previous)=>[
                 ...previous,
                 message
@@ -503,10 +523,12 @@ function ChatAgent({ onItineraryGenerated }) {
             }
         }, 1200);
         try {
-            // Check if this is a support question (not a new trip request)
-            const isSupportQuestion = /^(thời tiết|ăn|nhà hàng|đi lại|ga tàu|bus|taxi|tiền tệ|tỷ giá|dịch thuật|cứu hộ|khẩn cấp)/i.test(text);
-            if (isSupportQuestion && currentTripData) {
-                // For support questions, don't regenerate itinerary
+            // Check if this is a support inquiry (not a request to plan a completely new tour)
+            const hasNewTripIntent = /(lập tour|lên tour|lên lịch|tạo tour|kế hoạch mới|đi du lịch mới|chuyến đi mới|tour mới|hành trình mới|lên kế hoạch)/i.test(text);
+            const isSupportInquiry = /(thời tiết|trời mưa|nhiệt độ|ăn gì|quán ăn|nhà hàng|đặc sản|đi lại|xe buýt|bus|tàu|taxi|sân bay|tiền|tỷ giá|đổi tiền|dịch|tiếng|an toàn|khẩn cấp|bệnh viện|thuốc|cho mình hỏi|bạn ơi|ở đâu|chỉ đường|review|gợi ý thêm|mấy giờ)/i.test(text);
+            const isSupportQuestion = currentTripData?.trip_id && isSupportInquiry && !hasNewTripIntent;
+            if (isSupportQuestion) {
+                // For support questions, answer directly without destroying active itinerary
                 const supportResponse = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["askInTripSupport"])(currentTripData.trip_id, text);
                 appendMessage({
                     id: `ai-${requestId}`,
@@ -514,7 +536,7 @@ function ChatAgent({ onItineraryGenerated }) {
                     text: supportResponse.agent_response || 'Câu trả lời của trợ lý hành trình.'
                 });
             } else {
-                // For new trip requests, regenerate itinerary
+                // For new trip requests, run trip planner
                 const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["planTripWithAI"])(text, 'vi', 'VND', controller.signal);
                 if (requestIdRef.current !== requestId) return;
                 appendMessage({
@@ -523,8 +545,11 @@ function ChatAgent({ onItineraryGenerated }) {
                     text: result.agent_response || 'Mình đã hoàn tất đề xuất cho chuyến đi của bạn.',
                     data: result
                 });
-                setCurrentTripData(result);
-                onItineraryGenerated?.(result);
+                // Only update active itinerary if itinerary is valid and non-empty
+                if (result?.itinerary && Array.isArray(result.itinerary) && result.itinerary.length > 0) {
+                    setCurrentTripData(result);
+                    onItineraryGenerated?.(result);
+                }
             }
         } catch (error) {
             if (error?.code === 'ERR_CANCELED' || requestIdRef.current !== requestId) return;
@@ -553,7 +578,7 @@ function ChatAgent({ onItineraryGenerated }) {
                         className: "absolute -right-7 -top-9 h-32 w-32 rounded-full bg-white/10 blur-2xl animate-pulse"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 115,
+                        lineNumber: 140,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -568,12 +593,12 @@ function ChatAgent({ onItineraryGenerated }) {
                                             className: "h-5 w-5 text-amber-200"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ChatAgent.tsx",
-                                            lineNumber: 119,
+                                            lineNumber: 144,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                        lineNumber: 118,
+                                        lineNumber: 143,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -586,7 +611,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         children: "Trợ lý lập kế hoạch"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 123,
+                                                        lineNumber: 148,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -594,13 +619,13 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         children: "Sẵn sàng"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 124,
+                                                        lineNumber: 149,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 122,
+                                                lineNumber: 147,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -610,26 +635,26 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         className: "h-3.5 w-3.5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 126,
+                                                        lineNumber: 151,
                                                         columnNumber: 82
                                                     }, this),
                                                     " Lịch trình được kiểm tra theo yêu cầu của bạn"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 126,
+                                                lineNumber: 151,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                        lineNumber: 121,
+                                        lineNumber: 146,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 117,
+                                lineNumber: 142,
                                 columnNumber: 11
                             }, this),
                             currentTripData?.trip_id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -640,26 +665,26 @@ function ChatAgent({ onItineraryGenerated }) {
                                         className: "h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                        lineNumber: 131,
+                                        lineNumber: 156,
                                         columnNumber: 15
                                     }, this),
                                     " PDF"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 130,
+                                lineNumber: 155,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 116,
+                        lineNumber: 141,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ChatAgent.tsx",
-                lineNumber: 114,
+                lineNumber: 139,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -672,14 +697,14 @@ function ChatAgent({ onItineraryGenerated }) {
                                 className: "h-3.5 w-3.5 text-sky-600"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 138,
+                                lineNumber: 163,
                                 columnNumber: 102
                             }, this),
                             " Gợi ý"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 138,
+                        lineNumber: 163,
                         columnNumber: 9
                     }, this),
                     suggestions.map((suggestion)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -689,13 +714,13 @@ function ChatAgent({ onItineraryGenerated }) {
                             children: suggestion.label
                         }, suggestion.label, false, {
                             fileName: "[project]/src/components/ChatAgent.tsx",
-                            lineNumber: 140,
+                            lineNumber: 165,
                             columnNumber: 11
                         }, this))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ChatAgent.tsx",
-                lineNumber: 137,
+                lineNumber: 162,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -715,7 +740,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                         children: message.text
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                        lineNumber: 150,
+                                        lineNumber: 175,
                                         columnNumber: 15
                                     }, this),
                                     message.data?.destination_analysis && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -728,7 +753,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         className: "h-3.5 w-3.5 text-rose-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 153,
+                                                        lineNumber: 178,
                                                         columnNumber: 63
                                                     }, this),
                                                     " ",
@@ -736,7 +761,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 153,
+                                                lineNumber: 178,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -746,7 +771,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         className: "h-3.5 w-3.5 text-emerald-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 179,
                                                         columnNumber: 63
                                                     }, this),
                                                     " ",
@@ -755,7 +780,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 154,
+                                                lineNumber: 179,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -765,7 +790,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         className: "h-3.5 w-3.5 text-sky-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 155,
+                                                        lineNumber: 180,
                                                         columnNumber: 63
                                                     }, this),
                                                     " ",
@@ -773,7 +798,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 155,
+                                                lineNumber: 180,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -783,7 +808,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                                         className: "h-3.5 w-3.5 text-violet-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                                        lineNumber: 156,
+                                                        lineNumber: 181,
                                                         columnNumber: 63
                                                     }, this),
                                                     " ",
@@ -792,24 +817,24 @@ function ChatAgent({ onItineraryGenerated }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                                lineNumber: 156,
+                                                lineNumber: 181,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ChatAgent.tsx",
-                                        lineNumber: 152,
+                                        lineNumber: 177,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 149,
+                                lineNumber: 174,
                                 columnNumber: 13
                             }, this)
                         }, message.id, false, {
                             fileName: "[project]/src/components/ChatAgent.tsx",
-                            lineNumber: 148,
+                            lineNumber: 173,
                             columnNumber: 11
                         }, this)),
                     loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -821,7 +846,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                     className: "h-4 w-4 animate-spin"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatAgent.tsx",
-                                    lineNumber: 165,
+                                    lineNumber: 190,
                                     columnNumber: 15
                                 }, this),
                                 " ",
@@ -829,12 +854,12 @@ function ChatAgent({ onItineraryGenerated }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ChatAgent.tsx",
-                            lineNumber: 164,
+                            lineNumber: 189,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 163,
+                        lineNumber: 188,
                         columnNumber: 11
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -849,31 +874,31 @@ function ChatAgent({ onItineraryGenerated }) {
                                     children: "✕"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatAgent.tsx",
-                                    lineNumber: 173,
+                                    lineNumber: 198,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/ChatAgent.tsx",
-                            lineNumber: 171,
+                            lineNumber: 196,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 170,
+                        lineNumber: 195,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         ref: bottomRef
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 177,
+                        lineNumber: 202,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ChatAgent.tsx",
-                lineNumber: 146,
+                lineNumber: 171,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -889,7 +914,7 @@ function ChatAgent({ onItineraryGenerated }) {
                         children: "Bạn muốn đi đâu?"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 181,
+                        lineNumber: 206,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -912,7 +937,7 @@ function ChatAgent({ onItineraryGenerated }) {
                                 className: "min-h-[96px] max-h-[150px] flex-1 resize-y bg-transparent px-2 py-1 text-sm leading-6 text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 183,
+                                lineNumber: 208,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -924,18 +949,18 @@ function ChatAgent({ onItineraryGenerated }) {
                                     className: "h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/ChatAgent.tsx",
-                                    lineNumber: 200,
+                                    lineNumber: 225,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ChatAgent.tsx",
-                                lineNumber: 199,
+                                lineNumber: 224,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 182,
+                        lineNumber: 207,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -943,19 +968,19 @@ function ChatAgent({ onItineraryGenerated }) {
                         children: "Enter để gửi · Shift + Enter để xuống dòng"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ChatAgent.tsx",
-                        lineNumber: 203,
+                        lineNumber: 228,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ChatAgent.tsx",
-                lineNumber: 180,
+                lineNumber: 205,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/ChatAgent.tsx",
-        lineNumber: 113,
+        lineNumber: 138,
         columnNumber: 5
     }, this);
 }
@@ -969,6 +994,7 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$shared$2f$lib$2f$app$2d$dynamic$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/shared/lib/app-dynamic.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.mjs [app-ssr] (ecmascript) <export default as Clock>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$map$2d$pin$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MapPin$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/map-pin.mjs [app-ssr] (ecmascript) <export default as MapPin>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$dollar$2d$sign$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__DollarSign$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/dollar-sign.mjs [app-ssr] (ecmascript) <export default as DollarSign>");
@@ -983,14 +1009,25 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$earth$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Globe2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/earth.mjs [app-ssr] (ecmascript) <export default as Globe2>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layers$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Layers$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/layers.mjs [app-ssr] (ecmascript) <export default as Layers>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api.ts [app-ssr] (ecmascript)");
+;
 'use client';
 ;
 ;
 ;
+const InteractiveTripMap = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$shared$2f$lib$2f$app$2d$dynamic$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"])(async ()=>{}, {
+    loadableGenerated: {
+        modules: [
+            "[project]/src/components/InteractiveTripMap.tsx [app-client] (ecmascript, next/dynamic entry)"
+        ]
+    },
+    ssr: false
+});
+;
 ;
 function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, totalCost, version = 1, days, currency = 'VND', onEditItem, onVersionSelect, availableVersions = [
     1
-] }) {
+], onSelectSuggestion }) {
+    const [viewMode, setViewMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('timeline');
     const getItemIcon = (type)=>{
         switch(type){
             case 'FLIGHT':
@@ -998,7 +1035,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     className: "w-4 h-4 text-sky-600"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 52,
+                    lineNumber: 59,
                     columnNumber: 16
                 }, this);
             case 'HOTEL_CHECKIN':
@@ -1008,7 +1045,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     className: "w-4 h-4 text-purple-600"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 56,
+                    lineNumber: 63,
                     columnNumber: 16
                 }, this);
             case 'LUNCH':
@@ -1019,7 +1056,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     className: "w-4 h-4 text-amber-600"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 61,
+                    lineNumber: 68,
                     columnNumber: 16
                 }, this);
             case 'SHOPPING':
@@ -1027,7 +1064,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     className: "w-4 h-4 text-pink-600"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 63,
+                    lineNumber: 70,
                     columnNumber: 16
                 }, this);
             default:
@@ -1035,7 +1072,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     className: "w-4 h-4 text-emerald-600"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 65,
+                    lineNumber: 72,
                     columnNumber: 16
                 }, this);
         }
@@ -1050,12 +1087,12 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                         className: "w-8 h-8 animate-pulse"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 73,
+                        lineNumber: 80,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 72,
+                    lineNumber: 79,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1063,7 +1100,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     children: "Chưa Có Lịch Trình Nào"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 75,
+                    lineNumber: 82,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1071,55 +1108,55 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                     children: "Hãy nhập yêu cầu điểm đến tại khung chat bên trái (như Hallstatt, Zermatt, Seoul, Sa Pa...) để AI Agent tự động phân tích và tạo lịch trình hoàn chỉnh!"
                 }, void 0, false, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 76,
+                    lineNumber: 83,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "flex flex-wrap gap-2 justify-center",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                            onClick: ()=>onEditItem?.({
-                                    suggestion: 'Hallstatt, Áo 3 ngày cho 2 người'
+                            onClick: ()=>onSelectSuggestion ? onSelectSuggestion('Lên lịch Hallstatt, Áo 3 ngày 2 đêm cho 2 người, ngân sách 1.500 EUR, thích hồ và ẩm thực địa phương.') : onEditItem?.({
+                                    suggestion: 'Hallstatt, Áo'
                                 }),
-                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200",
+                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm",
                             children: "Hallstatt, Áo"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                            lineNumber: 80,
+                            lineNumber: 87,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                            onClick: ()=>onEditItem?.({
-                                    suggestion: 'Seoul, Hàn Quốc 4 ngày cho 2 người'
+                            onClick: ()=>onSelectSuggestion ? onSelectSuggestion('Đi Seoul 4 ngày 3 đêm cho 2 người từ Hà Nội, ngân sách 35 triệu VND, thích ẩm thực và mua sắm.') : onEditItem?.({
+                                    suggestion: 'Seoul, Hàn Quốc'
                                 }),
-                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200",
+                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm",
                             children: "Seoul, Hàn Quốc"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                            lineNumber: 86,
+                            lineNumber: 93,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                            onClick: ()=>onEditItem?.({
-                                    suggestion: 'Đà Nẵng, Việt Nam 3 ngày cho gia đình'
+                            onClick: ()=>onSelectSuggestion ? onSelectSuggestion('Lập kế hoạch Đà Nẵng 3 ngày 2 đêm cho gia đình 4 người, ngân sách 18 triệu, thích biển và đồ ăn.') : onEditItem?.({
+                                    suggestion: 'Đà Nẵng, Việt Nam'
                                 }),
-                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200",
+                            className: "px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm",
                             children: "Đà Nẵng, Việt Nam"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                            lineNumber: 92,
+                            lineNumber: 99,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                    lineNumber: 79,
+                    lineNumber: 86,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-            lineNumber: 71,
+            lineNumber: 78,
             columnNumber: 7
         }, this);
     }
@@ -1143,20 +1180,20 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 className: "w-4 h-4 text-rose-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 113,
+                                                lineNumber: 120,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "ĐIỂM ĐẾN QUỐC TẾ TỐI ƯU"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 114,
+                                                lineNumber: 121,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 112,
+                                        lineNumber: 119,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1165,12 +1202,12 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                             children: destinationName || destinationAnalysis?.city_or_village || 'Lịch Trình Du Lịch'
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                            lineNumber: 117,
+                                            lineNumber: 124,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 116,
+                                        lineNumber: 123,
                                         columnNumber: 13
                                     }, this),
                                     destinationAnalysis?.country && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1182,7 +1219,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 children: destinationAnalysis.country
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 121,
+                                                lineNumber: 128,
                                                 columnNumber: 27
                                             }, this),
                                             destinationAnalysis.latitude && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1196,19 +1233,19 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 123,
+                                                lineNumber: 130,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 127,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 111,
+                                lineNumber: 118,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1222,7 +1259,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 children: "Tổng Chi Phí Ước Tính"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 134,
+                                                lineNumber: 141,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1233,13 +1270,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 135,
+                                                lineNumber: 142,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 133,
+                                        lineNumber: 140,
                                         columnNumber: 15
                                     }, this),
                                     tripId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1250,7 +1287,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 146,
+                                                lineNumber: 153,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1258,25 +1295,25 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 children: "Xuất PDF"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 147,
+                                                lineNumber: 154,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 142,
+                                        lineNumber: 149,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 131,
+                                lineNumber: 138,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 110,
+                        lineNumber: 117,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1290,7 +1327,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         children: "Sân bay quốc tế gần nhất:"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 157,
+                                        lineNumber: 164,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1305,13 +1342,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 158,
+                                        lineNumber: 165,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 156,
+                                lineNumber: 163,
                                 columnNumber: 13
                             }, this),
                             localCur && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1322,7 +1359,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         children: "Tiền tệ bản địa:"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 166,
+                                        lineNumber: 173,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1333,13 +1370,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 167,
+                                        lineNumber: 174,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 165,
+                                lineNumber: 172,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1350,7 +1387,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         children: "Phiên bản lịch trình:"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 181,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1360,7 +1397,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 className: "w-3.5 h-3.5"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 176,
+                                                lineNumber: 183,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1370,31 +1407,31 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 177,
+                                                lineNumber: 184,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 175,
+                                        lineNumber: 182,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 173,
+                                lineNumber: 180,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 154,
+                        lineNumber: 161,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                lineNumber: 109,
+                lineNumber: 116,
                 columnNumber: 7
             }, this),
             availableVersions && availableVersions.length > 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1407,7 +1444,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                 className: "w-4 h-4 text-sky-600"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 187,
+                                lineNumber: 194,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1415,13 +1452,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                 children: "Lịch sử điều chỉnh (Dynamic Re-plan):"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 188,
+                                lineNumber: 195,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 186,
+                        lineNumber: 193,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1437,21 +1474,103 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                 ]
                             }, v, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 192,
+                                lineNumber: 199,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 190,
+                        lineNumber: 197,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                lineNumber: 185,
+                lineNumber: 192,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-between bg-slate-100 p-1.5 rounded-xl border border-slate-200",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center gap-1.5",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setViewMode('timeline'),
+                                className: `px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition ${viewMode === 'timeline' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
+                                        className: "w-4 h-4 text-sky-600"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                        lineNumber: 227,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Lịch trình chi tiết (Timeline)"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                        lineNumber: 228,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                lineNumber: 219,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setViewMode('map'),
+                                className: `px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition ${viewMode === 'map' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$map$2d$pin$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MapPin$3e$__["MapPin"], {
+                                        className: "w-4 h-4 text-rose-500"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                        lineNumber: 238,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Bản đồ số tương tác (Interactive Map)"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                        lineNumber: 239,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                                lineNumber: 230,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                        lineNumber: 218,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "text-[11px] font-semibold text-slate-500 pr-2 hidden sm:inline",
+                        children: viewMode === 'map' ? 'Đang xem bản đồ GPS & lộ trình' : `${days.length} ngày khám phá`
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                        lineNumber: 243,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                lineNumber: 217,
+                columnNumber: 7
+            }, this),
+            viewMode === 'map' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(InteractiveTripMap, {
+                days: days,
+                destinationName: destinationName,
+                destinationAnalysis: destinationAnalysis
+            }, void 0, false, {
+                fileName: "[project]/src/components/ItineraryTimeline.tsx",
+                lineNumber: 249,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-6",
                 children: days.map((day, dIdx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden",
@@ -1467,7 +1586,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 children: day.day_number
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 215,
+                                                lineNumber: 261,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1480,13 +1599,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 218,
+                                                lineNumber: 264,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 260,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1497,13 +1616,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 220,
+                                        lineNumber: 266,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 213,
+                                lineNumber: 259,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1513,7 +1632,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                         className: "absolute left-9 top-8 bottom-8 w-0.5 bg-slate-200"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 227,
+                                        lineNumber: 273,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1531,7 +1650,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                         children: item.start_time
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                        lineNumber: 235,
+                                                                        lineNumber: 281,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1539,13 +1658,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                         children: item.end_time
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 282,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                lineNumber: 234,
+                                                                lineNumber: 280,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1553,7 +1672,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                 children: getItemIcon(item.item_type)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                lineNumber: 240,
+                                                                lineNumber: 286,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1572,7 +1691,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                 children: item.title
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 249,
+                                                                                                lineNumber: 295,
                                                                                                 columnNumber: 31
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1580,13 +1699,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                 children: item.item_type
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 250,
+                                                                                                lineNumber: 296,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                        lineNumber: 248,
+                                                                                        lineNumber: 294,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1599,20 +1718,20 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                         className: "w-3.5 h-3.5 text-slate-400"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                        lineNumber: 257,
+                                                                                                        lineNumber: 303,
                                                                                                         columnNumber: 33
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                                         children: item.location
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                        lineNumber: 258,
+                                                                                                        lineNumber: 304,
                                                                                                         columnNumber: 33
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 256,
+                                                                                                lineNumber: 302,
                                                                                                 columnNumber: 31
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1622,7 +1741,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                         className: "w-3.5 h-3.5 text-slate-400"
                                                                                                     }, void 0, false, {
                                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                        lineNumber: 261,
+                                                                                                        lineNumber: 307,
                                                                                                         columnNumber: 33
                                                                                                     }, this),
                                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1632,25 +1751,25 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                         ]
                                                                                                     }, void 0, true, {
                                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                        lineNumber: 262,
+                                                                                                        lineNumber: 308,
                                                                                                         columnNumber: 33
                                                                                                     }, this)
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 260,
+                                                                                                lineNumber: 306,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                        lineNumber: 255,
+                                                                                        lineNumber: 301,
                                                                                         columnNumber: 29
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                lineNumber: 247,
+                                                                                lineNumber: 293,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1663,7 +1782,7 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                 className: "w-3.5 h-3.5"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 269,
+                                                                                                lineNumber: 315,
                                                                                                 columnNumber: 31
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1673,13 +1792,13 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 270,
+                                                                                                lineNumber: 316,
                                                                                                 columnNumber: 31
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                        lineNumber: 268,
+                                                                                        lineNumber: 314,
                                                                                         columnNumber: 29
                                                                                     }, this),
                                                                                     onEditItem && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1690,32 +1809,32 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                                                 className: "w-3.5 h-3.5"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 278,
+                                                                                                lineNumber: 324,
                                                                                                 columnNumber: 33
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                                 children: "Đổi lịch / Re-plan"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                                lineNumber: 279,
+                                                                                                lineNumber: 325,
                                                                                                 columnNumber: 33
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                        lineNumber: 274,
+                                                                                        lineNumber: 320,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                                lineNumber: 267,
+                                                                                lineNumber: 313,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                        lineNumber: 246,
+                                                                        lineNumber: 292,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     item.notes && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1726,19 +1845,19 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                        lineNumber: 286,
+                                                                        lineNumber: 332,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                lineNumber: 245,
+                                                                lineNumber: 291,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                        lineNumber: 232,
+                                                        lineNumber: 278,
                                                         columnNumber: 21
                                                     }, this),
                                                     iIdx < day.items?.length - 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1750,59 +1869,59 @@ function ItineraryTimeline({ tripId, destinationAnalysis, destinationName, total
                                                                     className: "w-3 h-3 text-sky-500"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                    lineNumber: 297,
+                                                                    lineNumber: 343,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     children: "Khoảng đệm di chuyển & dự phòng: ~30 phút"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                                    lineNumber: 298,
+                                                                    lineNumber: 344,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                            lineNumber: 296,
+                                                            lineNumber: 342,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 341,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, iIdx, true, {
                                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                                lineNumber: 231,
+                                                lineNumber: 277,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                        lineNumber: 229,
+                                        lineNumber: 275,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                                lineNumber: 226,
+                                lineNumber: 272,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, dIdx, true, {
                         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                        lineNumber: 211,
+                        lineNumber: 257,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/src/components/ItineraryTimeline.tsx",
-                lineNumber: 209,
-                columnNumber: 7
+                lineNumber: 255,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/ItineraryTimeline.tsx",
-        lineNumber: 107,
+        lineNumber: 114,
         columnNumber: 5
     }, this);
 }
@@ -2076,6 +2195,13 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$compass$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Compass$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/compass.mjs [app-ssr] (ecmascript) <export default as Compass>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-check.mjs [app-ssr] (ecmascript) <export default as CheckCircle2>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$info$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Info$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/info.mjs [app-ssr] (ecmascript) <export default as Info>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/users.mjs [app-ssr] (ecmascript) <export default as Users>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$credit$2d$card$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CreditCard$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/credit-card.mjs [app-ssr] (ecmascript) <export default as CreditCard>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$qr$2d$code$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__QrCode$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/qr-code.mjs [app-ssr] (ecmascript) <export default as QrCode>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/plus.mjs [app-ssr] (ecmascript) <export default as Plus>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trash.mjs [app-ssr] (ecmascript) <export default as Trash2>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user-plus.mjs [app-ssr] (ecmascript) <export default as UserPlus>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$receipt$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Receipt$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/receipt.mjs [app-ssr] (ecmascript) <export default as Receipt>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api.ts [app-ssr] (ecmascript)");
 'use client';
 ;
@@ -2682,6 +2808,151 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
         // Ignore
         }
     };
+    // --- COLLABORATION & EXPENSES STATE ---
+    const [collabSubTab, setCollabSubTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('members');
+    const [members, setMembers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [expenses, setExpenses] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [debtSettlements, setDebtSettlements] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [totalSpent, setTotalSpent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
+    const [collabLoading, setCollabLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [collabMsg, setCollabMsg] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    // Invite Form
+    const [inviteEmail, setInviteEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [inviteName, setInviteName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [inviteRole, setInviteRole] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('EDITOR');
+    // Expense Form
+    const [expPayer, setExpPayer] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [expTitle, setExpTitle] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [expAmount, setExpAmount] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [expCategory, setExpCategory] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('food');
+    // Checkout Modal State
+    const [isCheckoutOpen, setIsCheckoutOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [checkoutBooking, setCheckoutBooking] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [paymentMethod, setPaymentMethod] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('VNPAY');
+    const [checkoutLoading, setCheckoutLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [checkoutResult, setCheckoutResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const loadCollabData = async ()=>{
+        if (!tripId) return;
+        setCollabLoading(true);
+        try {
+            const [memRes, expRes] = await Promise.all([
+                __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].getMembers(tripId),
+                __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].getExpenses(tripId)
+            ]);
+            setMembers(memRes.members || []);
+            setExpenses(expRes.expenses || []);
+            setDebtSettlements(expRes.debt_settlements || []);
+            setTotalSpent(expRes.total_spent || 0);
+            if (!expPayer && memRes.members?.length > 0) {
+                setExpPayer(memRes.members[0].full_name || 'Trưởng đoàn');
+            }
+        } catch  {
+        // Fallback
+        } finally{
+            setCollabLoading(false);
+        }
+    };
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (activeTab === 'collab') {
+            void loadCollabData();
+        }
+    }, [
+        activeTab,
+        tripId
+    ]);
+    const handleInviteMember = async (e)=>{
+        e.preventDefault();
+        if (!inviteEmail || !tripId) return;
+        setCollabLoading(true);
+        try {
+            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].inviteMember(tripId, {
+                email: inviteEmail,
+                full_name: inviteName || undefined,
+                role: inviteRole
+            });
+            setCollabMsg(res.message);
+            setInviteEmail('');
+            setInviteName('');
+            await loadCollabData();
+            setTimeout(()=>setCollabMsg(''), 3000);
+        } catch (err) {
+            setCollabMsg(err?.response?.data?.detail || 'Không thể mời thành viên lúc này.');
+            setTimeout(()=>setCollabMsg(''), 4000);
+        } finally{
+            setCollabLoading(false);
+        }
+    };
+    const handleRemoveMember = async (memberId)=>{
+        if (!tripId || memberId === 0) return;
+        setCollabLoading(true);
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].removeMember(tripId, memberId);
+            await loadCollabData();
+        } catch  {
+        // Ignore
+        } finally{
+            setCollabLoading(false);
+        }
+    };
+    const handleAddExpense = async (e)=>{
+        e.preventDefault();
+        if (!expTitle || !expAmount || !tripId) return;
+        const numAmt = parseFloat(expAmount.replace(/[^0-9.]/g, ''));
+        if (!numAmt || numAmt <= 0) return;
+        setCollabLoading(true);
+        try {
+            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].createExpense(tripId, {
+                payer_name: expPayer || members[0]?.full_name || 'Trưởng đoàn',
+                title: expTitle,
+                category: expCategory,
+                amount: numAmt,
+                currency: 'VND'
+            });
+            setCollabMsg(res.message);
+            setExpTitle('');
+            setExpAmount('');
+            await loadCollabData();
+            setTimeout(()=>setCollabMsg(''), 3000);
+        } catch (err) {
+            setCollabMsg(err?.response?.data?.detail || 'Không thể thêm chi tiêu.');
+            setTimeout(()=>setCollabMsg(''), 4000);
+        } finally{
+            setCollabLoading(false);
+        }
+    };
+    const handleDeleteExpense = async (expenseId)=>{
+        if (!tripId) return;
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["tripsAPI"].deleteExpense(tripId, expenseId);
+            await loadCollabData();
+        } catch  {
+        // Ignore
+        }
+    };
+    const triggerCheckout = (booking)=>{
+        setCheckoutBooking(booking || null);
+        setCheckoutResult(null);
+        setIsCheckoutOpen(true);
+    };
+    const executeCheckout = async ()=>{
+        setCheckoutLoading(true);
+        try {
+            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["bookingsAPI"].checkout({
+                booking_id: checkoutBooking?.id,
+                trip_id: tripId,
+                payment_method: paymentMethod,
+                card_number: '9704228812345678',
+                card_holder: 'TRAVELER DEMO'
+            });
+            setCheckoutResult(res);
+            await loadBookings();
+            onBookingUpdated?.();
+        } catch  {
+        // Handle error
+        } finally{
+            setCheckoutLoading(false);
+        }
+    };
     // --- IN-TRIP SUPPORT STATE ---
     const [supportQuestion, setSupportQuestion] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [supportAnswer, setSupportAnswer] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
@@ -2717,6 +2988,11 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
             icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2d$check$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarCheck$3e$__["CalendarCheck"]
         },
         {
+            id: 'collab',
+            label: 'Nhóm & Chi tiêu',
+            icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"]
+        },
+        {
             id: 'support',
             label: 'Hỗ trợ',
             icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$life$2d$buoy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LifeBuoy$3e$__["LifeBuoy"]
@@ -2739,12 +3015,12 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         className: "h-4 w-4 text-amber-300"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 357,
+                                        lineNumber: 514,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                    lineNumber: 356,
+                                    lineNumber: 513,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2754,7 +3030,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                             children: "Tiện Ích Hành Trình"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                            lineNumber: 360,
+                                            lineNumber: 517,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2762,24 +3038,24 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                             children: "Tỷ giá thực tế · Dịch thuật · Đặt chỗ · Hỗ trợ"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                            lineNumber: 361,
+                                            lineNumber: 518,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                    lineNumber: 359,
+                                    lineNumber: 516,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                            lineNumber: 355,
+                            lineNumber: 512,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 354,
+                        lineNumber: 511,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2792,25 +3068,25 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         className: "mx-auto mb-1 h-3.5 w-3.5"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 378,
+                                        lineNumber: 535,
                                         columnNumber: 15
                                     }, this),
                                     label
                                 ]
                             }, id, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 369,
+                                lineNumber: 526,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 367,
+                        lineNumber: 524,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                lineNumber: 353,
+                lineNumber: 510,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2830,7 +3106,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Quy đổi tỷ giá trực tiếp"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 392,
+                                                lineNumber: 549,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2838,13 +3114,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Live Market"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 393,
+                                                lineNumber: 550,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 391,
+                                        lineNumber: 548,
                                         columnNumber: 15
                                     }, this),
                                     currencyLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2854,7 +3130,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "mx-auto h-7 w-7 animate-spin text-white"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 397,
+                                                lineNumber: 554,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2862,13 +3138,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Đang truy vấn tỷ giá thời gian thực..."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 398,
+                                                lineNumber: 555,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 396,
+                                        lineNumber: 553,
                                         columnNumber: 17
                                     }, this) : conversion ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                                         children: [
@@ -2877,7 +3153,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: conversion.formatted
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 402,
+                                                lineNumber: 559,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2892,26 +3168,26 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 403,
+                                                lineNumber: 560,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 401,
+                                        lineNumber: 558,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "mt-2 text-sm text-emerald-100",
                                         children: "Nhập số tiền để quy đổi"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 408,
+                                        lineNumber: 565,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 390,
+                                lineNumber: 547,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2923,7 +3199,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Số tiền cần đổi"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 413,
+                                        lineNumber: 570,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2935,7 +3211,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         placeholder: "100"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 414,
+                                        lineNumber: 571,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2958,18 +3234,18 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 ]
                                                             }, code, true, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 432,
+                                                                lineNumber: 589,
                                                                 columnNumber: 23
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 426,
+                                                        lineNumber: 583,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 424,
+                                                lineNumber: 581,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2984,12 +3260,12 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                     className: "h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 443,
+                                                    lineNumber: 600,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 437,
+                                                lineNumber: 594,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3009,24 +3285,24 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 ]
                                                             }, code, true, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 454,
+                                                                lineNumber: 611,
                                                                 columnNumber: 23
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 448,
+                                                        lineNumber: 605,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 446,
+                                                lineNumber: 603,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 423,
+                                        lineNumber: 580,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3038,20 +3314,20 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "h-4 w-4 animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 465,
+                                                lineNumber: 622,
                                                 columnNumber: 36
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 465,
+                                                lineNumber: 622,
                                                 columnNumber: 88
                                             }, this),
                                             "Cập nhật tỷ giá mới nhất"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 460,
+                                        lineNumber: 617,
                                         columnNumber: 15
                                     }, this),
                                     currencyError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3060,7 +3336,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: currencyError
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 469,
+                                        lineNumber: 626,
                                         columnNumber: 33
                                     }, this),
                                     conversion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3072,7 +3348,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Nguồn:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 473,
+                                                        lineNumber: 630,
                                                         columnNumber: 22
                                                     }, this),
                                                     " ",
@@ -3080,7 +3356,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 473,
+                                                lineNumber: 630,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3091,25 +3367,25 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 474,
+                                                lineNumber: 631,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 472,
+                                        lineNumber: 629,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 412,
+                                lineNumber: 569,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 389,
+                        lineNumber: 546,
                         columnNumber: 11
                     }, this),
                     activeTab === 'translation' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3124,7 +3400,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Dịch sang ngôn ngữ"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 485,
+                                        lineNumber: 642,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -3137,12 +3413,12 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: name
                                             }, code, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 493,
+                                                lineNumber: 650,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 486,
+                                        lineNumber: 643,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3151,7 +3427,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Câu tiếng Việt"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 497,
+                                        lineNumber: 654,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -3163,7 +3439,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         className: "field-control mt-1.5 resize-none text-sm"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 498,
+                                        lineNumber: 655,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3175,20 +3451,20 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "h-4 w-4 animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 512,
+                                                lineNumber: 669,
                                                 columnNumber: 39
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$languages$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Languages$3e$__["Languages"], {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 512,
+                                                lineNumber: 669,
                                                 columnNumber: 91
                                             }, this),
                                             "Dịch ngay"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 507,
+                                        lineNumber: 664,
                                         columnNumber: 15
                                     }, this),
                                     translation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3204,7 +3480,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 children: "Bản dịch bản địa"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 520,
+                                                                lineNumber: 677,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3212,13 +3488,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 children: translation.translated_text
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 521,
+                                                                lineNumber: 678,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 519,
+                                                        lineNumber: 676,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3229,24 +3505,24 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                             className: "h-4 w-4 text-emerald-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 528,
+                                                            lineNumber: 685,
                                                             columnNumber: 37
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clipboard$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clipboard$3e$__["Clipboard"], {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 528,
+                                                            lineNumber: 685,
                                                             columnNumber: 86
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 523,
+                                                        lineNumber: 680,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 518,
+                                                lineNumber: 675,
                                                 columnNumber: 19
                                             }, this),
                                             copyNotice && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3254,13 +3530,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Đã sao chép vào bộ nhớ tạm!"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 531,
+                                                lineNumber: 688,
                                                 columnNumber: 34
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 517,
+                                        lineNumber: 674,
                                         columnNumber: 17
                                     }, this),
                                     translationError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3269,13 +3545,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: translationError
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 535,
+                                        lineNumber: 692,
                                         columnNumber: 36
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 484,
+                                lineNumber: 641,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3286,7 +3562,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Mẫu câu du lịch thông dụng"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 539,
+                                        lineNumber: 696,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3297,24 +3573,24 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: phrase
                                             }, phrase, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 542,
+                                                lineNumber: 699,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 540,
+                                        lineNumber: 697,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 538,
+                                lineNumber: 695,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 483,
+                        lineNumber: 640,
                         columnNumber: 11
                     }, this),
                     activeTab === 'bookings' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3329,7 +3605,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                             className: "h-4 w-4 text-sky-600 shrink-0 mt-0.5"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                            lineNumber: 561,
+                                            lineNumber: 718,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3339,7 +3615,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                     children: "Quản lý Đặt Chỗ (Human-in-the-Loop)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 563,
+                                                    lineNumber: 720,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3350,31 +3626,31 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                             children: "CHỜ DUYỆT (PENDING)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 566,
+                                                            lineNumber: 723,
                                                             columnNumber: 54
                                                         }, this),
                                                         " để bạn toàn quyền xác nhận hoặc hủy theo ý muốn."
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 564,
+                                                    lineNumber: 721,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                            lineNumber: 562,
+                                            lineNumber: 719,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                    lineNumber: 560,
+                                    lineNumber: 717,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 559,
+                                lineNumber: 716,
                                 columnNumber: 13
                             }, this),
                             bookingActionMsg && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3384,14 +3660,14 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         className: "h-4 w-4 text-emerald-600 shrink-0"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 575,
+                                        lineNumber: 732,
                                         columnNumber: 17
                                     }, this),
                                     bookingActionMsg
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 574,
+                                lineNumber: 731,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3407,7 +3683,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Dịch Vụ Đã Đề Xuất"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 584,
+                                                        lineNumber: 741,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3415,13 +3691,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Kiểm tra và duyệt các dịch vụ cho lịch trình"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 585,
+                                                        lineNumber: 742,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 583,
+                                                lineNumber: 740,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3435,18 +3711,18 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                     className: `h-3.5 w-3.5 ${bookingsLoading ? 'animate-spin' : ''}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 592,
+                                                    lineNumber: 749,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 587,
+                                                lineNumber: 744,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 582,
+                                        lineNumber: 739,
                                         columnNumber: 15
                                     }, this),
                                     bookingsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3456,7 +3732,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "mx-auto h-6 w-6 animate-spin text-sky-600"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 598,
+                                                lineNumber: 755,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3464,13 +3740,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Đang tải danh sách đặt chỗ..."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 599,
+                                                lineNumber: 756,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 597,
+                                        lineNumber: 754,
                                         columnNumber: 17
                                     }, this) : bookings.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "rounded-xl border border-dashed border-slate-300 bg-white p-5 text-center text-xs text-slate-500",
@@ -3479,7 +3755,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Chưa có yêu cầu đặt chỗ nào trong hệ thống."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 603,
+                                                lineNumber: 760,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3487,13 +3763,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Hãy chọn một trong các dịch vụ gợi ý bên dưới để đặt ngay!"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 604,
+                                                lineNumber: 761,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 602,
+                                        lineNumber: 759,
                                         columnNumber: 17
                                     }, this) : bookings.map((booking)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
                                             className: "rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-300",
@@ -3510,24 +3786,24 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 616,
+                                                                        lineNumber: 773,
                                                                         columnNumber: 60
                                                                     }, this) : booking.category === 'hotel' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$hotel$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Hotel$3e$__["Hotel"], {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 617,
+                                                                        lineNumber: 774,
                                                                         columnNumber: 59
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$compass$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Compass$3e$__["Compass"], {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 618,
+                                                                        lineNumber: 775,
                                                                         columnNumber: 28
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                    lineNumber: 611,
+                                                                    lineNumber: 768,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3537,7 +3813,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                             children: booking.service_name
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                            lineNumber: 621,
+                                                                            lineNumber: 778,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3548,7 +3824,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                            lineNumber: 622,
+                                                                            lineNumber: 779,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3559,19 +3835,19 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                            lineNumber: 625,
+                                                                            lineNumber: 782,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                    lineNumber: 620,
+                                                                    lineNumber: 777,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 610,
+                                                            lineNumber: 767,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3579,13 +3855,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                             children: booking.status === 'CONFIRMED' ? 'ĐÃ DUYỆT' : booking.status === 'CANCELLED' ? 'ĐÃ HỦY' : 'CHỜ DUYỆT'
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 629,
+                                                            lineNumber: 786,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 609,
+                                                    lineNumber: 766,
                                                     columnNumber: 21
                                                 }, this),
                                                 booking.status === 'PENDING' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3597,7 +3873,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                             children: "✓ Xác Nhận Đặt Chỗ"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 642,
+                                                            lineNumber: 799,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3606,25 +3882,25 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                             children: "✕ Hủy"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                            lineNumber: 648,
+                                                            lineNumber: 805,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                    lineNumber: 641,
+                                                    lineNumber: 798,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, booking.id, true, {
                                             fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                            lineNumber: 608,
+                                            lineNumber: 765,
                                             columnNumber: 19
                                         }, this))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 581,
+                                lineNumber: 738,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3637,7 +3913,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Đề Xuất Dịch Vụ Theo Điểm Đến"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 664,
+                                                lineNumber: 821,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3649,13 +3925,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 665,
+                                                lineNumber: 822,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 663,
+                                        lineNumber: 820,
                                         columnNumber: 15
                                     }, this),
                                     recLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3665,7 +3941,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "mx-auto h-5 w-5 animate-spin text-slate-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 670,
+                                                lineNumber: 827,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3673,13 +3949,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "Đang tìm các lựa chọn khách sạn & tour..."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 671,
+                                                lineNumber: 828,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 669,
+                                        lineNumber: 826,
                                         columnNumber: 17
                                     }, this) : recommendations ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "space-y-2",
@@ -3694,7 +3970,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 className: "h-4 w-4 text-amber-600 shrink-0"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 679,
+                                                                lineNumber: 836,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3704,7 +3980,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         children: recommendations.recommended_hotels[0].name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 681,
+                                                                        lineNumber: 838,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3717,19 +3993,19 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 682,
+                                                                        lineNumber: 839,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 680,
+                                                                lineNumber: 837,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 678,
+                                                        lineNumber: 835,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3738,13 +4014,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Đặt Ngay"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 687,
+                                                        lineNumber: 844,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 677,
+                                                lineNumber: 834,
                                                 columnNumber: 21
                                             }, this),
                                             recommendations.recommended_flights?.[0] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3757,7 +4033,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 className: "h-4 w-4 text-sky-600 shrink-0"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 700,
+                                                                lineNumber: 857,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3767,7 +4043,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         children: recommendations.recommended_flights[0].airline
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 702,
+                                                                        lineNumber: 859,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3780,19 +4056,19 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 703,
+                                                                        lineNumber: 860,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 701,
+                                                                lineNumber: 858,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 699,
+                                                        lineNumber: 856,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3801,13 +4077,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Đặt Vé"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 708,
+                                                        lineNumber: 865,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 698,
+                                                lineNumber: 855,
                                                 columnNumber: 21
                                             }, this),
                                             recommendations.recommended_activities?.[0] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3820,7 +4096,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                 className: "h-4 w-4 text-violet-600 shrink-0"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 721,
+                                                                lineNumber: 878,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3830,7 +4106,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         children: recommendations.recommended_activities[0].name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 723,
+                                                                        lineNumber: 880,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3843,19 +4119,19 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                        lineNumber: 724,
+                                                                        lineNumber: 881,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                                lineNumber: 722,
+                                                                lineNumber: 879,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 720,
+                                                        lineNumber: 877,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3864,31 +4140,787 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                         children: "Đặt Tour"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                        lineNumber: 729,
+                                                        lineNumber: 886,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 719,
+                                                lineNumber: 876,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 674,
+                                        lineNumber: 831,
                                         columnNumber: 17
                                     }, this) : null
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 662,
+                                lineNumber: 819,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 557,
+                        lineNumber: 714,
+                        columnNumber: 11
+                    }, this),
+                    activeTab === 'collab' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "space-y-4 animate-in fade-in duration-300",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "rounded-2xl border border-indigo-200 bg-indigo-50/80 p-3.5 text-slate-800 shadow-sm",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-start gap-2.5",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"], {
+                                            className: "h-4 w-4 text-indigo-600 shrink-0 mt-0.5"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 907,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "text-xs font-bold text-indigo-900",
+                                                    children: "Du Lịch Theo Nhóm & Chia Tiền Tự Động (Splitwise)"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 909,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "mt-1 text-[11px] leading-relaxed text-slate-600",
+                                                    children: "Mời bạn bè và gia đình cùng lên tour. Mọi khoản chi tiêu chung sẽ được thuật toán tối ưu hóa tự động để biết chính xác ai cần chuyển tiền cho ai với số giao dịch ít nhất."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 910,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 908,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 906,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                lineNumber: 905,
+                                columnNumber: 13
+                            }, this),
+                            collabMsg && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs font-bold text-emerald-800 flex items-center gap-1.5 animate-in fade-in",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
+                                        className: "h-4 w-4 text-emerald-600 shrink-0"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 920,
+                                        columnNumber: 17
+                                    }, this),
+                                    collabMsg
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                lineNumber: 919,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex rounded-xl bg-slate-100 p-1 border border-slate-200",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setCollabSubTab('members'),
+                                        className: `flex-1 rounded-lg py-1.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${collabSubTab === 'members' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"], {
+                                                className: "h-3.5 w-3.5"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 935,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: [
+                                                    "Thành Viên Nhóm (",
+                                                    members.length,
+                                                    ")"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 936,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 927,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setCollabSubTab('expenses'),
+                                        className: `flex-1 rounded-lg py-1.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${collabSubTab === 'expenses' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$receipt$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Receipt$3e$__["Receipt"], {
+                                                className: "h-3.5 w-3.5"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 946,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: [
+                                                    "Sổ Chi Tiêu & Quyết Toán (",
+                                                    expenses.length,
+                                                    ")"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 947,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 938,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                lineNumber: 926,
+                                columnNumber: 13
+                            }, this),
+                            collabSubTab === 'members' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "space-y-3.5",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                        onSubmit: handleInviteMember,
+                                        className: "rounded-xl border border-slate-200 bg-white p-3 space-y-2.5 shadow-sm",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                className: "text-xs font-bold text-slate-800 flex items-center gap-1.5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__["UserPlus"], {
+                                                        className: "h-4 w-4 text-sky-600"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 957,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: "Mời Người Đồng Hành"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 958,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 956,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "grid grid-cols-1 sm:grid-cols-2 gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                        type: "email",
+                                                        required: true,
+                                                        placeholder: "Email người bạn (vd: hoa@gmail.com)",
+                                                        value: inviteEmail,
+                                                        onChange: (e)=>setInviteEmail(e.target.value),
+                                                        className: "rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 961,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                        type: "text",
+                                                        placeholder: "Tên hoặc biệt danh (tùy chọn)",
+                                                        value: inviteName,
+                                                        onChange: (e)=>setInviteName(e.target.value),
+                                                        className: "rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 969,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 960,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between gap-2 pt-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                        value: inviteRole,
+                                                        onChange: (e)=>setInviteRole(e.target.value),
+                                                        className: "rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-700 font-semibold bg-white",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                value: "EDITOR",
+                                                                children: "Quyền: Biên tập viên (Sửa tour & thêm chi tiêu)"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 983,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                value: "VIEWER",
+                                                                children: "Quyền: Người xem (Chỉ xem lịch trình)"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 984,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 978,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        type: "submit",
+                                                        disabled: collabLoading,
+                                                        className: "rounded-lg bg-sky-600 hover:bg-sky-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition disabled:opacity-50",
+                                                        children: "Gửi Lời Mời"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 986,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 977,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 955,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h5", {
+                                                className: "text-[11px] font-bold uppercase tracking-wider text-slate-500",
+                                                children: "Danh Sách Thành Viên"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 998,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "space-y-1.5",
+                                                children: members.map((m)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex items-center gap-2.5",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-black",
+                                                                        children: (m.full_name || m.email)[0].toUpperCase()
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1003,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                className: "text-xs font-bold text-slate-800 flex items-center gap-1.5",
+                                                                                children: [
+                                                                                    m.full_name || m.email,
+                                                                                    m.is_owner && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                        className: "bg-amber-100 text-amber-800 text-[10px] font-extrabold px-1.5 py-0.2 rounded-md",
+                                                                                        children: "Trưởng đoàn"
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                                        lineNumber: 1010,
+                                                                                        columnNumber: 33
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                                lineNumber: 1007,
+                                                                                columnNumber: 29
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                className: "text-[11px] text-slate-400 font-mono",
+                                                                                children: m.email
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                                lineNumber: 1015,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1006,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1002,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex items-center gap-2",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600",
+                                                                        children: m.role === 'OWNER' ? 'Chủ sở hữu' : m.role === 'EDITOR' ? 'Biên tập' : 'Xem'
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1020,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    !m.is_owner && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        onClick: ()=>void handleRemoveMember(m.id),
+                                                                        className: "p-1 text-slate-400 hover:text-rose-600 rounded transition",
+                                                                        title: "Xóa khỏi nhóm",
+                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__["Trash2"], {
+                                                                            className: "w-3.5 h-3.5"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                            lineNumber: 1029,
+                                                                            columnNumber: 31
+                                                                        }, this)
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1024,
+                                                                        columnNumber: 29
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1019,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, m.id, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1001,
+                                                        columnNumber: 23
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 999,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 997,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                lineNumber: 953,
+                                columnNumber: 15
+                            }, this),
+                            collabSubTab === 'expenses' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "space-y-3.5",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "rounded-xl bg-gradient-to-r from-slate-900 to-indigo-950 p-3.5 text-white shadow-md",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between mb-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-[10px] font-bold uppercase tracking-wider text-slate-400",
+                                                        children: "Tổng Chi Tiêu Cả Nhóm"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1046,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-base font-black text-emerald-400",
+                                                        children: [
+                                                            totalSpent.toLocaleString(),
+                                                            " VND"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1047,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1045,
+                                                columnNumber: 19
+                                            }, this),
+                                            debtSettlements.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "mt-2.5 pt-2 border-t border-white/10 space-y-1.5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-[11px] font-bold text-amber-300 block",
+                                                        children: "💡 Quyết toán nợ tối ưu (Ai trả ai):"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1052,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    debtSettlements.map((s, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center justify-between text-xs bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/10",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "font-semibold text-slate-200",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-amber-200 font-bold",
+                                                                            children: s.from
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                            lineNumber: 1056,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        " → trả cho ",
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-emerald-300 font-bold",
+                                                                            children: s.to
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                            lineNumber: 1056,
+                                                                            columnNumber: 103
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                    lineNumber: 1055,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "font-mono font-bold text-emerald-400",
+                                                                    children: [
+                                                                        s.amount.toLocaleString(),
+                                                                        " VND"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                    lineNumber: 1058,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, idx, true, {
+                                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                            lineNumber: 1054,
+                                                            columnNumber: 25
+                                                        }, this))
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1051,
+                                                columnNumber: 21
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-2 pt-2 border-t border-white/10 text-[11px] text-slate-400",
+                                                children: "Mọi người hiện đang cân bằng chi tiêu, không ai còn dư nợ!"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1063,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 1044,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                        onSubmit: handleAddExpense,
+                                        className: "rounded-xl border border-slate-200 bg-white p-3 space-y-2 shadow-sm",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                className: "text-xs font-bold text-slate-800 flex items-center gap-1.5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                        className: "h-4 w-4 text-emerald-600"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1072,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: "Ghi Nhận Khoản Chi Mới"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1073,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1071,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "grid grid-cols-2 gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                                className: "text-[10px] font-bold text-slate-500 block mb-0.5",
+                                                                children: "Người trả tiền:"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1078,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                                value: expPayer,
+                                                                onChange: (e)=>setExpPayer(e.target.value),
+                                                                className: "w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-800 font-medium bg-white",
+                                                                children: members.map((m)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: m.full_name || m.email,
+                                                                        children: m.full_name || m.email
+                                                                    }, m.id, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1085,
+                                                                        columnNumber: 27
+                                                                    }, this))
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1079,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1077,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                                className: "text-[10px] font-bold text-slate-500 block mb-0.5",
+                                                                children: "Hạng mục:"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1093,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                                value: expCategory,
+                                                                onChange: (e)=>setExpCategory(e.target.value),
+                                                                className: "w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-800 font-medium bg-white",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: "food",
+                                                                        children: "Ẩm thực / Ăn uống"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1099,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: "transit",
+                                                                        children: "Xe cộ / Di chuyển"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1100,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: "hotel",
+                                                                        children: "Khách sạn / Phòng nghỉ"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1101,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: "ticket",
+                                                                        children: "Vé tham quan / Tour"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1102,
+                                                                        columnNumber: 25
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                                        value: "other",
+                                                                        children: "Khoản chi khác"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                        lineNumber: 1103,
+                                                                        columnNumber: 25
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1094,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1092,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1076,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "grid grid-cols-2 gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                        type: "text",
+                                                        required: true,
+                                                        placeholder: "Nội dung (vd: Lẩu gà lá é)",
+                                                        value: expTitle,
+                                                        onChange: (e)=>setExpTitle(e.target.value),
+                                                        className: "rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1109,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                        type: "number",
+                                                        required: true,
+                                                        placeholder: "Số tiền (VND)",
+                                                        value: expAmount,
+                                                        onChange: (e)=>setExpAmount(e.target.value),
+                                                        className: "rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1117,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1108,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "submit",
+                                                disabled: collabLoading,
+                                                className: "w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 py-1.5 text-xs font-bold text-white shadow-sm transition disabled:opacity-50",
+                                                children: "+ Thêm Vào Sổ Chi Tiêu (Chia đều cả nhóm)"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1127,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 1070,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-1.5 max-h-[220px] overflow-y-auto pr-1",
+                                        children: expenses.map((exp)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm text-xs",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "font-bold text-slate-800",
+                                                                children: exp.title
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1141,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                className: "text-[10px] text-slate-400",
+                                                                children: [
+                                                                    exp.payer_name,
+                                                                    " đã thanh toán · Chia cho ",
+                                                                    exp.split_members?.length || members.length,
+                                                                    " người"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1142,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1140,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center gap-2",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "font-extrabold text-slate-900 font-mono",
+                                                                children: [
+                                                                    Number(exp.amount).toLocaleString(),
+                                                                    " VND"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1147,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>void handleDeleteExpense(exp.id),
+                                                                className: "text-slate-400 hover:text-rose-600 p-1 rounded transition",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__["Trash2"], {
+                                                                    className: "w-3.5 h-3.5"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                    lineNumber: 1154,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                                lineNumber: 1150,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                        lineNumber: 1146,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, exp.id, true, {
+                                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                lineNumber: 1139,
+                                                columnNumber: 21
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 1137,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                lineNumber: 1042,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                        lineNumber: 903,
                         columnNumber: 11
                     }, this),
                     activeTab === 'support' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3901,7 +4933,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         className: "h-5 w-5 text-violet-200"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 747,
+                                        lineNumber: 1169,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3909,7 +4941,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Trợ Lý Thông Minh Trong Hành Trình"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 748,
+                                        lineNumber: 1170,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3917,13 +4949,13 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Hỏi quán ăn ngon bổ rẻ, dự báo thời tiết, cách đi tàu điện ngầm hoặc gợi ý điểm đến theo thời gian thực."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 749,
+                                        lineNumber: 1171,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 746,
+                                lineNumber: 1168,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3934,7 +4966,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Câu hỏi mẫu:"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 756,
+                                        lineNumber: 1178,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3946,7 +4978,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "🍲 Gợi ý quán ăn ngon bổ rẻ tại Seoul"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 758,
+                                                lineNumber: 1180,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3955,7 +4987,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "🌤️ Dự báo thời tiết & trang phục phù hợp"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 764,
+                                                lineNumber: 1186,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3964,19 +4996,19 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 children: "🚇 Hướng dẫn đi tàu điện ngầm & thẻ giao thông"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 770,
+                                                lineNumber: 1192,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 757,
+                                        lineNumber: 1179,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 755,
+                                lineNumber: 1177,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -3992,7 +5024,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         children: "Đặt câu hỏi cho AI Agent"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 786,
+                                        lineNumber: 1208,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -4004,7 +5036,7 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                         placeholder: "Ví dụ: Tôi hiện đang ở Seoul, hãy đề xuất cho tôi các quán ăn ngon bổ rẻ xung quanh Seoul này..."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 787,
+                                        lineNumber: 1209,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4016,26 +5048,26 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                                 className: "h-4 w-4 animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 800,
+                                                lineNumber: 1222,
                                                 columnNumber: 35
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                                lineNumber: 800,
+                                                lineNumber: 1222,
                                                 columnNumber: 87
                                             }, this),
                                             "Gửi câu hỏi"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                        lineNumber: 795,
+                                        lineNumber: 1217,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 779,
+                                lineNumber: 1201,
                                 columnNumber: 13
                             }, this),
                             supportAnswer && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4043,25 +5075,401 @@ function TravelUtilitiesHub({ tripId = 1, destinationCurrency, destinationCountr
                                 children: supportAnswer
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                                lineNumber: 806,
+                                lineNumber: 1228,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                        lineNumber: 745,
+                        lineNumber: 1167,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-                lineNumber: 386,
+                lineNumber: 543,
                 columnNumber: 7
+            }, this),
+            isCheckoutOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-in fade-in",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl border border-slate-200 text-slate-800",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center justify-between border-b border-slate-100 pb-3",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center gap-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$credit$2d$card$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CreditCard$3e$__["CreditCard"], {
+                                            className: "w-5 h-5 text-sky-600"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1242,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                            className: "text-sm font-bold text-slate-900",
+                                            children: "Thanh Toán & Xuất Vé Điện Tử"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1243,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1241,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>setIsCheckoutOpen(false),
+                                    className: "text-slate-400 hover:text-slate-600 font-bold p-1",
+                                    children: "✕"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1245,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                            lineNumber: 1240,
+                            columnNumber: 13
+                        }, this),
+                        !checkoutResult ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "mt-4 space-y-4 text-xs",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-slate-500 block mb-1 font-semibold",
+                                            children: "Dịch vụ cần thanh toán:"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1256,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "p-3 rounded-xl bg-slate-50 border border-slate-200",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "font-bold text-slate-900",
+                                                    children: checkoutBooking ? checkoutBooking.service_name : 'Toàn bộ dịch vụ đang chờ duyệt của tour'
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1258,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "mt-1 font-extrabold text-emerald-600 text-sm",
+                                                    children: [
+                                                        checkoutBooking ? Number(checkoutBooking.price).toLocaleString() : 'Ước tính theo tour',
+                                                        " VND"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1261,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1257,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1255,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-slate-500 block mb-1.5 font-semibold",
+                                            children: "Chọn cổng thanh toán:"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1268,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "grid grid-cols-2 gap-2",
+                                            children: [
+                                                'VNPAY',
+                                                'MOMO',
+                                                'STRIPE',
+                                                'CARD'
+                                            ].map((method)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>setPaymentMethod(method),
+                                                    className: `p-2.5 rounded-xl border font-bold text-center transition ${paymentMethod === method ? 'bg-sky-50 border-sky-400 text-sky-800 ring-2 ring-sky-300/30' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`,
+                                                    children: method === 'VNPAY' ? 'VNPay QR' : method === 'MOMO' ? 'Ví MoMo' : method === 'STRIPE' ? 'Stripe Pay' : 'Thẻ Visa/Master'
+                                                }, method, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1271,
+                                                    columnNumber: 23
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1269,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1267,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 flex items-start gap-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$qr$2d$code$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__QrCode$3e$__["QrCode"], {
+                                            className: "w-4 h-4 text-amber-600 shrink-0 mt-0.5"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1288,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-[11px] leading-relaxed",
+                                            children: [
+                                                "Hệ thống sẽ cấp ",
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                    children: "Mã Vé / Voucher điện tử"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1290,
+                                                    columnNumber: 37
+                                                }, this),
+                                                " kèm mã QR chuẩn VietQR ngay lập tức sau khi nhấn xác nhận."
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1289,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1287,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center gap-2 pt-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>setIsCheckoutOpen(false),
+                                            className: "flex-1 rounded-xl border border-slate-200 py-2.5 font-bold text-slate-600 hover:bg-slate-50",
+                                            children: "Đóng"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1295,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>void executeCheckout(),
+                                            disabled: checkoutLoading,
+                                            className: "flex-1 rounded-xl bg-sky-600 hover:bg-sky-700 py-2.5 font-bold text-white shadow-md transition disabled:opacity-50",
+                                            children: checkoutLoading ? 'Đang xử lý...' : 'Xác Nhận Thanh Toán'
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1301,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1294,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                            lineNumber: 1254,
+                            columnNumber: 15
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "mt-4 space-y-4 text-center",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                                        className: "w-6 h-6 stroke-[3]"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                        lineNumber: 1313,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1312,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                            className: "text-sm font-black text-slate-900",
+                                            children: "Thanh Toán Thành Công!"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1316,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-slate-500 mt-0.5",
+                                            children: checkoutResult.message
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1317,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1315,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-3 bg-slate-50 rounded-xl border border-slate-200 text-left space-y-1.5 text-xs font-mono",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex justify-between",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-slate-500",
+                                                    children: "Mã giao dịch:"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1322,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "font-bold text-slate-800",
+                                                    children: checkoutResult.transaction_id
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1323,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1321,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex justify-between",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-slate-500",
+                                                    children: "Mã Voucher:"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1326,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "font-bold text-emerald-600",
+                                                    children: checkoutResult.voucher_code
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1327,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1325,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex justify-between",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-slate-500",
+                                                    children: "Cổng thanh toán:"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1330,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "font-bold text-slate-800",
+                                                    children: checkoutResult.payment_method
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                                    lineNumber: 1331,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1329,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1320,
+                                    columnNumber: 17
+                                }, this),
+                                checkoutResult.qr_code_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-3 bg-white rounded-xl border border-slate-200 inline-block shadow-sm",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                            src: checkoutResult.qr_code_url,
+                                            alt: "Payment QR Voucher",
+                                            className: "w-36 h-36 mx-auto object-contain"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1337,
+                                            columnNumber: 21
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-[10px] text-slate-400 font-bold block mt-1",
+                                            children: "Mã QR Vé Điện Tử"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                            lineNumber: 1342,
+                                            columnNumber: 21
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1336,
+                                    columnNumber: 19
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>setIsCheckoutOpen(false),
+                                    className: "w-full rounded-xl bg-sky-600 hover:bg-sky-700 py-2.5 text-xs font-bold text-white shadow",
+                                    children: "Hoàn Tất"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                                    lineNumber: 1346,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                            lineNumber: 1311,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                    lineNumber: 1239,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
+                lineNumber: 1238,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TravelUtilitiesHub.tsx",
-        lineNumber: 351,
+        lineNumber: 508,
         columnNumber: 5
     }, this);
 }
@@ -4216,17 +5624,42 @@ const tripsAPI = {
             day,
             item_id: itemId,
             new_index: newIndex
-        }).then((r)=>r.data)
+        }).then((r)=>r.data),
+    getMembers: (tripId)=>api.get(`/trips/${tripId}/members`).then((r)=>r.data),
+    inviteMember: (tripId, data)=>api.post(`/trips/${tripId}/members`, data).then((r)=>r.data),
+    removeMember: (tripId, memberId)=>api.delete(`/trips/${tripId}/members/${memberId}`).then((r)=>r.data),
+    getExpenses: (tripId)=>api.get(`/trips/${tripId}/expenses`).then((r)=>r.data),
+    createExpense: (tripId, data)=>api.post(`/trips/${tripId}/expenses`, data).then((r)=>r.data),
+    deleteExpense: (tripId, expenseId)=>api.delete(`/trips/${tripId}/expenses/${expenseId}`).then((r)=>r.data)
 };
 const searchAPI = {
-    flights: (req)=>api.post('/flights/search', req).then((r)=>r.data),
-    hotels: (req)=>api.post('/hotels/search', req).then((r)=>r.data),
+    flights: (req)=>api.post('/flights/search', req).then((r)=>{
+            const data = r.data || {};
+            const list = data.flights || data.offers || [];
+            return {
+                ...data,
+                offers: list,
+                flights: list,
+                count: data.count || list.length
+            };
+        }),
+    hotels: (req)=>api.post('/hotels/search', req).then((r)=>{
+            const data = r.data || {};
+            const list = data.hotels || data.accommodations || [];
+            return {
+                ...data,
+                accommodations: list,
+                hotels: list,
+                count: data.count || list.length
+            };
+        }),
     places: (req)=>api.post('/places/search', req).then((r)=>r.data)
 };
 const currencyAPI = {
     convert: (req)=>api.post('/currency/convert', req).then((r)=>r.data),
-    rates: (base = 'VND')=>api.get('/currency/rate', {
+    rates: (base = 'VND')=>api.get('/currency/rates', {
             params: {
+                base,
                 base_currency: base
             }
         }).then((r)=>r.data)
@@ -4253,7 +5686,8 @@ const bookingsAPI = {
                 origin,
                 trip_id
             }
-        }).then((r)=>r.data)
+        }).then((r)=>r.data),
+    checkout: (data)=>api.post('/bookings/checkout', data).then((r)=>r.data)
 };
 const planTripWithAI = async (prompt, language, currency, signal)=>{
     const res = await api.post('/agent/plan-trip', {

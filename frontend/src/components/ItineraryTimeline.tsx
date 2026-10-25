@@ -1,6 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const InteractiveTripMap = dynamic(() => import('@/components/InteractiveTripMap'), { ssr: false });
 import {
   Clock,
   MapPin,
@@ -36,6 +39,7 @@ interface ItineraryTimelineProps {
 }
 
 export default function ItineraryTimeline({
+
   tripId,
   destinationAnalysis,
   destinationName,
@@ -48,6 +52,7 @@ export default function ItineraryTimeline({
   availableVersions = [1],
   onSelectSuggestion
 }: ItineraryTimelineProps) {
+  const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
   const getItemIcon = (type: string) => {
     switch (type) {
       case 'FLIGHT':
@@ -207,8 +212,47 @@ export default function ItineraryTimeline({
         </div>
       )}
 
-      {/* Day by Day Cards */}
-      <div className="space-y-6">
+
+      {/* View Mode Toggle: Timeline vs Interactive Map */}
+      <div className="flex items-center justify-between bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setViewMode('timeline')}
+            className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition ${
+              viewMode === 'timeline'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+            }`}
+          >
+            <Clock className="w-4 h-4 text-sky-600" />
+            <span>Lịch trình chi tiết (Timeline)</span>
+          </button>
+          <button
+            onClick={() => setViewMode('map')}
+            className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition ${
+              viewMode === 'map'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+            }`}
+          >
+            <MapPin className="w-4 h-4 text-rose-500" />
+            <span>Bản đồ số tương tác (Interactive Map)</span>
+          </button>
+        </div>
+
+        <span className="text-[11px] font-semibold text-slate-500 pr-2 hidden sm:inline">
+          {viewMode === 'map' ? 'Đang xem bản đồ GPS & lộ trình' : `${days.length} ngày khám phá`}
+        </span>
+      </div>
+
+      {viewMode === 'map' ? (
+        <InteractiveTripMap
+          days={days}
+          destinationName={destinationName}
+          destinationAnalysis={destinationAnalysis}
+        />
+      ) : (
+        <div className="space-y-6">
         {days.map((day, dIdx) => (
           <div key={dIdx} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             {/* Day Header */}
@@ -308,6 +352,7 @@ export default function ItineraryTimeline({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

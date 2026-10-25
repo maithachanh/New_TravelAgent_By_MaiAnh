@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional, List, Dict, Any
 from app.core.database import get_db
-from app.models.models import Trip, ItineraryDay, ItineraryItem, TripStatus, Booking, BookingStatus, TripVersion
+from app.models.models import Trip, ItineraryDay, ItineraryItem, TripStatus, Booking, BookingStatus, TripVersion, User
+from app.api.auth import get_current_user_optional
 from app.schemas.schemas import AgentPlanRequest, ReplanRequest, InTripSupportRequest
 from app.agent.graph import travel_agent_app
 from app.services.replan_service import replan_service
@@ -18,6 +19,7 @@ router = APIRouter(prefix="/agent", tags=["AI Travel Agent Core & Multi-Agent Pl
 @router.post("/plan-trip")
 def plan_trip_with_ai(
     req: AgentPlanRequest,
+    current_user: User = Depends(get_current_user_optional),
     db: Session = Depends(get_db)
 ):
     """
@@ -55,7 +57,7 @@ def plan_trip_with_ai(
             end_date_str = (base_date + timedelta(days=duration - 1)).strftime("%Y-%m-%d")
 
         trip = Trip(
-            user_id=1,
+            user_id=current_user.id if current_user else 1,
             title=f"Tour {full_dest} ({duration}N) do AI Lập",
             origin=origin,
             destination=full_dest,
@@ -119,7 +121,7 @@ def plan_trip_with_ai(
 
         # 1. Flight proposal (PENDING)
         db.add(Booking(
-            user_id=1,
+            user_id=current_user.id if current_user else 1,
             trip_id=trip.id,
             service_name=f"Vé bay khứ hồi: {origin} -> {full_dest} ({fl_airline} {fl_num})",
             category="flight",
@@ -131,7 +133,7 @@ def plan_trip_with_ai(
 
         # 2. Hotel proposal (PENDING)
         db.add(Booking(
-            user_id=1,
+            user_id=current_user.id if current_user else 1,
             trip_id=trip.id,
             service_name=f"Phòng nghỉ: {ht_name} ({max(1, duration - 1)} đêm)",
             category="hotel",
@@ -143,7 +145,7 @@ def plan_trip_with_ai(
 
         # 3. Activity proposal (PENDING)
         db.add(Booking(
-            user_id=1,
+            user_id=current_user.id if current_user else 1,
             trip_id=trip.id,
             service_name=f"Tour trải nghiệm: {act_title}",
             category="activity",
@@ -182,6 +184,7 @@ def plan_trip_with_ai(
         "total_cost": b_validation.get("total_cost", 0.0),
         "trip_id": trip_id,
         "version": 1,
+        "critique_feedback": result.get("critique_feedback", {}),
         "itinerary": final_itinerary
     }
 
