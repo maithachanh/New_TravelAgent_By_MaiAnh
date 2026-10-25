@@ -20,7 +20,17 @@ const suggestions = [
   { label: 'Đà Nẵng', text: 'Lập kế hoạch Đà Nẵng 3 ngày 2 đêm cho gia đình 4 người, ngân sách 18 triệu, thích biển và đồ ăn.' },
 ];
 
-export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerated?: (data: any) => void }) {
+interface ChatAgentProps {
+  onItineraryGenerated?: (data: any) => void;
+  externalPrompt?: string;
+  onPromptConsumed?: () => void;
+}
+
+export default function ChatAgent({
+  onItineraryGenerated,
+  externalPrompt,
+  onPromptConsumed
+}: ChatAgentProps) {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState('Đang phân tích yêu cầu của bạn…');
@@ -42,6 +52,14 @@ export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerat
   }, [messages, loading]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  useEffect(() => {
+    if (externalPrompt && externalPrompt.trim()) {
+      setPrompt(externalPrompt);
+      void handleSend(externalPrompt);
+      onPromptConsumed?.();
+    }
+  }, [externalPrompt]);
 
   const appendMessage = (message: Message) => setMessages((previous) => [...previous, message]);
 
@@ -66,11 +84,14 @@ export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerat
     }, 1200);
 
     try {
-      // Check if this is a support question (not a new trip request)
-      const isSupportQuestion = /^(thời tiết|ăn|nhà hàng|đi lại|ga tàu|bus|taxi|tiền tệ|tỷ giá|dịch thuật|cứu hộ|khẩn cấp)/i.test(text);
+      // Check if this is a support inquiry (not a request to plan a completely new tour)
+      const hasNewTripIntent = /(lập tour|lên tour|lên lịch|tạo tour|kế hoạch mới|đi du lịch mới|chuyến đi mới|tour mới|hành trình mới|lên kế hoạch)/i.test(text);
+      const isSupportInquiry = /(thời tiết|trời mưa|nhiệt độ|ăn gì|quán ăn|nhà hàng|đặc sản|đi lại|xe buýt|bus|tàu|taxi|sân bay|tiền|tỷ giá|đổi tiền|dịch|tiếng|an toàn|khẩn cấp|bệnh viện|thuốc|cho mình hỏi|bạn ơi|ở đâu|chỉ đường|review|gợi ý thêm|mấy giờ)/i.test(text);
 
-      if (isSupportQuestion && currentTripData) {
-        // For support questions, don't regenerate itinerary
+      const isSupportQuestion = currentTripData?.trip_id && isSupportInquiry && !hasNewTripIntent;
+
+      if (isSupportQuestion) {
+        // For support questions, answer directly without destroying active itinerary
         const supportResponse = await askInTripSupport(currentTripData.trip_id, text);
         appendMessage({
           id: `ai-${requestId}`,
@@ -78,7 +99,7 @@ export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerat
           text: supportResponse.agent_response || 'Câu trả lời của trợ lý hành trình.',
         });
       } else {
-        // For new trip requests, regenerate itinerary
+        // For new trip requests, run trip planner
         const result = await planTripWithAI(text, 'vi', 'VND', controller.signal);
         if (requestIdRef.current !== requestId) return;
 
@@ -88,8 +109,12 @@ export default function ChatAgent({ onItineraryGenerated }: { onItineraryGenerat
           text: result.agent_response || 'Mình đã hoàn tất đề xuất cho chuyến đi của bạn.',
           data: result,
         });
-        setCurrentTripData(result);
-        onItineraryGenerated?.(result);
+
+        // Only update active itinerary if itinerary is valid and non-empty
+        if (result?.itinerary && Array.isArray(result.itinerary) && result.itinerary.length > 0) {
+          setCurrentTripData(result);
+          onItineraryGenerated?.(result);
+        }
       }
     } catch (error: any) {
       if (error?.code === 'ERR_CANCELED' || requestIdRef.current !== requestId) return;

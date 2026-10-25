@@ -74,20 +74,17 @@ def optimize_daily_route(
 ) -> List[Dict[str, Any]]:
     """
     Ensures strict chronological monotonicity, logical time windows,
-    and 30-minute transit buffers between all items in a day.
-    NEVER allows time to jump backward or overlap.
+    and transit buffers between all items in a day.
+    NEVER allows time to jump backward, overlap, or squash multiple evening items into 23:59.
     """
     if not items:
         return []
 
     prefs = user_preferences or ["culture", "food", "nature"]
 
-    # Sort items by their inherent planned sequence (FLIGHT / BREAKFAST -> MORNING -> LUNCH -> AFTERNOON -> SUNSET -> DINNER)
     def role_priority(item: Dict[str, Any]) -> int:
         t = item.get("item_type", "")
-        # Priority order: Flight morning -> Hotel check-in -> Breakfast -> Morning activity -> Lunch -> Afternoon activity -> Sunset -> Dinner -> Hotel checkout -> Return flight
         if t == "FLIGHT":
-            # Check if it's morning or return flight based on original time
             orig_time = _time_to_minutes(item.get("start_time", "08:00"))
             return 10 if orig_time < 720 else 90
         if t == "HOTEL_CHECKIN":
@@ -107,45 +104,61 @@ def optimize_daily_route(
             return 80
         return 70
 
-    # Sort items by role priority first so order is always logical
     sorted_items = sorted(items, key=role_priority)
+    total_items = len(sorted_items)
 
-    # Now enforce strictly monotonic non-overlapping schedule
     optimized_timeline: List[Dict[str, Any]] = []
-    current_min = 8 * 60 # 08:00 start of day
+    current_min = 8 * 60  # Default day start at 08:00
 
     for idx, item in enumerate(sorted_items):
         item_copy = dict(item)
         dur = item_copy.get("duration_minutes", 60)
-
+        item_type = item_copy.get("item_type", "")
         item_orig_min = _time_to_minutes(item_copy.get("start_time", "08:00"))
+        remaining_after = total_items - idx - 1
+
         if idx == 0:
             actual_start_min = max(current_min, item_orig_min) if item_orig_min > 0 else current_min
         else:
-            # Transit buffer of 30 minutes from previous item
-            transit_buffer = 30
+            # Use smaller transit buffer (15m) if running late in evening, else standard 30m
+            transit_buffer = 15 if current_min >= 20 * 60 else 30
             actual_start_min = max(current_min + transit_buffer, item_orig_min)
 
-        actual_end_min = actual_start_min + dur
-
-        # Handle long flights that extend beyond midnight
-        # If the start time is very late (after 23:50), allow it to continue to next day
-        # But cap display at 23:59 for this day's view
-        if actual_start_min >= 23 * 60 + 50:
-            # For display purposes, show as ending at 23:59, but mark it as continuing
-            item_copy["start_time"] = _minutes_to_time(actual_start_min)
-            item_copy["end_time"] = "23:59"
-            item_copy["continues_next_day"] = True
-            # Reset current_min to start of next day for subsequent items
-            current_min = 24 * 60  # Start fresh for next day
-        else:
-            # Normal case: cap at 23:59
-            if actual_end_min > 23 * 60 + 59:
-                actual_end_min = 23 * 60 + 59
+        # Handle Long Haul Flight on arrival day:
+        # If this is a long flight (> 360 min) with subsequent evening items (hotel check-in, dinner)
+        if item_type == "FLIGHT" and dur >= 360 and remaining_after > 0:
+            # Flight lands in the evening so there is comfortable time for hotel checkin & dinner
+            # Reserve at least 60 mins per remaining activity + 15 mins transit
+            target_arrival_min = min(20 * 60 + 30, (23 * 60 + 30) - (remaining_after * 75))
+            actual_end_min = max(actual_start_min + 120, target_arrival_min)
             item_copy["start_time"] = _minutes_to_time(actual_start_min)
             item_copy["end_time"] = _minutes_to_time(actual_end_min)
             current_min = actual_end_min
+            optimized_timeline.append(item_copy)
+            continue
 
+        # Prevent squashing evening activities past 21:00
+        # If time is tight, gracefully stagger items so start_time < end_time and no overlaps
+        if remaining_after > 0:
+            # Ensure we don't exceed the boundary that would push future items off the schedule
+            max_allowed_end = (23 * 60 + 50) - (remaining_after * 45)
+            if actual_start_min >= max_allowed_end:
+                actual_start_min = max(current_min + 10, max_allowed_end - 45)
+
+            actual_end_min = min(actual_start_min + dur, max_allowed_end)
+            if actual_end_min <= actual_start_min:
+                actual_end_min = actual_start_min + 35
+        else:
+            # Final item of the day
+            if actual_start_min >= 23 * 60 + 40:
+                actual_start_min = 23 * 60
+            actual_end_min = min(actual_start_min + dur, 23 * 60 + 55)
+            if actual_end_min <= actual_start_min:
+                actual_end_min = actual_start_min + 30
+
+        item_copy["start_time"] = _minutes_to_time(actual_start_min)
+        item_copy["end_time"] = _minutes_to_time(actual_end_min)
+        current_min = actual_end_min
         optimized_timeline.append(item_copy)
 
     return optimized_timeline

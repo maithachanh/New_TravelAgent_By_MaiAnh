@@ -66,7 +66,8 @@ export default function ServicesScreen() {
     setFlightLoading(true);
     try {
       const data = await searchFlightsMobile(flightOrigin, flightDest, parseInt(flightTravelers) || 1);
-      setFlights(data.flights || data || []);
+      const flightList = Array.isArray(data) ? data : (data?.flights || data?.offers || []);
+      setFlights(flightList);
     } catch (err: any) {
       Alert.alert('Lỗi', err.message || 'Không tìm thấy chuyến bay.');
     } finally {
@@ -82,7 +83,8 @@ export default function ServicesScreen() {
     setHotelLoading(true);
     try {
       const data = await searchHotelsMobile(hotelCity, budgetTier);
-      setHotels(data.hotels || data || []);
+      const hotelList = Array.isArray(data) ? data : (data?.hotels || data?.accommodations || []);
+      setHotels(hotelList);
     } catch (err: any) {
       Alert.alert('Lỗi', err.message || 'Không tìm thấy khách sạn.');
     } finally {
@@ -231,7 +233,7 @@ export default function ServicesScreen() {
               </View>
 
               {/* Flight Results */}
-              {flights.map((fl: any, i: number) => (
+              {(Array.isArray(flights) ? flights : []).map((fl: any, i: number) => (
                 <View key={i} style={styles.resultItem}>
                   <View style={styles.resultHeader}>
                     <Text style={styles.airlineName}>✈️ {fl.airline || 'Hãng bay'}</Text>
@@ -306,7 +308,7 @@ export default function ServicesScreen() {
               </View>
 
               {/* Hotel Results */}
-              {hotels.map((ht: any, i: number) => (
+              {(Array.isArray(hotels) ? hotels : []).map((ht: any, i: number) => (
                 <View key={i} style={styles.resultItem}>
                   <View style={styles.resultHeader}>
                     <Text style={styles.airlineName}>🏨 {ht.name || 'Khách sạn'}</Text>

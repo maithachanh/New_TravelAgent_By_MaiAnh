@@ -42,10 +42,15 @@ def build_upgraded_travel_agent_graph():
     workflow.set_entry_point("user_request_analyzer")
 
     # Clean deterministic DAG pipeline:
+    # If destination is present, proceed to full planning with sensible defaults;
+    # only divert to clarification if destination is genuinely missing.
     workflow.add_edge("user_request_analyzer", "requirement_extractor")
     workflow.add_conditional_edges(
         "requirement_extractor",
-        lambda state: "clarification" if state.get("extracted_requirements", {}).get("missing_fields") else "destination_analyzer",
+        lambda state: "clarification" if (
+            state.get("extracted_requirements", {}).get("missing_fields") and
+            not state.get("extracted_requirements", {}).get("destination")
+        ) else "destination_analyzer",
         {
             "clarification": "clarification",
             "destination_analyzer": "destination_analyzer",

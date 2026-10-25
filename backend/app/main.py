@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.core.config import settings
-from app.core.database import engine, Base
+from app.core.database import engine, Base, init_db_defaults
 from app.api import (
     auth,
     destinations,
@@ -17,11 +17,8 @@ from app.api import (
     translation,
     websocket
 )
-
-from app.core.database import engine, Base, init_db_defaults
 import time
 from collections import defaultdict
-from starlette.responses import JSONResponse
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -110,12 +107,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include All Domain Routers
+# Include All Domain Routers (mounted under standard and /ai prefixes for universal compatibility)
 app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(agent.router, prefix=settings.API_V1_STR)
 app.include_router(agent.router, prefix=f"{settings.API_V1_STR}/ai")
 app.include_router(trips.router, prefix=settings.API_V1_STR)
+app.include_router(trips.router, prefix=f"{settings.API_V1_STR}/ai")
 app.include_router(bookings.router, prefix=settings.API_V1_STR)
+app.include_router(bookings.router, prefix=f"{settings.API_V1_STR}/ai")
 app.include_router(flights.router, prefix=settings.API_V1_STR)
 app.include_router(hotels.router, prefix=settings.API_V1_STR)
 app.include_router(places.router, prefix=settings.API_V1_STR)

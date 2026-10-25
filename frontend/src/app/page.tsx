@@ -13,12 +13,18 @@ export default function Home() {
   const [isReplanOpen, setIsReplanOpen] = useState(false);
   const [versions, setVersions] = useState<Record<number, any[]>>({});
   const [currentVersion, setCurrentVersion] = useState(1);
+  const [selectedSuggestion, setSelectedSuggestion] = useState<string>('');
 
   const handleItineraryGenerated = (data: any) => {
-    setTripData(data);
-    const version = data.version || 1;
-    setCurrentVersion(version);
-    if (data.itinerary?.length) setVersions({ [version]: data.itinerary });
+    if (!data) return;
+    if (data.itinerary && Array.isArray(data.itinerary) && data.itinerary.length > 0) {
+      setTripData(data);
+      const version = data.version || 1;
+      setCurrentVersion(version);
+      setVersions({ [version]: data.itinerary });
+    } else if (!tripData) {
+      setTripData(data);
+    }
   };
 
   const handleReplanSuccess = (itinerary: any[], version?: number, totalCost?: number) => {
@@ -61,8 +67,29 @@ export default function Home() {
       </section>
 
       <section className="grid items-start gap-5 xl:grid-cols-12">
-        <div className="xl:col-span-4 animate-in fade-in slide-in-from-bottom-4 duration-500"><ChatAgent onItineraryGenerated={handleItineraryGenerated} /></div>
-        <div className="xl:col-span-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100"><div className="panel-surface min-h-[720px] p-4 sm:p-5"><ItineraryTimeline tripId={tripData?.trip_id} destinationAnalysis={tripData?.destination_analysis} destinationName={tripData?.destination} totalCost={tripData?.total_cost} version={currentVersion} availableVersions={Object.keys(versions).map(Number)} onVersionSelect={selectVersion} days={tripData?.itinerary || []} onEditItem={(item: any) => { setSelectedItem(item); setIsReplanOpen(true); }} /></div></div>
+        <div className="xl:col-span-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <ChatAgent
+            onItineraryGenerated={handleItineraryGenerated}
+            externalPrompt={selectedSuggestion}
+            onPromptConsumed={() => setSelectedSuggestion('')}
+          />
+        </div>
+        <div className="xl:col-span-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+          <div className="panel-surface min-h-[720px] p-4 sm:p-5">
+            <ItineraryTimeline
+              tripId={tripData?.trip_id}
+              destinationAnalysis={tripData?.destination_analysis}
+              destinationName={tripData?.destination}
+              totalCost={tripData?.total_cost}
+              version={currentVersion}
+              availableVersions={Object.keys(versions).map(Number)}
+              onVersionSelect={selectVersion}
+              days={tripData?.itinerary || []}
+              onSelectSuggestion={(s: string) => setSelectedSuggestion(s)}
+              onEditItem={(item: any) => { setSelectedItem(item); setIsReplanOpen(true); }}
+            />
+          </div>
+        </div>
         <div className="xl:col-span-3 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <TravelUtilitiesHub
             tripId={tripData?.trip_id || 1}
@@ -70,11 +97,19 @@ export default function Home() {
             destinationCountry={tripData?.destination_analysis?.country}
             destination={tripData?.destination || 'Tokyo, Nhật Bản'}
             origin={tripData?.origin || 'TP. Hồ Chí Minh, Việt Nam'}
+            startDate={tripData?.start_date || tripData?.itinerary?.[0]?.date}
+            endDate={tripData?.end_date || tripData?.itinerary?.[tripData?.itinerary?.length - 1]?.date}
           />
         </div>
       </section>
 
-      <ReplanModal isOpen={isReplanOpen} onClose={() => setIsReplanOpen(false)} tripId={tripData?.trip_id || 1} item={selectedItem} onReplanSuccess={handleReplanSuccess} />
+      <ReplanModal
+        isOpen={isReplanOpen}
+        onClose={() => setIsReplanOpen(false)}
+        tripId={tripData?.trip_id || 1}
+        item={selectedItem}
+        onReplanSuccess={handleReplanSuccess}
+      />
     </div>
   );
 }

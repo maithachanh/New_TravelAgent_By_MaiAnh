@@ -345,11 +345,19 @@ export const tripsAPI = {
 // Search APIs
 // ---------------------------------------------------------------------------
 export const searchAPI = {
-  flights: (req: FlightSearchRequest): Promise<{ offers: FlightOption[]; count: number }> =>
-    api.post('/flights/search', req).then((r) => r.data),
+  flights: (req: FlightSearchRequest): Promise<{ offers: FlightOption[]; flights: FlightOption[]; count: number }> =>
+    api.post('/flights/search', req).then((r) => {
+      const data = r.data || {};
+      const list = data.flights || data.offers || [];
+      return { ...data, offers: list, flights: list, count: data.count || list.length };
+    }),
 
-  hotels: (req: HotelSearchRequest): Promise<{ accommodations: HotelOption[]; count: number }> =>
-    api.post('/hotels/search', req).then((r) => r.data),
+  hotels: (req: HotelSearchRequest): Promise<{ accommodations: HotelOption[]; hotels: HotelOption[]; count: number }> =>
+    api.post('/hotels/search', req).then((r) => {
+      const data = r.data || {};
+      const list = data.hotels || data.accommodations || [];
+      return { ...data, accommodations: list, hotels: list, count: data.count || list.length };
+    }),
 
   places: (req: { query: string; city: string; country?: string; type?: string }): Promise<{ places: any[] }> =>
     api.post('/places/search', req).then((r) => r.data),
@@ -363,7 +371,7 @@ export const currencyAPI = {
     api.post('/currency/convert', req).then((r) => r.data),
 
   rates: (base: string = 'VND'): Promise<{ base: string; rates: Record<string, number>; last_updated: string }> =>
-    api.get('/currency/rate', { params: { base_currency: base } }).then((r) => r.data),
+    api.get('/currency/rates', { params: { base, base_currency: base } }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------

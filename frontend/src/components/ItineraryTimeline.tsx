@@ -32,6 +32,7 @@ interface ItineraryTimelineProps {
   onEditItem?: (item: any) => void;
   onVersionSelect?: (ver: number) => void;
   availableVersions?: number[];
+  onSelectSuggestion?: (suggestion: string) => void;
 }
 
 export default function ItineraryTimeline({
@@ -44,7 +45,8 @@ export default function ItineraryTimeline({
   currency = 'VND',
   onEditItem,
   onVersionSelect,
-  availableVersions = [1]
+  availableVersions = [1],
+  onSelectSuggestion
 }: ItineraryTimelineProps) {
   const getItemIcon = (type: string) => {
     switch (type) {
@@ -78,20 +80,20 @@ export default function ItineraryTimeline({
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
           <button
-            onClick={() => onEditItem?.({ suggestion: 'Hallstatt, Áo 3 ngày cho 2 người' })}
-            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+            onClick={() => onSelectSuggestion ? onSelectSuggestion('Lên lịch Hallstatt, Áo 3 ngày 2 đêm cho 2 người, ngân sách 1.500 EUR, thích hồ và ẩm thực địa phương.') : onEditItem?.({ suggestion: 'Hallstatt, Áo' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm"
           >
             Hallstatt, Áo
           </button>
           <button
-            onClick={() => onEditItem?.({ suggestion: 'Seoul, Hàn Quốc 4 ngày cho 2 người' })}
-            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+            onClick={() => onSelectSuggestion ? onSelectSuggestion('Đi Seoul 4 ngày 3 đêm cho 2 người từ Hà Nội, ngân sách 35 triệu VND, thích ẩm thực và mua sắm.') : onEditItem?.({ suggestion: 'Seoul, Hàn Quốc' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm"
           >
             Seoul, Hàn Quốc
           </button>
           <button
-            onClick={() => onEditItem?.({ suggestion: 'Đà Nẵng, Việt Nam 3 ngày cho gia đình' })}
-            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+            onClick={() => onSelectSuggestion ? onSelectSuggestion('Lập kế hoạch Đà Nẵng 3 ngày 2 đêm cho gia đình 4 người, ngân sách 18 triệu, thích biển và đồ ăn.') : onEditItem?.({ suggestion: 'Đà Nẵng, Việt Nam' })}
+            className="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-sm font-medium transition-colors border border-sky-200 shadow-sm"
           >
             Đà Nẵng, Việt Nam
           </button>

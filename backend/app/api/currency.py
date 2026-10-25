@@ -24,20 +24,48 @@ def _currency_error(error: ValueError) -> HTTPException:
 @router.get("/rates")
 def get_all_exchange_rates(
     base: Optional[str] = Query(None, alias="base"),
-    base_currency: Optional[str] = Query(None, alias="base_currency")
+    base_currency: Optional[str] = Query(None, alias="base_currency"),
+    from_currency: Optional[str] = Query(None, alias="from_currency"),
+    from_alias: Optional[str] = Query(None, alias="from"),
+    to_currency: Optional[str] = Query(None, alias="to_currency"),
+    to_alias: Optional[str] = Query(None, alias="to")
 ):
+    from_c = from_currency or from_alias
+    to_c = to_currency or to_alias
+    if from_c and to_c:
+        try:
+            details = currency_service.get_rate_details(from_c, to_c)
+        except ValueError as error:
+            raise _currency_error(error) from error
+        return {
+            "from": from_c.upper(),
+            "to": to_c.upper(),
+            "from_currency": from_c.upper(),
+            "to_currency": to_c.upper(),
+            "rate": details["rate"],
+            "source": details["source"],
+            "last_updated": details["last_updated"],
+        }
     target_base = base or base_currency or "USD"
     return currency_service.get_all_rates(target_base)
 
 @router.get("/rate")
 def get_exchange_rate(
+    base: Optional[str] = Query(None, alias="base"),
+    base_currency: Optional[str] = Query(None, alias="base_currency"),
     from_currency: Optional[str] = None,
     from_alias: Optional[str] = Query(None, alias="from"),
     to_currency: Optional[str] = None,
     to_alias: Optional[str] = Query(None, alias="to")
 ):
-    from_c = from_currency or from_alias or "USD"
-    to_c = to_currency or to_alias or "VND"
+    from_c = from_currency or from_alias
+    to_c = to_currency or to_alias
+    if (base or base_currency) and not to_c:
+        target_base = base or base_currency or "USD"
+        return currency_service.get_all_rates(target_base)
+
+    from_c = from_c or base or "USD"
+    to_c = to_c or "VND"
     try:
         details = currency_service.get_rate_details(from_c, to_c)
     except ValueError as error:

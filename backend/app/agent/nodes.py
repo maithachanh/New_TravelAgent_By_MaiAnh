@@ -30,299 +30,31 @@ def user_request_analyzer_node(state: TravelAgentState) -> Dict[str, Any]:
 # 2. Requirement Extractor Node
 def requirement_extractor_node(state: TravelAgentState) -> Dict[str, Any]:
     prompt = state.get("user_prompt", "")
-    # Hybrid extraction: uses OpenAI LLM when available, falls back to deterministic parser
     extracted = llm_service.extract_travel_requirements(prompt)
-    return {"extracted_requirements": extracted}
-    prompt_lower = prompt.lower()
-
-    # Tier 1: Check Specific Cities, Villages, and Landmarks (Ordered by specificity)
-    SPECIFIC_SPOTS = [
-        # Japan
-        (["kyoto"], "Kyoto, Nhật Bản"),
-        (["osaka"], "Osaka, Nhật Bản"),
-        (["tokyo"], "Tokyo, Nhật Bản"),
-        (["shirakawa", "shirakawago"], "Shirakawa-go, Gifu, Nhật Bản"),
-        (["nara"], "Nara, Nhật Bản"),
-        (["sapporo", "hokkaido"], "Sapporo, Hokkaido, Nhật Bản"),
-        (["fukuoka"], "Fukuoka, Nhật Bản"),
-        (["hiroshima"], "Hiroshima, Nhật Bản"),
-        # South Korea
-        (["busan"], "Busan, Hàn Quốc"),
-        (["jeju"], "Đảo Jeju, Hàn Quốc"),
-        (["incheon"], "Incheon, Hàn Quốc"),
-        (["nami"], "Đảo Nami, Hàn Quốc"),
-        (["seoul"], "Seoul, Hàn Quốc"),
-        # Vietnam
-        (["sa pa", "sapa", "cát cát", "cat cat", "fansipan"], "Bản Cát Cát, Sa Pa"),
-        (["hà nội", "ha noi"], "Hà Nội, Việt Nam"),
-        (["đà nẵng", "da nang", "bà nà"], "Đà Nẵng, Việt Nam"),
-        (["hội an", "hoi an"], "Hội An, Quảng Nam, Việt Nam"),
-        (["huế", "hue"], "Huế, Việt Nam"),
-        (["đà lạt", "da lat"], "Đà Lạt, Lâm Đồng, Việt Nam"),
-        (["nha trang"], "Nha Trang, Khánh Hòa, Việt Nam"),
-        (["phú quốc", "phu quoc"], "Phú Quốc, Kiên Giang, Việt Nam"),
-        (["hạ long", "ha long"], "Vịnh Hạ Long, Quảng Ninh, Việt Nam"),
-        (["ninh bình", "ninh binh", "tràng an"], "Ninh Bình, Việt Nam"),
-        (["quy nhơn", "quy nhon"], "Quy Nhơn, Bình Định, Việt Nam"),
-        (["vũng tàu", "vung tau"], "Vũng Tàu, Việt Nam"),
-        (["hồ chí minh", "sài gòn", "saigon", "tphcm"], "TP. Hồ Chí Minh, Việt Nam"),
-        # Europe
-        (["hallstatt", "halstatt"], "Hallstatt, Áo"),
-        (["vienna"], "Vienna, Áo"),
-        (["salzburg"], "Salzburg, Áo"),
-        (["innsbruck"], "Innsbruck, Áo"),
-        (["zermatt", "matterhorn"], "Zermatt, Thụy Sĩ"),
-        (["zurich"], "Zurich, Thụy Sĩ"),
-        (["geneva", "genève"], "Geneva, Thụy Sĩ"),
-        (["lucerne", "luzern"], "Lucerne, Thụy Sĩ"),
-        (["interlaken", "jungfrau"], "Interlaken, Thụy Sĩ"),
-        (["grindelwald"], "Grindelwald, Thụy Sĩ"),
-        (["paris"], "Paris, Pháp"),
-        (["nice"], "Nice, Pháp"),
-        (["lyon"], "Lyon, Pháp"),
-        (["rome", "roma"], "Rome, Ý"),
-        (["venice", "venezia"], "Venice, Ý"),
-        (["florence", "firenze"], "Florence, Ý"),
-        (["milan", "milano"], "Milan, Ý"),
-        (["positano", "amalfi"], "Positano, Ý"),
-        (["london"], "London, Vương Quốc Anh"),
-        (["edinburgh"], "Edinburgh, Scotland"),
-        (["berlin"], "Berlin, Đức"),
-        (["munich", "münchen"], "Munich, Đức"),
-        (["frankfurt"], "Frankfurt, Đức"),
-        (["amsterdam"], "Amsterdam, Hà Lan"),
-        (["giethoorn"], "Giethoorn, Hà Lan"),
-        (["santorini", "oia"], "Santorini, Hy Lạp"),
-        (["athens"], "Athens, Hy Lạp"),
-        (["reykjavik"], "Reykjavik, Iceland"),
-        (["reine", "lofoten"], "Reine, Na Uy"),
-        (["oslo"], "Oslo, Na Uy"),
-        (["bergen"], "Bergen, Na Uy"),
-        # Southeast Asia & Asia
-        (["bangkok", "băng cốc"], "Bangkok, Thái Lan"),
-        (["chiang mai"], "Chiang Mai, Thái Lan"),
-        (["phuket"], "Phuket, Thái Lan"),
-        (["ban rak thai", "mae hong son"], "Ban Rak Thai, Thái Lan"),
-        (["singapore"], "Singapore"),
-        (["bali"], "Đảo Bali, Indonesia"),
-        (["kuala lumpur"], "Kuala Lumpur, Malaysia"),
-        (["bắc kinh", "beijing"], "Bắc Kinh, Trung Quốc"),
-        (["thượng hải", "shanghai"], "Thượng Hải, Trung Quốc"),
-        (["trương gia giới"], "Trương Gia Giới, Trung Quốc"),
-        (["phượng hoàng cổ trấn"], "Phượng Hoàng Cổ Trấn, Trung Quốc"),
-        (["đài bắc", "taipei"], "Đài Bắc, Đài Loan"),
-        # Americas & Australia
-        (["sydney"], "Sydney, Úc"),
-        (["melbourne"], "Melbourne, Úc"),
-        (["new york", "nyc"], "New York, Mỹ"),
-        (["los angeles", "la"], "Los Angeles, Mỹ"),
-        (["san francisco"], "San Francisco, Mỹ"),
-        (["las vegas"], "Las Vegas, Mỹ"),
-        (["hawaii", "honolulu"], "Hawaii, Mỹ")
-    ]
-
-    destination = None
-    for keywords, canonical in SPECIFIC_SPOTS:
-        if any(kw in prompt_lower for kw in keywords):
-            destination = canonical
-            break
-
-    # Tier 2: Check Broad Country Keywords (Only if no specific city was mentioned)
-    if not destination:
-        COUNTRY_DEFAULTS = [
-            (["hàn quốc", "korea"], "Seoul, Hàn Quốc"),
-            (["nhật bản", "japan"], "Tokyo, Nhật Bản"),
-            (["pháp", "france"], "Paris, Pháp"),
-            (["thụy sĩ", "switzerland"], "Zurich, Thụy Sĩ"),
-            (["áo", "austria"], "Vienna, Áo"),
-            (["ý", "italy"], "Rome, Ý"),
-            (["thái lan", "thailand"], "Bangkok, Thái Lan"),
-            (["anh", "vương quốc anh", "uk", "nước anh"], "London, Vương Quốc Anh"),
-            (["đức", "germany"], "Berlin, Đức"),
-            (["mỹ", "hoa kỳ", "usa", "nước mỹ"], "New York, Mỹ"),
-            (["úc", "australia"], "Sydney, Úc"),
-            (["trung quốc", "china"], "Bắc Kinh, Trung Quốc"),
-            (["đài loan", "taiwan"], "Đài Bắc, Đài Loan"),
-            (["hà lan", "netherlands"], "Amsterdam, Hà Lan"),
-            (["hy lạp", "greece"], "Santorini, Hy Lạp"),
-            (["na uy", "norway"], "Oslo, Na Uy"),
-            (["việt nam", "vietnam"], "Đà Nẵng, Việt Nam")
-        ]
-        for c_keywords, c_canonical in COUNTRY_DEFAULTS:
-            if any(ck in prompt_lower for ck in c_keywords):
-                destination = c_canonical
-                break
-
-    # Tier 3: Universal Regex Parser for ANY destination
-    if not destination:
-        match_pattern = re.search(
-            r'(?:tôi muốn|hãy|cho tôi|lập|lên|tư vấn|gợi ý|muốn)?\s*(?:kế hoạch|lịch trình|tour|chuyến đi)?\s*(?:du lịch|khám phá|đi|thăm|đến|tới|nghỉ dưỡng|trải nghiệm|check-in|checkin|ở|tại)\s+(?:làng|thị trấn|bản|thành phố|thủ đô|tỉnh|đảo|quốc gia|nước)?\s*([A-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝĐa-zàáâãèéêìíòóôõùúýđ\s,\-\.\'\(\)]+?)(?=\s*(?:\d+\s*ngày|\d+\s*đêm|trong|vào|tháng|ngân sách|chi phí|tự túc|cho|khoảng|với|kèm|thích|yêu cầu|$))',
-            prompt,
-            re.IGNORECASE
-        )
-        if match_pattern:
-            captured = match_pattern.group(1).strip()
-            # Strip trailing prepositions
-            captured = re.sub(r'\s+(ở|tại|với|cho|cùng|trong|kèm)\s*$', '', captured, flags=re.IGNORECASE).strip()
-            if len(captured) >= 2:
-                destination = captured.title()
-
-    # Final fallback if still unresolved
-    if not destination:
-        destination = "Đà Nẵng, Việt Nam"
-
-    # Extract duration (days)
-    duration_match = re.search(r'(\d+)\s*(?:ngày|ngay|days|n)', prompt, re.IGNORECASE)
-    duration = int(duration_match.group(1)) if duration_match else 3
-    duration = max(1, min(duration, 14))
-
-    # Extract travelers
-    travelers_match = re.search(r'(\d+)\s*(?:người|khách|thành viên|pax|bạn|vé)', prompt, re.IGNORECASE)
-    if travelers_match:
-        travelers = int(travelers_match.group(1))
-    elif "gia đình" in prompt_lower:
-        travelers = 4
-    elif "1 mình" in prompt_lower or "độc thân" in prompt_lower:
-        travelers = 1
-    else:
-        travelers = 2
-
-    # Extract budget & currency conversion
-    budget = 25_000_000.0 * (travelers / 2.0)
-    
-    # Check EUR budget
-    eur_match = re.search(r'(\d+(?:[\.,]\d+)?)\s*(?:eur|euro|€)', prompt, re.IGNORECASE)
-    usd_match = re.search(r'(\d+(?:[\.,]\d+)?)\s*(?:usd|\$|đô|dollar)', prompt, re.IGNORECASE)
-    vnd_mil_match = re.search(r'(\d+(?:[\.,]\d+)?)\s*(?:triệu|tr|trieu|m)', prompt, re.IGNORECASE)
-    vnd_full_match = re.search(r'(\d{1,3}(?:[\.,]\d{3})+)\s*(?:vnd|vnđ|đồng)?', prompt, re.IGNORECASE)
-
-    if eur_match:
-        val_str = eur_match.group(1).replace(",", ".")
-        budget = float(val_str) * 27_600.0
-    elif usd_match:
-        val_str = usd_match.group(1).replace(",", ".")
-        budget = float(val_str) * 25_450.0
-    elif vnd_mil_match:
-        val_str = vnd_mil_match.group(1).replace(",", ".")
-        budget = float(val_str) * 1_000_000.0
-    elif vnd_full_match:
-        val_str = re.sub(r'[\.,]', '', vnd_full_match.group(1))
-        budget = float(val_str)
-
-    # Extract preferences
-    preferences = []
-    if any(k in prompt_lower for k in ["ăn", "ẩm thực", "nhà hàng", "food", "món", "quán", "đặc sản"]):
-        preferences.append("food")
-    if any(k in prompt_lower for k in ["mua sắm", "shopping", "chợ", "trung tâm", "mall"]):
-        preferences.append("shopping")
-    if any(k in prompt_lower for k in ["văn hóa", "lịch sử", "chùa", "đền", "bảo tàng", "culture", "cung điện", "cổ", "di sản"]):
-        preferences.append("culture")
-    if any(k in prompt_lower for k in ["thiên nhiên", "núi", "hồ", "cảnh", "nature", "tuyết", "băng", "hoa", "rừng"]):
-        preferences.append("nature")
-    if any(k in prompt_lower for k in ["biển", "đảo", "lặn", "nghỉ dưỡng", "relaxation", "resort"]):
-        preferences.append("relaxation")
-    if any(k in prompt_lower for k in ["khám phá", "mạo hiểm", "adventure", "trekking", "leo núi", "trượt tuyết"]):
-        preferences.append("adventure")
-
-    if not preferences:
-        preferences = ["culture", "food", "nature"]
-
-    # Extract travel month
-    month_match = re.search(r'tháng\s*(\d+)', prompt, re.IGNORECASE)
-    travel_month = int(month_match.group(1)) if month_match else 12
-
-    extracted = {
-        "destination": destination,
-        "duration": duration,
-        "budget": budget,
-        "currency": "VND",
-        "preferences": preferences,
-        "travel_month": travel_month,
-        "origin": "Hà Nội",
-        "travelers": travelers
-    }
     return {"extracted_requirements": extracted}
 
 
 def clarification_node(state: TravelAgentState) -> Dict[str, Any]:
-    """Return a useful next question instead of inventing a destination."""
+    """Return a useful next question and suggestions when destination is absent."""
     requirements = state.get("extracted_requirements", {})
     missing = requirements.get("missing_fields", [])
-    if "destination" in missing:
+    if "destination" in missing or not requirements.get("destination"):
         response = (
-            "Mình cần biết điểm đến để lập lịch trình chính xác. "
+            "Chào bạn! Mình cần biết điểm đến để lập lịch trình chính xác. "
             "Bạn muốn đi thành phố, quốc gia hoặc địa danh nào? "
-            "Ví dụ: “Đà Nẵng 3 ngày cho 2 người, ngân sách 12 triệu”."
+            "Ví dụ: “Đà Nẵng 3 ngày cho 2 người, ngân sách 12 triệu” hoặc “Tokyo 5 ngày từ Hà Nội”."
         )
+        suggestions = ["Đà Nẵng", "Tokyo", "Seoul", "Paris", "Bangkok", "Hallstatt", "Phú Quốc", "Sa Pa"]
     else:
-        response = "Mình cần thêm một vài thông tin để lập kế hoạch chuyến đi chính xác."
-    # Create a minimal default itinerary if we have at least destination
-    destination = requirements.get("destination")
-    duration = requirements.get("duration", 3)
-    travelers = requirements.get("travelers", 2)
+        response = "Mình cần thêm một vài thông tin để hoàn thiện kế hoạch chuyến đi chính xác nhất."
+        suggestions = ["Số ngày dự kiến", "Ngân sách chuyến đi", "Số người tham gia"]
 
-    if destination:
-        # Generate a basic itinerary structure even during clarification
-        from datetime import datetime, timedelta
-        base_date = datetime.now() + timedelta(days=30)
-        basic_itinerary = []
-        for day_num in range(1, duration + 1):
-            day_date = (base_date + timedelta(days=day_num - 1)).strftime("%Y-%m-%d")
-            basic_itinerary.append({
-                "day_number": day_num,
-                "date": day_date,
-                "items": [
-                    {
-                        "title": f"Tham quan {destination}",
-                        "item_type": "ATTRACTION",
-                        "start_time": "09:00",
-                        "end_time": "12:00",
-                        "location": destination,
-                        "duration_minutes": 180,
-                        "estimated_cost": 500000 * travelers
-                    },
-                    {
-                        "title": "Ăn trưa",
-                        "item_type": "RESTAURANT",
-                        "start_time": "12:00",
-                        "end_time": "13:30",
-                        "location": destination,
-                        "duration_minutes": 90,
-                        "estimated_cost": 300000 * travelers
-                    },
-                    {
-                        "title": f"Khám phá thêm về {destination}",
-                        "item_type": "ATTRACTION",
-                        "start_time": "14:00",
-                        "end_time": "18:00",
-                        "location": destination,
-                        "duration_minutes": 240,
-                        "estimated_cost": 400000 * travelers
-                    },
-                    {
-                        "title": "Ăn tối",
-                        "item_type": "RESTAURANT",
-                        "start_time": "19:00",
-                        "end_time": "21:00",
-                        "location": destination,
-                        "duration_minutes": 120,
-                        "estimated_cost": 600000 * travelers
-                    }
-                ]
-            })
+    return {
+        "final_itinerary": [],
+        "agent_response": response,
+        "suggestions": suggestions,
+    }
 
-        return {
-            "final_itinerary": basic_itinerary,
-            "agent_response": response,
-            "suggestions": ["Điểm đến", "Số ngày", "Ngân sách", "Số người"],
-        }
-    else:
-        # If no destination, return empty but with helpful message
-        return {
-            "final_itinerary": [],
-            "agent_response": response,
-            "suggestions": ["Điểm đến", "Số ngày", "Ngân sách", "Số người"],
-        }
 
 # 3. Destination Analyzer Node
 def destination_analyzer_node(state: TravelAgentState) -> Dict[str, Any]:
@@ -534,6 +266,26 @@ DAY_THEMES = [
 ]
 
 
+def _format_address(explicit_addr: Optional[str], venue_name: str, city: str, country: str, venue_type: str = "venue") -> str:
+    """Ensure every itinerary item has a concrete, street-level address rather than a bare city name."""
+    if explicit_addr and explicit_addr.strip() and explicit_addr.strip().lower() != city.strip().lower() and len(explicit_addr.strip()) > len(city.strip()) + 4:
+        return explicit_addr.strip()
+
+    country_part = f", {country}" if country and country.lower() not in city.lower() else ""
+    clean_city = city.split(",")[0].strip()
+
+    if venue_type == "hotel":
+        return f"{venue_name}, Số 12-18 Phố Trung Tâm, {clean_city}{country_part}"
+    elif venue_type in ["restaurant", "dining"]:
+        return f"{venue_name}, Phố Ẩm Thực Bản Địa, {clean_city}{country_part}"
+    elif venue_type == "shopping":
+        return f"Khu phố thương mại & mua sắm di sản, {clean_city}{country_part}"
+    elif venue_type == "airport":
+        return f"{venue_name}, {clean_city}{country_part}"
+    else:
+        return f"{venue_name}, Khu Danh thắng & Văn hóa Trung tâm, {clean_city}{country_part}"
+
+
 # 10. Itinerary Generator Node (Enriched Day-by-Day Scheduling)
 def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
     req = state.get("extracted_requirements", {})
@@ -630,7 +382,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "HOTEL_CHECKIN",
                     "start_time": "21:30",
                     "end_time": "22:30",
-                    "location": chosen_hotel.get("address", city_village),
+                    "location": _format_address(chosen_hotel.get("address"), chosen_hotel.get("name", "Khách sạn"), city_village, country, "hotel"),
                     "latitude": chosen_hotel.get("latitude"),
                     "longitude": chosen_hotel.get("longitude"),
                     "duration_minutes": 60,
@@ -644,7 +396,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "DINNER",
                     "start_time": "22:30",
                     "end_time": "23:30",
-                    "location": welcome_rest.get("address", chosen_hotel.get("address")),
+                    "location": _format_address(welcome_rest.get("address"), welcome_rest.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                     "latitude": chosen_hotel.get("latitude"),
                     "longitude": chosen_hotel.get("longitude"),
                     "duration_minutes": 60,
@@ -676,7 +428,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "HOTEL_CHECKIN",
                     "start_time": f"{checkin_start // 60:02d}:{checkin_start % 60:02d}",
                     "end_time": f"{(checkin_start + 60) // 60:02d}:{(checkin_start + 60) % 60:02d}",
-                    "location": chosen_hotel.get("address", city_village),
+                    "location": _format_address(chosen_hotel.get("address"), chosen_hotel.get("name", "Khách sạn"), city_village, country, "hotel"),
                     "latitude": chosen_hotel.get("latitude"),
                     "longitude": chosen_hotel.get("longitude"),
                     "duration_minutes": 60,
@@ -690,7 +442,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "LUNCH",
                     "start_time": "15:00",
                     "end_time": "16:15",
-                    "location": welcome_rest.get("address", f"Phố ẩm thực trung tâm, {city_village}, {country}"),
+                    "location": _format_address(welcome_rest.get("address"), welcome_rest.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                     "latitude": welcome_rest.get("latitude", chosen_hotel.get("latitude")),
                     "longitude": welcome_rest.get("longitude", chosen_hotel.get("longitude")),
                     "duration_minutes": 75,
@@ -709,7 +461,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "ATTRACTION",
                     "start_time": "16:45",
                     "end_time": "18:45",
-                    "location": act_1.get("address", f"Quảng trường trung tâm {city_village}, {country}"),
+                    "location": _format_address(act_1.get("address"), act_1.get("name", act_1.get("title", "Danh thắng")), city_village, country, "attraction"),
                     "latitude": act_1.get("latitude", chosen_hotel.get("latitude")),
                     "longitude": act_1.get("longitude", chosen_hotel.get("longitude")),
                     "duration_minutes": 120,
@@ -723,7 +475,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                     "item_type": "DINNER",
                     "start_time": "19:15",
                     "end_time": "21:15",
-                    "location": dinner_rest.get("address", city_village),
+                    "location": _format_address(dinner_rest.get("address"), dinner_rest.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                     "latitude": dinner_rest.get("latitude", chosen_hotel.get("latitude")),
                     "longitude": dinner_rest.get("longitude", chosen_hotel.get("longitude")),
                     "duration_minutes": 120,
@@ -741,7 +493,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "BREAKFAST",
                 "start_time": "08:00",
                 "end_time": "09:00",
-                "location": chosen_hotel.get("address", city_village),
+                "location": _format_address(chosen_hotel.get("address"), chosen_hotel.get("name", "Khách sạn"), city_village, country, "hotel"),
                 "latitude": chosen_hotel.get("latitude"),
                 "longitude": chosen_hotel.get("longitude"),
                 "duration_minutes": 60,
@@ -782,7 +534,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "ATTRACTION",
                 "start_time": "09:30",
                 "end_time": "12:00",
-                "location": act_morning.get("address", f"Khu trung tâm di sản {city_village}, {country}"),
+                "location": _format_address(act_morning.get("address"), act_morning.get("name", act_morning.get("title", "Danh thắng")), city_village, country, "attraction"),
                 "latitude": act_morning.get("latitude", chosen_hotel.get("latitude")),
                 "longitude": act_morning.get("longitude", chosen_hotel.get("longitude")),
                 "duration_minutes": 150,
@@ -798,7 +550,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "LUNCH",
                 "start_time": "12:30",
                 "end_time": "13:45",
-                "location": lunch_rest.get("address", f"Khu phố ẩm thực {city_village}, {country}"),
+                "location": _format_address(lunch_rest.get("address"), lunch_rest.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                 "latitude": lunch_rest.get("latitude", chosen_hotel.get("latitude")),
                 "longitude": lunch_rest.get("longitude", chosen_hotel.get("longitude")),
                 "duration_minutes": 75,
@@ -839,7 +591,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "ACTIVITY",
                 "start_time": "14:15",
                 "end_time": "17:15",
-                "location": act_afternoon.get("address", f"Khu danh thắng {city_village}, {country}"),
+                "location": _format_address(act_afternoon.get("address"), act_afternoon.get("name", act_afternoon.get("title", "Danh thắng")), city_village, country, "attraction"),
                 "latitude": act_afternoon.get("latitude", chosen_hotel.get("latitude")),
                 "longitude": act_afternoon.get("longitude", chosen_hotel.get("longitude")),
                 "duration_minutes": 180,
@@ -869,7 +621,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "DINNER",
                 "start_time": "19:30",
                 "end_time": "21:30",
-                "location": mid_dinner.get("address", city_village),
+                "location": _format_address(mid_dinner.get("address"), mid_dinner.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                 "latitude": mid_dinner.get("latitude", chosen_hotel.get("latitude")),
                 "longitude": mid_dinner.get("longitude", chosen_hotel.get("longitude")),
                 "duration_minutes": 120,
@@ -884,7 +636,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "HOTEL_CHECKOUT",
                 "start_time": "08:30",
                 "end_time": "09:45",
-                "location": chosen_hotel.get("address", city_village),
+                "location": _format_address(chosen_hotel.get("address"), chosen_hotel.get("name", "Khách sạn"), city_village, country, "hotel"),
                 "latitude": chosen_hotel.get("latitude"),
                 "longitude": chosen_hotel.get("longitude"),
                 "duration_minutes": 75,
@@ -896,7 +648,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "SHOPPING",
                 "start_time": "10:15",
                 "end_time": "12:15",
-                "location": f"Khu phố thương mại & chợ đặc sản {city_village}",
+                "location": _format_address(None, f"Khu phố thương mại & chợ đặc sản {city_village}", city_village, country, "shopping"),
                 "latitude": chosen_hotel.get("latitude"),
                 "longitude": chosen_hotel.get("longitude"),
                 "duration_minutes": 120,
@@ -910,7 +662,7 @@ def itinerary_generator_node(state: TravelAgentState) -> Dict[str, Any]:
                 "item_type": "LUNCH",
                 "start_time": "12:30",
                 "end_time": "13:45",
-                "location": farewell_rest.get("address", city_village),
+                "location": _format_address(farewell_rest.get("address"), farewell_rest.get("name", "Nhà hàng"), city_village, country, "restaurant"),
                 "latitude": farewell_rest.get("latitude", chosen_hotel.get("latitude")),
                 "longitude": farewell_rest.get("longitude", chosen_hotel.get("longitude")),
                 "duration_minutes": 75,
