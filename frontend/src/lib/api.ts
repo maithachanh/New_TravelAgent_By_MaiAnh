@@ -12,6 +12,30 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// Older API records were written with a Windows code-page mismatch.  Repair
+// only strings that exhibit the signature, keeping normal Unicode untouched.
+const MOJIBAKE_PATTERN = /(?:Ã.|Â.|Ä.|Æ.|áº.|ðŸ)/;
+const textDecoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { fatal: true }) : null;
+
+export const repairMojibake = (value: string): string => {
+  if (!MOJIBAKE_PATTERN.test(value) || !textDecoder) return value;
+  try {
+    const bytes = Uint8Array.from(Array.from(value, (char) => char.charCodeAt(0)));
+    return textDecoder.decode(bytes);
+  } catch {
+    return value;
+  }
+};
+
+const repairApiPayload = (value: any): any => {
+  if (typeof value === 'string') return repairMojibake(value);
+  if (Array.isArray(value)) return value.map(repairApiPayload);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, repairApiPayload(item)]));
+  }
+  return value;
+};
+
 // Auth request interceptor
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
@@ -21,15 +45,39 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Global error interceptor
+// Global error interceptor with retry logic
 api.interceptors.response.use(
-  (res) => res,
-  (err: AxiosError) => {
+  (res) => {
+    res.data = repairApiPayload(res.data);
+    return res;
+  },
+  async (err: AxiosError) => {
+    const originalRequest = err.config as any;
+    const retryCount = originalRequest._retryCount || 0;
+    const maxRetries = 3;
+
+    // Retry on network errors or 5xx errors
+    if (!err.response && retryCount < maxRetries) {
+      originalRequest._retryCount = retryCount + 1;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+      return api(originalRequest);
+    }
+
     if (err.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('access_token');
       localStorage.removeItem('travel_user');
       window.dispatchEvent(new Event('unauthorized'));
     }
+
+    // Provide more descriptive error messages
+    if (err.response?.status === 404) {
+      err.message = 'API endpoint not found. Please check the backend service.';
+    } else if (err.response?.status === 500) {
+      err.message = 'Server error occurred. Please try again later.';
+    } else if (err.code === 'ECONNABORTED') {
+      err.message = 'Request timeout. Please check your connection and try again.';
+    }
+
     return Promise.reject(err);
   },
 );
@@ -140,6 +188,7 @@ export interface CurrencyConvertResponse {
   converted_amount: number;
   rate: number;
   last_updated: string;
+  source: string;
 }
 
 export interface FlightSearchRequest {
@@ -245,19 +294,19 @@ export const authAPI = {
 // ---------------------------------------------------------------------------
 export const agentAPI = {
   chat: (req: AgentChatRequest): Promise<AgentChatResponse> =>
-    api.post('/ai/chat', req).then((r) => r.data),
+    api.post('/agent/plan-trip', { prompt: req.message, trip_id: req.trip_id }).then((r) => r.data),
 
   planTrip: (req: PlanTripRequest): Promise<PlanTripResponse> =>
-    api.post('/ai/plan-trip', req).then((r) => r.data),
+    api.post('/agent/plan-trip', req).then((r) => r.data),
 
   modifyTrip: (tripId: number, modification: string, language?: string): Promise<PlanTripResponse> =>
-    api.patch(`/ai/trips/${tripId}/modify`, { modification, language }).then((r) => r.data),
+    api.post('/agent/replan', { trip_id: tripId, modification, language }).then((r) => r.data),
 
   recommend: (query: string, city: string, country: string): Promise<{ recommendations: any[] }> =>
     api.post('/ai/recommend', { query, city, country }).then((r) => r.data),
 
-  confirmBooking: (tripId: number): Promise<{ success: boolean; message: string }> =>
-    api.post(`/ai/trips/${tripId}/confirm`).then((r) => r.data),
+  confirmBooking: (bookingId: number): Promise<{ success: boolean; message: string }> =>
+    api.post(`/bookings/${bookingId}/confirm`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -296,10 +345,10 @@ export const tripsAPI = {
 // Search APIs
 // ---------------------------------------------------------------------------
 export const searchAPI = {
-  flights: (req: FlightSearchRequest): Promise<{ flights: FlightOption[]; total: number }> =>
+  flights: (req: FlightSearchRequest): Promise<{ offers: FlightOption[]; count: number }> =>
     api.post('/flights/search', req).then((r) => r.data),
 
-  hotels: (req: HotelSearchRequest): Promise<{ hotels: HotelOption[]; total: number }> =>
+  hotels: (req: HotelSearchRequest): Promise<{ accommodations: HotelOption[]; count: number }> =>
     api.post('/hotels/search', req).then((r) => r.data),
 
   places: (req: { query: string; city: string; country?: string; type?: string }): Promise<{ places: any[] }> =>
@@ -311,18 +360,18 @@ export const searchAPI = {
 // ---------------------------------------------------------------------------
 export const currencyAPI = {
   convert: (req: CurrencyConvertRequest): Promise<CurrencyConvertResponse> =>
-    api.get('/currency/convert', { params: req }).then((r) => r.data),
+    api.post('/currency/convert', req).then((r) => r.data),
 
   rates: (base: string = 'VND'): Promise<{ base: string; rates: Record<string, number>; last_updated: string }> =>
-    api.get('/currency/rates', { params: { base } }).then((r) => r.data),
+    api.get('/currency/rate', { params: { base_currency: base } }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // Translation API
 // ---------------------------------------------------------------------------
 export const translationAPI = {
-  translate: (text: string, targetLanguage: string, sourceLanguage?: string): Promise<{ translated_text: string; detected_source?: string }> =>
-    api.post('/translation/translate', { text, target_language: targetLanguage, source_language: sourceLanguage }).then((r) => r.data),
+  translate: (text: string, targetLanguage: string, sourceLanguage?: string): Promise<{ translated_text: string; source_lang: string; target_lang: string; provider: string; success: boolean; error?: string }> =>
+    api.post('/translation/translate', { text, target_lang: targetLanguage, source_lang: sourceLanguage }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
@@ -362,13 +411,28 @@ export const bookingsAPI = {
 
   bookActivity: (data: { trip_id: number; activity_name: string; location: string; date: string; price: number }): Promise<any> =>
     api.post('/bookings/activity', data).then((r) => r.data),
+
+  bookRestaurant: (data: { trip_id: number; restaurant_name: string; city: string; date: string; time: string; price: number; guests?: number }): Promise<any> =>
+    api.post('/bookings/restaurant', data).then((r) => r.data),
+
+  getRecommendations: (destination: string, origin: string, trip_id?: number): Promise<{
+    destination: string;
+    origin: string;
+    trip_id?: number;
+    recommended_hotels: any[];
+    recommended_flights: any[];
+    recommended_activities: any[];
+    recommended_restaurants: any[];
+    notice: string;
+  }> =>
+    api.get('/bookings/recommendations', { params: { destination, origin, trip_id } }).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
 // Standalone Direct Functions for Convenient Usage
 // ---------------------------------------------------------------------------
-export const planTripWithAI = async (prompt: string, language?: string, currency?: string) => {
-  const res = await api.post('/agent/plan-trip', { prompt, language, currency });
+export const planTripWithAI = async (prompt: string, language?: string, currency?: string, signal?: AbortSignal) => {
+  const res = await api.post('/agent/plan-trip', { prompt, language, currency }, { signal });
   return res.data;
 };
 
@@ -430,4 +494,3 @@ export const formatCurrency = (amount: number, currency: string): string => {
     maximumFractionDigits: currency === 'VND' || currency === 'JPY' || currency === 'KRW' ? 0 : 2,
   }).format(amount);
 };
-
