@@ -24,5 +24,6 @@ def search_hotels(req: HotelSearchRequest):
     return {
         "city": req.city,
         "count": len(results),
+        "hotels": results,
         "accommodations": results
     }

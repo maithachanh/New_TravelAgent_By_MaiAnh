@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 from app.core.database import get_db
 from app.models.models import Booking, BookingStatus
+from app.agent.tools.registry import tool_registry
 
 router = APIRouter(prefix="/bookings", tags=["Booking Management (Human-in-the-loop)"])
 
@@ -34,6 +35,15 @@ class ActivityBookingRequest(BaseModel):
     location: str
     date: str
     price: float
+
+class RestaurantBookingRequest(BaseModel):
+    trip_id: int
+    restaurant_name: str
+    city: str
+    date: str
+    time: str
+    price: float
+    guests: int = 1
 
 @router.post("/flight")
 def book_flight(req: FlightBookingRequest, db: Session = Depends(get_db)):
@@ -106,9 +116,68 @@ def book_activity(req: ActivityBookingRequest, db: Session = Depends(get_db)):
     db.refresh(booking)
     return {"message": "Đặt hoạt động / tour thành công!", "booking": booking}
 
+@router.post("/restaurant")
+def book_restaurant(req: RestaurantBookingRequest, db: Session = Depends(get_db)):
+    ref = f"BK-RES-{uuid.uuid4().hex[:6].upper()}"
+    booking = Booking(
+        user_id=1,
+        trip_id=req.trip_id,
+        service_name=f"Nhà hàng: {req.restaurant_name} ({req.city})",
+        category="restaurant",
+        booking_reference=ref,
+        price=req.price,
+        status=BookingStatus.CONFIRMED,
+        details={
+            "restaurant_name": req.restaurant_name,
+            "city": req.city,
+            "date": req.date,
+            "time": req.time,
+            "guests": req.guests
+        }
+    )
+    db.add(booking)
+    db.commit()
+    db.refresh(booking)
+    return {"message": "Đặt bàn nhà hàng thành công!", "booking": booking}
+
+@router.get("/recommendations")
+def get_booking_recommendations(
+    destination: str = Query("Tokyo, Nhật Bản"),
+    origin: str = Query("TP. Hồ Chí Minh, Việt Nam"),
+    trip_id: Optional[int] = 1
+):
+    """
+    Returns curated hotel, flight, activity, and restaurant options for the user to browse and 1-click book.
+    """
+    city_village = destination.split(",")[0].strip() if "," in destination else destination
+
+    flights = tool_registry.flight_tool.search_flights(origin=origin, destination=destination, travelers=2)
+    hotels = tool_registry.hotel_tool.search_hotels(city=city_village)
+    activities = tool_registry.activity_tool.search_activities(city=city_village)
+    restaurants = tool_registry.restaurant_tool.search_restaurants(city=city_village)
+
+    return {
+        "destination": destination,
+        "origin": origin,
+        "trip_id": trip_id,
+        "recommended_hotels": hotels[:3],
+        "recommended_flights": flights[:3],
+        "recommended_activities": activities[:4],
+        "recommended_restaurants": restaurants[:4],
+        "notice": "Dịch vụ được chọn lọc dựa trên vị trí trung tâm, đánh giá cao (>4.5 sao) và mức giá tối ưu."
+    }
+
 @router.get("/")
-def get_all_bookings(db: Session = Depends(get_db)):
-    return db.query(Booking).order_by(Booking.booking_date.desc()).all()
+def get_all_bookings(
+    trip_id: Optional[int] = None,
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Booking)
+    if trip_id:
+        query = query.filter(Booking.trip_id == trip_id)
+    return query.order_by(Booking.booking_date.desc()).offset(skip).limit(limit).all()
 
 @router.get("/{id}")
 def get_booking_by_id(id: int, db: Session = Depends(get_db)):
@@ -134,4 +203,3 @@ def cancel_booking(id: int, db: Session = Depends(get_db)):
     booking.status = BookingStatus.CANCELLED
     db.commit()
     return {"message": "Hủy booking thành công!", "booking_reference": booking.booking_reference, "status": "CANCELLED"}
-

@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     container_name: travel_agent_backend
     environment:
-      DATABASE_URL: postgresql+asyncpg://travel_admin:${DB_PASSWORD:-travel_secure_2026}@postgres:5432/travel_agent
+      DATABASE_URL: postgresql://travel_admin:${DB_PASSWORD:-travel_secure_2026}@postgres:5432/travel_agent
       REDIS_URL: redis://redis:6379
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY}

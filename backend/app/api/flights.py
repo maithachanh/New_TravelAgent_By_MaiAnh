@@ -24,5 +24,6 @@ def search_flights(req: FlightSearchRequest):
         "destination": req.destination,
         "travelers": req.travelers,
         "count": len(results),
+        "flights": results,
         "offers": results
     }

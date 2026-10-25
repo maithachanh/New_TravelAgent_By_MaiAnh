@@ -90,12 +90,13 @@ class Trip(Base):
     user = relationship("User", back_populates="trips")
     days = relationship("ItineraryDay", back_populates="trip", cascade="all, delete-orphan", order_by="ItineraryDay.day_number")
     bookings = relationship("Booking", back_populates="trip", cascade="all, delete-orphan")
+    versions = relationship("TripVersion", back_populates="trip", cascade="all, delete-orphan", order_by="TripVersion.version")
 
 class ItineraryDay(Base):
     __tablename__ = "itinerary_days"
 
     id = Column(Integer, primary_key=True, index=True)
-    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False)
+    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False, index=True)
     day_number = Column(Integer, nullable=False)
     date = Column(String(20), nullable=False) # YYYY-MM-DD
     notes = Column(Text, nullable=True)
@@ -107,8 +108,8 @@ class ItineraryItem(Base):
     __tablename__ = "itinerary_items"
 
     id = Column(Integer, primary_key=True, index=True)
-    day_id = Column(Integer, ForeignKey("itinerary_days.id"), nullable=False)
-    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False)
+    day_id = Column(Integer, ForeignKey("itinerary_days.id"), nullable=False, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False, index=True)
     title = Column(String(255), nullable=False)
     item_type = Column(Enum(ItemType), default=ItemType.ATTRACTION)
     start_time = Column(String(10), nullable=False) # HH:MM
@@ -128,15 +129,29 @@ class Booking(Base):
     __tablename__ = "bookings"
 
     id = Column(Integer, primary_key=True, index=True)
-    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     service_name = Column(String(255), nullable=False)
     category = Column(String(50), nullable=False) # flight, hotel, restaurant, activity
-    booking_reference = Column(String(100), unique=True, nullable=False)
+    booking_reference = Column(String(100), unique=True, nullable=False, index=True)
     price = Column(Float, default=0.0)
-    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING)
+    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING, index=True)
     booking_date = Column(DateTime, default=datetime.utcnow)
     details = Column(JSON, default=dict)
 
     trip = relationship("Trip", back_populates="bookings")
     user = relationship("User", back_populates="bookings")
+
+class TripVersion(Base):
+    __tablename__ = "trip_versions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id", ondelete="CASCADE"), nullable=False, index=True)
+    version = Column(Integer, nullable=False, index=True)
+    itinerary_data = Column(JSON, nullable=False)
+    total_cost = Column(Float, default=0.0)
+    changes_summary = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    trip = relationship("Trip", back_populates="versions")
+

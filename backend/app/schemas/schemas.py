@@ -101,7 +101,6 @@ class ItineraryDayOut(BaseModel):
     class Config:
         from_attributes = True
 
-# Trip Schemas
 class TripCreate(BaseModel):
     title: str
     origin: str
@@ -112,6 +111,21 @@ class TripCreate(BaseModel):
     budget: float = 0.0
     currency: str = "VND"
     preferences: List[str] = []
+
+class TripUpdate(BaseModel):
+    title: Optional[str] = None
+    origin: Optional[str] = None
+    destination: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    travelers: Optional[int] = None
+    budget: Optional[float] = None
+    currency: Optional[str] = None
+    preferences: Optional[List[str]] = None
+    status: Optional[TripStatus] = None
+
+class ItemReorderRequest(BaseModel):
+    item_ids: List[int]
 
 class TripOut(TripCreate):
     id: int

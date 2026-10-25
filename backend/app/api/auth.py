@@ -22,6 +22,7 @@ from app.schemas.schemas import (
 router = APIRouter(prefix="/auth", tags=["Authentication & User Profile"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login", auto_error=False)
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     credentials_exception = HTTPException(
@@ -41,6 +42,38 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+
+def get_current_user_optional(token: str = Depends(oauth2_scheme_optional), db: Session = Depends(get_db)) -> User:
+    """Returns authenticated user if token present, otherwise falls back to default user (id=1)."""
+    if token:
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            user_id: str = payload.get("sub")
+            if user_id:
+                user = db.query(User).filter(User.id == int(user_id)).first()
+                if user:
+                    return user
+        except Exception:
+            pass
+    # Demo/local fallback
+    default_user = db.query(User).filter(User.id == 1).first()
+    if default_user:
+        return default_user
+    # If no user exists, create one on the fly
+    new_user = User(
+        id=1,
+        email="admin@travelagent.ai",
+        hashed_password="$2b$12$e80yq9D36k8uK7s8yF7aNuC9oE3Y2x8.p9zJ9E0y/4U7m.wzH0q.",
+        full_name="Admin Traveler",
+        language="vi",
+        currency="VND",
+        timezone="Asia/Ho_Chi_Minh",
+        is_active=True
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
 
 @router.post("/register", response_model=UserProfile, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserRegister, db: Session = Depends(get_db)):

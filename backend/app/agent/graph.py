@@ -3,6 +3,7 @@ from app.agent.state import TravelAgentState
 from app.agent.nodes import (
     user_request_analyzer_node,
     requirement_extractor_node,
+    clarification_node,
     destination_analyzer_node,
     budget_analyzer_node,
     search_planner_node,
@@ -23,6 +24,7 @@ def build_upgraded_travel_agent_graph():
     # Add all 14 nodes in the DAG
     workflow.add_node("user_request_analyzer", user_request_analyzer_node)
     workflow.add_node("requirement_extractor", requirement_extractor_node)
+    workflow.add_node("clarification", clarification_node)
     workflow.add_node("destination_analyzer", destination_analyzer_node)
     workflow.add_node("budget_analyzer", budget_analyzer_node)
     workflow.add_node("search_planner", search_planner_node)
@@ -41,7 +43,15 @@ def build_upgraded_travel_agent_graph():
 
     # Clean deterministic DAG pipeline:
     workflow.add_edge("user_request_analyzer", "requirement_extractor")
-    workflow.add_edge("requirement_extractor", "destination_analyzer")
+    workflow.add_conditional_edges(
+        "requirement_extractor",
+        lambda state: "clarification" if state.get("extracted_requirements", {}).get("missing_fields") else "destination_analyzer",
+        {
+            "clarification": "clarification",
+            "destination_analyzer": "destination_analyzer",
+        },
+    )
+    workflow.add_edge("clarification", END)
     workflow.add_edge("destination_analyzer", "budget_analyzer")
     workflow.add_edge("budget_analyzer", "search_planner")
     workflow.add_edge("search_planner", "flight_search")

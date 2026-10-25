@@ -18,6 +18,17 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
     
     CHROMA_DB_DIR: str = os.getenv("CHROMA_DB_DIR", "./chroma_storage")
+    
+    # Allowed CORS Origins for Web, Mobile, and local dev
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8081",
+        "http://127.0.0.1:8081",
+        "http://localhost:19006",
+        "http://127.0.0.1:19006",
+        "*"
+    ]
 
     class Config:
         case_sensitive = True

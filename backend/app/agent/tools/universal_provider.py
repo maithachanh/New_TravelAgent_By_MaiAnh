@@ -100,10 +100,28 @@ CITY_CUISINES: Dict[str, List[Dict[str, str]]] = {
         {"name": "Cà Phê Bờ Sông Hàn Ngắm Cầu Rồng", "specialty": "Cà phê dừa béo ngậy ngắm cảnh Cầu Rồng phun lửa về đêm", "cuisine": "Cà phê ngắm cảnh sông Hàn"}
     ],
     "paris": [
-        {"name": "Bistrot Chez Janou Le Marais", "specialty": "Thịt vịt hầm Confit de Canard & Chậu mousse sô cô la không giới hạn", "cuisine": "Bistrot truyền thống Paris"},
-        {"name": "Le Bouillon Chartier Montmartre", "specialty": "Ốc sên nướng bơ tỏi Escargots de Bourgogne & Bò sốt vang đỏ", "cuisine": "Ẩm thực Pháp cổ điển"},
-        {"name": "Café de Flore Boulevard Saint-Germain", "specialty": "Bánh sừng bò Croissant giòn rụm & Sô cô la nóng kiểu Pháp", "cuisine": "Quán Cà phê di sản Paris"},
-        {"name": "Nhà hàng Du Thuyền Bateaux Parisiens", "specialty": "Fine dining 4 món thượng hạng ngắm tháp Eiffel rực sáng trên sông Seine", "cuisine": "Fine Dining du thuyền"}
+        {"name": "Bistrot Chez Janou Le Marais", "specialty": "Thịt vịt hầm Confit de Canard & Chậu mousse sô cô la không giới hạn", "cuisine": "Bistrot truyền thống Paris", "address": "2 Rue Roger Verlomme, 75003 Paris"},
+        {"name": "Le Bouillon Chartier Montmartre", "specialty": "Ốc sên nướng bơ tỏi Escargots de Bourgogne & Bò sốt vang đỏ", "cuisine": "Ẩm thực Pháp cổ điển", "address": "7 Rue du Faubourg Montmartre, 75009 Paris"},
+        {"name": "Café de Flore Boulevard Saint-Germain", "specialty": "Bánh sừng bò Croissant giòn rụm & Sô cô la nóng kiểu Pháp", "cuisine": "Quán Cà phê di sản Paris", "address": "172 Bd Saint-Germain, 75006 Paris"},
+        {"name": "Nhà hàng Du Thuyền Bateaux Parisiens", "specialty": "Fine dining 4 món thượng hạng ngắm tháp Eiffel rực sáng trên sông Seine", "cuisine": "Fine Dining du thuyền", "address": "Port de la Bourdonnais, 75007 Paris"}
+    ],
+    "liverpool": [
+        {"name": "The Art School Restaurant", "specialty": "Thịt cừu hầm Scouse truyền thống Liverpool & Bánh tart hoa quả", "cuisine": "Ẩm thực Anh cao cấp", "address": "1 Sugnall St, Liverpool L7 7EB"},
+        {"name": "Panoramic 34 Tầng Cao Ngắm Sông Mersey", "specialty": "Trà chiều Afternoon Tea hoàng gia & Bò bít tết Wellington", "cuisine": "Fine Dining ngắm cảnh", "address": "West Tower, Brook St, Liverpool L3 9PJ"},
+        {"name": "The Cavern Pub Mathew Street", "specialty": "Cá tuyết chiên giòn Fish & Chips & Bia thủ công Mersey", "cuisine": "Quán Pub âm nhạc huyền thoại", "address": "10 Mathew St, Liverpool L2 6RE"},
+        {"name": "Maray Albert Dock", "specialty": "Súp lơ nướng sốt tahini hạt lựu & Hải sản vùng biển Tây Bắc Anh", "cuisine": "Ẩm thực Địa Trung Hải kết hợp", "address": "Unit 4, Britannia Pavilion, Albert Dock, Liverpool L3 4AD"}
+    ],
+    "london": [
+        {"name": "Rules Restaurant Covent Garden (1798)", "specialty": "Bò nướng truyền thống Sunday Roast & Bánh Yorkshire Pudding", "cuisine": "Ẩm thực truyền thống Anh", "address": "34-35 Maiden Ln, London WC2E 7LB"},
+        {"name": "Dishoom Covent Garden", "specialty": "Thịt gà nướng Ruby Chicken & Trà sữa Chai Bombay ấm nóng", "cuisine": "Ẩm thực phong cách Bombay London", "address": "12 Upper St Martin's Ln, London WC2H 9FB"},
+        {"name": "Duck & Waffle Tầng 40 Bishopsgate", "specialty": "Đùi vịt quay giòn trên bánh waffle trứng lòng đào sốt mù tạt", "cuisine": "Fine Dining tầng cao ngắm cảnh", "address": "110 Bishopsgate, London EC2N 4AY"},
+        {"name": "Borough Market Chợ Ẩm Thực Cổ", "specialty": "Bánh sandwich phô mai nướng, hàu tươi đảo Jersey & Tráng miệng", "cuisine": "Ẩm thực chợ truyền thống", "address": "8 Southwark St, London SE1 1TL"}
+    ],
+    "new york": [
+        {"name": "Peter Luger Steak House Brooklyn", "specialty": "Bò bít tết Porterhouse khô nướng than củi trứ danh nước Mỹ", "cuisine": "Steakhouse huyền thoại Michelin", "address": "178 Broadway, Brooklyn, NY 11211"},
+        {"name": "Katz's Delicatessen Lower East Side", "specialty": "Bánh mì kẹp thịt bò muối Pastrami hun khói khổng lồ từ năm 1888", "cuisine": "Deli truyền thống New York", "address": "205 E Houston St, New York, NY 10002"},
+        {"name": "Joe's Pizza Greenwich Village", "specialty": "Pizza lát mỏng New York Style phô mai mozzarella kéo sợi nóng hổi", "cuisine": "Pizza New York", "address": "7 Carmine St, New York, NY 10014"},
+        {"name": "Grand Central Oyster Bar", "specialty": "Súp nghêu Clam Chowder & Khay hàu tươi sống các bờ biển nước Mỹ", "cuisine": "Hải sản nhà ga lịch sử", "address": "89 E 42nd St, New York, NY 10017"}
     ]
 }
 
@@ -184,8 +202,26 @@ CITY_ACTIVITIES: Dict[str, List[Dict[str, Any]]] = {
     "paris": [
         {"title": "Bảo Tàng Nghệ Thuật Musée du Louvre & Chiêm Ngưỡng Nàng Mona Lisa", "type": "ATTRACTION", "desc": "Bảo tàng lớn nhất thế giới lưu giữ kiệt tác nghệ thuật vô giá nhân loại", "cost": 550000.0},
         {"title": "Lên Đài Quan Sát Tháp Eiffel & Ngắm Toàn Cảnh Paris", "type": "ATTRACTION", "desc": "Biểu tượng kinh đô ánh sáng ngắm toàn cảnh thung lũng sông Seine", "cost": 750000.0},
-        {"title": "Du Thuyền Sông Seine Ngắm Hoàng Hôn Paris", "type": "ACTIVITY", "desc": "Lướt nhẹ qua Nhà thờ Đức Bà, Cầu Pont Alexandre III và các cung điện cổ", "cost": 450000.0},
-        {"title": "Khám Phá Đồi Nghệ Thuật Montmartre & Vương Cung Thánh Đường Sacré-Cœur", "type": "ATTRACTION", "desc": "Ngọn đồi lãng mạn nơi hội tụ các danh họa và quang cảnh Paris từ bậc thang đá", "cost": 0.0}
+        {"title": "Du Thuyền Sông Seine Ngắm Hoàng Hôn Paris", "type": "ACTIVITY", "desc": "Lướt nhẹ qua Nhà thờ Đức Bà, Cầu Pont Alexandre III và các cung điện cổ", "cost": 450000.0, "address": "Port de la Bourdonnais, 75007 Paris"},
+        {"title": "Khám Phá Đồi Nghệ Thuật Montmartre & Vương Cung Thánh Đường Sacré-Cœur", "type": "ATTRACTION", "desc": "Ngọn đồi lãng mạn nơi hội tụ các danh họa và quang cảnh Paris từ bậc thang đá", "cost": 0.0, "address": "35 Rue du Chevalier de la Barre, 75018 Paris"}
+    ],
+    "liverpool": [
+        {"title": "Bảo Tàng Ban Nhạc The Beatles Story tại Albert Dock", "type": "ATTRACTION", "desc": "Hành trình âm nhạc huyền thoại của 4 chàng trai thế kỷ bên bến cảng lịch sử", "cost": 650000.0, "address": "Britannia Vaults, Albert Dock, Liverpool L3 4AD"},
+        {"title": "Sân Vận Động Anfield & Tour Phòng Truyền Thống Liverpool FC", "type": "ACTIVITY", "desc": "Chạm tay vào biểu tượng 'This Is Anfield' và khám phá phòng thay đồ sân cỏ vinh quang", "cost": 850000.0, "address": "Anfield Rd, Liverpool L4 0TH"},
+        {"title": "Đại Thánh Đường Liverpool Cathedral & Tháp Chuông Cao Nhất", "type": "ATTRACTION", "desc": "Nhà thờ Gothic lớn nhất Vương quốc Anh với tầm nhìn bao quát toàn bộ vùng Merseyside", "cost": 200000.0, "address": "St James Mt, Liverpool L1 7AZ"},
+        {"title": "Phố Âm Nhạc Mathew Street & Quán Bar The Cavern Club", "type": "ACTIVITY", "desc": "Thưởng thức nhạc sống acoustic nơi The Beatles biểu diễn những nốt nhạc đầu tiên", "cost": 300000.0, "address": "10 Mathew St, Liverpool L2 6RE"}
+    ],
+    "london": [
+        {"title": "Bảo Tàng Anh British Museum & Khám Phá Cổ Vật Thế Giới", "type": "ATTRACTION", "desc": "Bảo tàng lịch sử văn hóa nhân loại với hòn đá Rosetta và lăng mộ Ai Cập cổ", "cost": 0.0, "address": "Great Russell St, London WC1B 3DG"},
+        {"title": "Vòng Quay London Eye & Ngắm Tháp Đồng Hồ Big Ben", "type": "ATTRACTION", "desc": "Cabin kính ngắm toàn cảnh dòng sông Thames và Cung điện Westminster", "cost": 850000.0, "address": "Riverside Building, County Hall, London SE1 7PB"},
+        {"title": "Tháp Luân Đôn Tower of London & Bộ Vương Miện Hoàng Gia", "type": "ATTRACTION", "desc": "Pháo đài cổ gần 1000 năm lưu giữ vương miện đính kim cương vô giá", "cost": 750000.0, "address": "London EC3N 4AB"},
+        {"title": "Du Thuyền Sông Thames đến Làng Thiên Văn Greenwich", "type": "ACTIVITY", "desc": "Lướt qua Cầu Tháp Tower Bridge đến kinh tuyến số 0 Greenwich", "cost": 450000.0, "address": "Westminster Pier, Victoria Embankment, London SW1A 2JH"}
+    ],
+    "new york": [
+        {"title": "Tượng Nữ Thần Tự Do Statue of Liberty & Đảo Ellis", "type": "ATTRACTION", "desc": "Biểu tượng tự do của nước Mỹ giữa vịnh New York", "cost": 650000.0, "address": "Liberty Island, New York, NY 10004"},
+        {"title": "Đài Quan Sát The Summit One Vanderbilt / Empire State", "type": "ATTRACTION", "desc": "Căn phòng kính đa chiều ngắm trọn vẹn đường chân trời đảo Manhattan", "cost": 950000.0, "address": "45 E 42nd St, New York, NY 10017"},
+        {"title": "Dạo Bộ Công Viên Central Park & Cầu Đá Bow Bridge", "type": "ATTRACTION", "desc": "Lá phổi xanh thơ mộng giữa lòng các tòa nhà chọc trời Manhattan", "cost": 0.0, "address": "Central Park, New York, NY 10024"},
+        {"title": "Quảng Trường Thời Đại Times Square & Thưởng Thức Kịch Broadway", "type": "ACTIVITY", "desc": "Giao lộ ánh sáng huyền ảo rực rỡ và vở nhạc kịch đỉnh cao nghệ thuật", "cost": 1800000.0, "address": "Manhattan, NY 10036"}
     ]
 }
 
@@ -199,15 +235,15 @@ class UniversalFlightProvider(BaseFlightTool):
     ) -> List[Dict[str, Any]]:
         geo = geo_service.resolve_destination(destination)
         airport = geo.get("nearest_airport", {})
-        dest_airport_code = airport.get("iata", "INTL")
+        dest_airport_code = airport.get("iata") or airport.get("code") or "INTL"
         dest_country = geo.get("country", destination)
         code = geo.get("country_code", "XX")
 
         # Determine route & airlines
-        if code in ["AT", "CH", "FR", "DE", "IT", "ES", "NL", "UK", "IS", "NO"]:
+        if code in ["AT", "CH", "FR", "DE", "IT", "ES", "NL", "UK", "GB", "IS", "NO"]:
             airlines = INTERNATIONAL_AIRLINES_BY_REGION["EUROPE"]
             base_price = 14500000.0
-            duration_str = "13h 45m (1 stop)"
+            duration_str = "14h 30m (1 stop)"
         elif code in ["US", "CA"]:
             airlines = INTERNATIONAL_AIRLINES_BY_REGION["AMERICAS"]
             base_price = 19500000.0
@@ -253,8 +289,11 @@ class UniversalHotelProvider(BaseHotelTool):
     def search_hotels(
         self,
         city: str,
+        check_in: Optional[str] = None,
+        check_out: Optional[str] = None,
         budget_tier: Optional[str] = "MEDIUM",
-        preferences: Optional[List[str]] = None
+        preferences: Optional[List[str]] = None,
+        **kwargs
     ) -> List[Dict[str, Any]]:
         geo = geo_service.resolve_destination(city)
         c_name = geo["city_or_village"]
@@ -341,71 +380,66 @@ class UniversalRestaurantProvider(BaseRestaurantTool):
         else:
             base_meal = 300000.0
 
-        # Check city-level catalog first
-        for key, dishes in CITY_CUISINES.items():
-            if key in c_lower:
-                rests = []
-                for idx, r in enumerate(dishes):
-                    rests.append({
-                        "name": r["name"],
-                        "cuisine": r["cuisine"],
-                        "rating": round(4.9 - idx * 0.1, 1),
-                        "price_avg": round(base_meal * (1.0 + idx * 0.2), -4),
-                        "currency": "VND",
-                        "address": f"Khu ẩm thực {c_name}, {country}",
-                        "latitude": round(lat + (idx * 0.002 - 0.002), 4),
-                        "longitude": round(lon + (idx * 0.002 - 0.001), 4),
-                        "specialty": r["specialty"]
-                    })
-                return rests
+        # Check city-level catalog first using comprehensive lookup
+        results_rests: List[Dict[str, Any]] = []
+        seen_rest_names = set()
 
-        # Dynamic authentic restaurants for any global village/city
-        return [
-            {
-                "name": f"Nhà hàng Đặc Sản Truyền Thống {c_name}",
-                "cuisine": f"Ẩm thực bản địa {country}",
-                "rating": 4.9,
-                "price_avg": round(base_meal, -4),
-                "currency": "VND",
-                "address": f"Quảng trường trung tâm {c_name}, {country}",
-                "latitude": round(lat + 0.0015, 4),
-                "longitude": round(lon + 0.0010, 4),
-                "specialty": f"Các món ăn truyền thống gia truyền trứ danh của vùng {c_name}"
-            },
-            {
-                "name": f"Quán Ăn Dân Dã & Cafe Phố Cổ {c_name}",
-                "cuisine": "Ẩm thực gia đình & Cafe view đẹp",
-                "rating": 4.8,
-                "price_avg": round(base_meal * 0.75, -4),
-                "currency": "VND",
-                "address": f"Góc phố cổ di sản, {c_name}, {country}",
-                "latitude": round(lat - 0.0020, 4),
-                "longitude": round(lon + 0.0015, 4),
-                "specialty": f"Bánh nướng nóng hổi và đồ uống đặc sản truyền thống của {c_name}"
-            },
-            {
-                "name": f"Nhà Hàng View Toàn Cảnh {c_name} Panorama",
-                "cuisine": "Fine Dining & Rượu Vang Bản Địa",
-                "rating": 4.9,
-                "price_avg": round(base_meal * 1.4, -4),
-                "currency": "VND",
-                "address": f"Điểm ngắm hoàng hôn, {c_name}, {country}",
-                "latitude": round(lat + 0.0035, 4),
-                "longitude": round(lon - 0.0025, 4),
-                "specialty": f"Bữa tối lãng mạn ngắm hoàng hôn buông xuống thung lũng {c_name}"
-            },
-            {
-                "name": f"Bistro Ẩm Thực Tươi Sống {c_name}",
-                "cuisine": "Hải sản & Nông sản theo mùa",
-                "rating": 4.7,
-                "price_avg": round(base_meal * 0.9, -4),
-                "currency": "VND",
-                "address": f"Khu chợ ẩm thực, {c_name}, {country}",
-                "latitude": round(lat - 0.0012, 4),
-                "longitude": round(lon - 0.0030, 4),
-                "specialty": f"Món ăn thơm ngon chế biến từ nông sản tươi sạch vùng {c_name}"
-            }
+        lookup_text = f"{city} {geo.get('query', '')} {c_name} {geo.get('display_name', '')}".lower()
+        for key, dishes in CITY_CUISINES.items():
+            if key in lookup_text:
+                for idx, r in enumerate(dishes):
+                    r_name = r["name"]
+                    if r_name not in seen_rest_names:
+                        seen_rest_names.add(r_name)
+                        results_rests.append({
+                            "name": r_name,
+                            "cuisine": r["cuisine"],
+                            "rating": round(4.9 - (idx % 5) * 0.1, 1),
+                            "price_avg": round(base_meal * (1.0 + (idx % 4) * 0.2), -4),
+                            "currency": "VND",
+                            "address": r.get("address", f"Số {15 + idx * 8} Phố Ẩm Thực, {c_name}, {country}"),
+                            "latitude": round(lat + (idx * 0.002 - 0.002), 4),
+                            "longitude": round(lon + (idx * 0.002 - 0.001), 4),
+                            "specialty": r["specialty"]
+                        })
+                break
+
+        # Supplement with diverse authentic dining venues for rich multi-day itineraries
+        dynamic_rest_templates = [
+            ("Nhà Hàng Đặc Sản Truyền Thống", f"Ẩm thực bản địa {country}", f"Các món ăn gia truyền trứ danh của vùng {c_name}", f"Số 12 Phố Cổ Di Sản, {c_name}, {country}"),
+            ("Quán Ăn Dân Dã & Trà Chiều", "Ẩm thực gia đình & Nông sản tươi", f"Bánh nướng nóng hổi và trà thảo mộc vùng {c_name}", f"Góc ngã tư phố cổ, {c_name}, {country}"),
+            ("Bistro Ẩm Thực Tươi Sống", "Hải sản & Nông sản theo mùa", f"Món ngon chế biến từ nguyên liệu sạch tại địa phương {c_name}", f"Khu chợ ẩm thực trung tâm, {c_name}, {country}"),
+            ("Nhà Hàng Ven Bờ Sông / Bờ Hồ Thơ Mộng", "Món nướng than hoa & Rượu bản địa", f"Bữa tối ấm áp bên bờ nước với món nướng thơm lừng", f"Đường dạo ven hồ sinh thái, {c_name}, {country}"),
+            ("Quán Cơm Gia Đình & Món Ngon Truyền Thống", "Mâm cơm ấm cúng", f"Canh hầm thảo dược và món rim kho chuẩn vị quê hương", f"Khu phố yên bình, {c_name}, {country}"),
+            ("Nhà Hàng Tầng Cao Panorama", "Fine Dining & Rượu Vang", f"Bữa tối lãng mạn ngắm thành phố lung linh ánh đèn", f"Tòa tháp ngắm cảnh trung tâm, {c_name}, {country}"),
+            ("Quán Lẩu Thảo Mộc & Đồ Nướng Bản Địa", "Lẩu ấm & Đồ nướng thảo dược", f"Nồi lẩu nóng hổi nấu cùng nấm rừng và rau xanh địa phương", f"Khu đồi sinh thái ngoại ô, {c_name}, {country}"),
+            ("Bếp Thực Dưỡng & Ẩm Thực Xanh", "Ẩm thực thanh đạm hữu cơ", f"Món ăn thanh mát từ rau củ tươi và nước ép tự nhiên", f"Gần khu vườn bách thảo, {c_name}, {country}"),
+            ("Quán Hải Sản & Món Nước Gia Truyền", "Đặc sản nước dùng gia truyền", f"Tô mì / súp nóng hổi ngập tràn hải sản tươi ngon", f"Phố cảng ẩm thực, {c_name}, {country}"),
+            ("Nhà Hàng Hầm Rượu Cổ Bản Xứ", "Thịt hầm rượu & Phô mai thủ công", f"Thịt bò hầm mềm đậm đà kết hợp cùng phô mai ủ truyền thống", f"Khu phố lịch sử, {c_name}, {country}"),
+            ("Góc Ẩm Thực Chợ Đêm & Món Ăn Vặt", "Món ngon đường phố", f"Bánh giòn nóng hổi và xiên nướng thơm phức chợ đêm", f"Quảng trường chợ đêm, {c_name}, {country}"),
+            ("Bistro Đương Đại & Cà Phê Nghệ Thuật", "Fusion hiện đại & Cà phê hạt", f"Món ăn kết hợp sáng tạo và thức uống phong cách mới", f"Phố nghệ thuật đương đại, {c_name}, {country}"),
+            ("Nhà Hàng Đồng Quê & Nông Trại Xanh", "Đặc sản trang trại đồng quê", f"Gà đồi nướng lu và xôi nếp thơm dẻo từ nông trại", f"Khu sinh thái đồng quê, {c_name}, {country}"),
+            ("Quán Mì Thủ Công & Điểm Tâm Sáng", "Mì sợi kéo tay & Bánh hấp", f"Mì sợi tươi tự làm với nước hầm xương đậm đà nguyên bản", f"Phố chợ sớm, {c_name}, {country}"),
+            ("Quán Bít Tết Bơ Tỏi & Rượu Bản Địa", "Steak & Grill phương Tây", f"Thịt bít tết áp chảo xì xèo cùng sốt tiêu đen thảo mộc", f"Khu thương mại trung tâm, {c_name}, {country}")
         ]
+
+        for idx, (prefix, cuis, spec, addr) in enumerate(dynamic_rest_templates):
+            name = f"{prefix} {c_name}"
+            if name not in seen_rest_names:
+                seen_rest_names.add(name)
+                results_rests.append({
+                    "name": name,
+                    "cuisine": cuis,
+                    "rating": round(4.8 - (idx % 3) * 0.1, 1),
+                    "price_avg": round(base_meal * (0.8 + (idx % 5) * 0.15), -4),
+                    "currency": "VND",
+                    "address": addr,
+                    "latitude": round(lat + ((idx - 5) * 0.0018), 4),
+                    "longitude": round(lon + ((idx - 5) * 0.0015), 4),
+                    "specialty": spec
+                })
+
+        return results_rests
 
 class UniversalActivityProvider(BaseActivityTool):
     def search_activities(
@@ -420,81 +454,82 @@ class UniversalActivityProvider(BaseActivityTool):
         code = geo.get("country_code", "XX")
         lat = geo["latitude"]
         lon = geo["longitude"]
-        c_lower = c_name.lower().strip()
 
-        # Check city-level catalog first
+        results_acts: List[Dict[str, Any]] = []
+        seen_act_names = set()
+
+        # 1. Curated iconic city-level catalog first
+        lookup_text = f"{city} {geo.get('query', '')} {c_name} {geo.get('display_name', '')}".lower()
         for key, acts in CITY_ACTIVITIES.items():
-            if key in c_lower:
-                results = []
+            if key in lookup_text:
                 for idx, a in enumerate(acts):
-                    results.append({
-                        "name": a["title"],
-                        "category": a["type"].lower(),
-                        "price": a["cost"],
-                        "currency": "VND",
-                        "duration_minutes": 150 + idx * 20,
-                        "address": f"{c_name}, {country}",
-                        "latitude": round(lat + (idx * 0.003 - 0.003), 4),
-                        "longitude": round(lon + (idx * 0.003 - 0.002), 4),
-                        "description": a["desc"]
-                    })
-                return results
+                    title = a["title"]
+                    if title not in seen_act_names:
+                        seen_act_names.add(title)
+                        results_acts.append({
+                            "name": title,
+                            "category": a["type"].lower(),
+                            "price": a["cost"],
+                            "currency": "VND",
+                            "duration_minutes": 150 + idx * 20,
+                            "address": a.get("address", f"Khu di tích lịch sử {c_name}, {country}"),
+                            "latitude": round(lat + (idx * 0.003 - 0.003), 4),
+                            "longitude": round(lon + (idx * 0.003 - 0.002), 4),
+                            "description": a["desc"]
+                        })
+                break
 
-        # Dynamic authentic activities for any global village/city
-        return [
-            {
-                "name": f"Khám phá Phố Cổ & Di Sản Lịch Sử {c_name}",
-                "category": "culture",
-                "price": 0.0,
-                "currency": "VND",
-                "duration_minutes": 150,
-                "address": f"Trung tâm lịch sử {c_name}, {country}",
-                "latitude": round(lat + 0.001, 4),
-                "longitude": round(lon + 0.002, 4),
-                "description": f"Dạo bước trên những con đường đá cuội cổ kính và chiêm ngưỡng kiến trúc đặc sắc của {c_name}."
-            },
-            {
-                "name": f"Chinh phục Điểm Ngắm Cảnh Toàn Cảnh (Viewpoint) {c_name}",
-                "category": "nature",
-                "price": 250000.0,
-                "currency": "VND",
-                "duration_minutes": 180,
-                "address": f"Đài quan sát đỉnh đồi ngắm cảnh, {c_name}, {country}",
-                "latitude": round(lat + 0.004, 4),
-                "longitude": round(lon - 0.003, 4),
-                "description": f"Ngắm trọn vẹn thung lũng, thiên nhiên và mái nhà cổ tích của {c_name} từ trên cao."
-            },
-            {
-                "name": f"Trải nghiệm Văn Hóa & Nghề Thủ Công Bản Địa {c_name}",
-                "category": "activity",
-                "price": 450000.0,
-                "currency": "VND",
-                "duration_minutes": 120,
-                "address": f"Làng nghề nghệ nhân truyền thống, {c_name}, {country}",
-                "latitude": round(lat - 0.002, 4),
-                "longitude": round(lon - 0.002, 4),
-                "description": f"Tự tay trải nghiệm sản phẩm văn hóa đặc sắc cùng các nghệ nhân bản địa {country}."
-            },
-            {
-                "name": f"Chợ Đêm & Mua Sắm Quà Lưu Niệm Bản Địa {c_name}",
-                "category": "shopping",
-                "price": 300000.0,
-                "currency": "VND",
-                "duration_minutes": 120,
-                "address": f"Khu chợ truyền thống {c_name}, {country}",
-                "latitude": round(lat - 0.001, 4),
-                "longitude": round(lon + 0.003, 4),
-                "description": f"Khám phá các gian hàng thủ công, đồ lưu niệm và món ăn vặt về đêm."
-            },
-            {
-                "name": f"Du Thuyền / Xe Ngựa Ngắm Cảnh Thiên Nhiên {c_name}",
-                "category": "relaxation",
-                "price": 380000.0,
-                "currency": "VND",
-                "duration_minutes": 90,
-                "address": f"Khu bến thuyền ngắm cảnh, {c_name}, {country}",
-                "latitude": round(lat + 0.0025, 4),
-                "longitude": round(lon + 0.0015, 4),
-                "description": f"Hòa mình vào không gian bình yên trong lành của cảnh sắc thiên nhiên {c_name}."
-            }
+        # 2. Rich non-repeating authentic activities for any global village/city
+        # Exactly ONE viewpoint activity template, all others are varied thematic landmarks
+        has_viewpoint = any("viewpoint" in a["name"].lower() or "đài quan sát" in a["name"].lower() for a in results_acts)
+
+        dynamic_act_templates = [
+            ("Khám phá Phố Cổ & Di Sản Lịch Sử", "culture", 0.0, 150, f"Khu trung tâm di sản lịch sử {c_name}, {country}", f"Dạo bước trên những con đường đá cuội cổ kính và chiêm ngưỡng kiến trúc đặc sắc của {c_name}."),
+            ("Bảo Tàng Nghệ Thuật & Lịch Sử Văn Hóa", "culture", 180000.0, 120, f"Đại lộ Văn Hóa, {c_name}, {country}", f"Chiêm ngưỡng bộ sưu tập hiện vật quý giá và những tác phẩm nghệ thuật tiêu biểu của {c_name}."),
+            ("Dạo Bộ Công Viên Sinh Thái & Vườn Bách Thảo", "nature", 0.0, 90, f"Công viên Trung Tâm, {c_name}, {country}", "Hòa mình vào không gian xanh mát rợp bóng cây cổ thụ và hồ nước thanh bình."),
+            ("Trải nghiệm Nghề Thủ Công Truyền Thống & Xưởng Gốm Bản Địa", "activity", 350000.0, 120, f"Làng nghề thủ công truyền thống, {c_name}, {country}", f"Tự tay sáng tạo tác phẩm lưu niệm độc bản cùng các nghệ nhân địa phương giàu kinh nghiệm của {country}."),
+            ("Du Thuyền Hoàng Hôn Ven Sông / Bờ Vịnh", "relaxation", 420000.0, 90, f"Bến du thuyền trung tâm, {c_name}, {country}", "Thư giãn trên boong tàu ngắm ánh tà dương buông xuống mặt nước thơ mộng."),
+            ("Khu Phố Bích Họa Nghệ Thuật & Con Đường Nhiếp Ảnh", "art", 0.0, 90, f"Khu phố nghệ thuật sáng tạo, {c_name}, {country}", "Khám phá các bức bích họa tường rực rỡ sắc màu và ghi lại những khoảnh khắc tuyệt đẹp."),
+            ("Chợ Đêm Bản Địa & Thưởng Thức Ẩm Thực Đường Phố", "shopping", 200000.0, 120, f"Khu chợ đêm truyền thống, {c_name}, {country}", "Hòa mình vào không khí nhộn nhịp, mua sắm đồ lưu niệm và nếm thử món ngon bản xứ."),
+            ("Quảng Trường Lễ Hội & Tháp Chuông Đồng Hồ Cổ", "culture", 0.0, 75, f"Quảng trường Lễ Hội, {c_name}, {country}", f"Chiêm ngưỡng kiến trúc tháp chuông cổ kính và nhịp sống thanh bình nơi trung tâm {c_name}."),
+            ("Tour Trà Đạo & Cà Phê Rang Xay Truyền Thống", "food", 160000.0, 90, f"Góc phố cà phê di sản, {c_name}, {country}", "Thưởng thức hương vị thức uống bản địa thơm lừng cùng các loại bánh truyền thống độc đáo."),
+            ("Tham Quan Thủy Cung & Thế Giới Sinh Vật Biển Kỳ Thú", "activity", 380000.0, 120, f"Đại lộ Sinh Thái Ven Hồ, {c_name}, {country}", "Khám phá đường hầm kính dưới nước với hàng trăm loài sinh vật kỳ vĩ."),
+            ("Chuyến Khám Phá Rừng Thông & Cung Đường Đi Bộ Sinh Thái", "nature", 0.0, 150, f"Đường mòn sinh thái ngoại ô {c_name}, {country}", "Hít thở không khí rừng trong lành và lắng nghe tiếng chim hót giữa thiên nhiên hoang sơ."),
+            ("Khu Phức Hợp Giải Trí & Trải Nghiệm Công Nghệ Đương Đại", "activity", 450000.0, 150, f"Trung tâm văn hóa đương đại, {c_name}, {country}", "Trải nghiệm không gian tương tác nghệ thuật số và các hoạt động giải trí hiện đại."),
+            ("Viếng Thăm Tu Viện Cổ & Không Gian Thiền Tịnh", "culture", 50000.0, 90, f"Khu thánh đường di sản, {c_name}, {country}", "Chiêm ngưỡng các bức tranh kính màu cổ kính và lắng đọng tâm hồn trong không gian trang nghiêm."),
+            ("Khám Phá Chợ Nông Sản & Nếm Thử Trái Cây / Bơ Sữa Địa Phương", "food", 120000.0, 75, f"Chợ phiên nông sản truyền thống, {c_name}, {country}", "Thưởng thức các loại hoa quả tươi mọng, mứt quả và bơ sữa béo ngậy được chế biến thủ công."),
+            ("Nhà Hát Biểu Diễn Nghệ Thuật & Âm Nhạc Dân Gian", "culture", 300000.0, 120, f"Nhà hát Nghệ thuật Trung tâm, {c_name}, {country}", "Thưởng thức những tiết mục ca múa nhạc truyền thống mang đậm bản sắc văn hóa vùng miền."),
+            ("Khu Vườn Cổ Tích & Mê Cung Hoa Ngoại Ô", "nature", 150000.0, 90, f"Khu sinh thái ngoại ô, {c_name}, {country}", "Dạo bước giữa những luống hoa khoe sắc và check-in mê cung cây xanh thơ mộng."),
+            ("Trải Nghiệm Đạp Xe Dọc Bờ Sông & Làng Ngoại Ô Yên Bình", "activity", 120000.0, 120, f"Tuyến đường ven sông thơ mộng, {c_name}, {country}", "Lướt nhẹ trên cung đường rợp bóng cây ngắm nhìn cuộc sống êm đềm của người dân ngoại ô."),
+            ("Khu Di Tích Pháo Đài / Thành Cổ Ngàn Năm", "culture", 100000.0, 105, f"Cổng thành cổ di sản, {c_name}, {country}", "Tìm hiểu những dấu mốc lịch sử hào hùng qua từng phiến đá thành lũy rêu phong."),
+            ("Phố Sách & Thư Viện Kiến Trúc Mái Vòm Độc Đáo", "culture", 0.0, 90, f"Phố sách văn hóa, {c_name}, {country}", "Thưởng lãm không gian đọc sách cổ kính với hàng vạn đầu sách quý giá.")
         ]
+
+        if not has_viewpoint:
+            dynamic_act_templates.insert(3, (
+                "Chinh phục Điểm Ngắm Cảnh Toàn Cảnh (Viewpoint)",
+                "nature",
+                250000.0,
+                180,
+                f"Đài quan sát đỉnh đồi ngắm cảnh, {c_name}, {country}",
+                f"Ngắm trọn vẹn thung lũng, thiên nhiên và mái nhà cổ tích của {c_name} từ trên cao."
+            ))
+
+        for idx, (prefix, cat, prc, dur, addr, desc) in enumerate(dynamic_act_templates):
+            name = f"{prefix} {c_name}"
+            if name not in seen_act_names:
+                seen_act_names.add(name)
+                results_acts.append({
+                    "name": name,
+                    "category": cat,
+                    "price": prc,
+                    "currency": "VND",
+                    "duration_minutes": dur,
+                    "address": addr,
+                    "latitude": round(lat + ((idx - 6) * 0.0019), 4),
+                    "longitude": round(lon + ((idx - 6) * 0.0016), 4),
+                    "description": desc
+                })
+
+        return results_acts
+

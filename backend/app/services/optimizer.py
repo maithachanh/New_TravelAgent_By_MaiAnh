@@ -14,6 +14,21 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
+def _time_to_minutes(time_str: str) -> int:
+    """Converts 'HH:MM' string to total minutes from midnight."""
+    try:
+        parts = time_str.strip().split(":")
+        return int(parts[0]) * 60 + int(parts[1])
+    except Exception:
+        return 0
+
+def _minutes_to_time(minutes: int) -> str:
+    """Converts total minutes from midnight to 'HH:MM' string (capped at 23:59)."""
+    m = min(minutes, 23 * 60 + 59)
+    h = m // 60
+    rem_m = m % 60
+    return f"{h:02d}:{rem_m:02d}"
+
 def compute_multi_factor_score(
     item: Dict[str, Any],
     user_preferences: List[str],
@@ -26,25 +41,20 @@ def compute_multi_factor_score(
     Multi-Factor Optimization Score:
     Score = 0.30 * PreferenceScore + 0.25 * DistanceScore + 0.20 * BudgetScore + 0.15 * TimeScore + 0.10 * RatingScore
     """
-    # 1. Preference Score (0.0 to 1.0)
     category = item.get("item_type", "").lower()
     item_title = item.get("title", "").lower()
     pref_match = any(p.lower() in category or p.lower() in item_title for p in user_preferences)
     pref_score = 1.0 if pref_match else 0.4
 
-    # 2. Distance Score (decaying with km)
     dist = haversine_distance(current_lat, current_lon, item.get("latitude", current_lat), item.get("longitude", current_lon))
-    dist_score = max(0.0, 1.0 - (dist / 20.0))  # Max 20km range
+    dist_score = max(0.0, 1.0 - (dist / 20.0))
 
-    # 3. Budget Score
     cost = item.get("estimated_cost", 0.0)
     budget_score = 1.0 if cost <= budget_remaining else max(0.1, 1.0 - ((cost - budget_remaining) / max(budget_remaining, 1.0)))
 
-    # 4. Time Score
     duration = item.get("duration_minutes", 60)
     time_score = 1.0 if duration <= available_minutes else 0.3
 
-    # 5. Rating Score
     rating = item.get("rating", 4.5)
     rating_score = min(1.0, rating / 5.0)
 
@@ -63,73 +73,87 @@ def optimize_daily_route(
     daily_budget: float = 5000000.0
 ) -> List[Dict[str, Any]]:
     """
-    Applies Distance Matrix, Nearest-Neighbor TSP heuristic, and Time Window Scheduling
-    to construct the optimal daily sequence.
+    Ensures strict chronological monotonicity, logical time windows,
+    and 30-minute transit buffers between all items in a day.
+    NEVER allows time to jump backward or overlap.
     """
     if not items:
         return []
 
     prefs = user_preferences or ["culture", "food", "nature"]
 
-    fixed_morning = []
-    flexible_items = []
+    # Sort items by their inherent planned sequence (FLIGHT / BREAKFAST -> MORNING -> LUNCH -> AFTERNOON -> SUNSET -> DINNER)
+    def role_priority(item: Dict[str, Any]) -> int:
+        t = item.get("item_type", "")
+        # Priority order: Flight morning -> Hotel check-in -> Breakfast -> Morning activity -> Lunch -> Afternoon activity -> Sunset -> Dinner -> Hotel checkout -> Return flight
+        if t == "FLIGHT":
+            # Check if it's morning or return flight based on original time
+            orig_time = _time_to_minutes(item.get("start_time", "08:00"))
+            return 10 if orig_time < 720 else 90
+        if t == "HOTEL_CHECKIN":
+            return 20
+        if t == "BREAKFAST":
+            return 30
+        if t in ["ATTRACTION", "ACTIVITY"]:
+            orig_time = _time_to_minutes(item.get("start_time", "09:00"))
+            return 40 if orig_time < 720 else 60
+        if t == "LUNCH":
+            return 50
+        if t == "SHOPPING":
+            return 65
+        if t == "HOTEL_CHECKOUT":
+            return 15
+        if t == "DINNER":
+            return 80
+        return 70
 
-    for item in items:
-        if item.get("item_type") in ["FLIGHT", "HOTEL_CHECKIN", "HOTEL_CHECKOUT"]:
-            fixed_morning.append(item)
+    # Sort items by role priority first so order is always logical
+    sorted_items = sorted(items, key=role_priority)
+
+    # Now enforce strictly monotonic non-overlapping schedule
+    optimized_timeline: List[Dict[str, Any]] = []
+    current_min = 8 * 60 # 08:00 start of day
+
+    for idx, item in enumerate(sorted_items):
+        item_copy = dict(item)
+        dur = item_copy.get("duration_minutes", 60)
+
+        item_orig_min = _time_to_minutes(item_copy.get("start_time", "08:00"))
+        if idx == 0:
+            actual_start_min = max(current_min, item_orig_min) if item_orig_min > 0 else current_min
         else:
-            flexible_items.append(item)
+            # Transit buffer of 30 minutes from previous item
+            transit_buffer = 30
+            actual_start_min = max(current_min + transit_buffer, item_orig_min)
 
-    # Initial anchor coordinates (from first item or default center)
-    cur_lat = items[0].get("latitude") or 16.0
-    cur_lon = items[0].get("longitude") or 108.0
+        actual_end_min = actual_start_min + dur
 
-    ordered_flex = []
-    unvisited = flexible_items.copy()
-    remaining_budget = daily_budget
+        # Handle long flights that extend beyond midnight
+        # If the start time is very late (after 23:50), allow it to continue to next day
+        # But cap display at 23:59 for this day's view
+        if actual_start_min >= 23 * 60 + 50:
+            # For display purposes, show as ending at 23:59, but mark it as continuing
+            item_copy["start_time"] = _minutes_to_time(actual_start_min)
+            item_copy["end_time"] = "23:59"
+            item_copy["continues_next_day"] = True
+            # Reset current_min to start of next day for subsequent items
+            current_min = 24 * 60  # Start fresh for next day
+        else:
+            # Normal case: cap at 23:59
+            if actual_end_min > 23 * 60 + 59:
+                actual_end_min = 23 * 60 + 59
+            item_copy["start_time"] = _minutes_to_time(actual_start_min)
+            item_copy["end_time"] = _minutes_to_time(actual_end_min)
+            current_min = actual_end_min
 
-    while unvisited:
-        # Score each candidate item
-        best_item = max(
-            unvisited,
-            key=lambda x: compute_multi_factor_score(x, prefs, cur_lat, cur_lon, remaining_budget, 180)
-        )
-        ordered_flex.append(best_item)
-        cur_lat = best_item.get("latitude") or cur_lat
-        cur_lon = best_item.get("longitude") or cur_lon
-        remaining_budget -= best_item.get("estimated_cost", 0.0)
-        unvisited.remove(best_item)
+        optimized_timeline.append(item_copy)
 
-    # Reconstruct timeline starting at 08:30
-    timeline: List[Dict[str, Any]] = []
-    
-    # Add morning fixed item if present
-    for f in fixed_morning:
-        timeline.append(f)
-
-    start_h = 10 if fixed_morning else 8
-    start_m = 30 if fixed_morning else 30
-
-    for idx, item in enumerate(ordered_flex):
-        dur = item.get("duration_minutes", 90)
-        end_total_m = start_m + dur
-        end_h = start_h + end_total_m // 60
-        end_m = end_total_m % 60
-
-        item["start_time"] = f"{start_h:02d}:{start_m:02d}"
-        item["end_time"] = f"{end_h:02d}:{end_m:02d}"
-        timeline.append(item)
-
-        # Buffer transit time (30 mins)
-        next_start_m = end_m + 30
-        start_h = end_h + next_start_m // 60
-        start_m = next_start_m % 60
-
-    return timeline
+    return optimized_timeline
 
 def calculate_trip_total_cost(days: List[Dict[str, Any]]) -> float:
+    """Calculates total cost across all items in all itinerary days."""
     total = 0.0
     for day in days:
         for item in day.get("items", []):
             total += float(item.get("estimated_cost", 0.0))
-    return total
+    return round(total, 2)
