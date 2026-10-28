@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Float, Text, Boolean, DateTime, ForeignKey, Enum, JSON
+from sqlalchemy import Column, Integer, String, Float, Text, Boolean, DateTime, ForeignKey, Enum, JSON, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
@@ -28,6 +28,7 @@ class ItemType(str, enum.Enum):
 
 class BookingStatus(str, enum.Enum):
     PENDING = "PENDING"
+    PAID = "PAID"
     CONFIRMED = "CONFIRMED"
     CANCELLED = "CANCELLED"
 
@@ -84,6 +85,8 @@ class Trip(Base):
     budget = Column(Float, default=0.0)
     currency = Column(String(10), default="VND")
     preferences = Column(JSON, default=list) # Selected travel styles for this trip
+    invite_code = Column(String(24), unique=True, nullable=True, index=True)
+    share_token = Column(String(80), unique=True, nullable=True, index=True)
     status = Column(Enum(TripStatus), default=TripStatus.DRAFT)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -93,6 +96,7 @@ class Trip(Base):
     versions = relationship("TripVersion", back_populates="trip", cascade="all, delete-orphan", order_by="TripVersion.version")
     members = relationship("TripMember", back_populates="trip", cascade="all, delete-orphan")
     expenses = relationship("TripExpense", back_populates="trip", cascade="all, delete-orphan")
+    votes = relationship("ActivityVote", back_populates="trip", cascade="all, delete-orphan")
 
 class ItineraryDay(Base):
     __tablename__ = "itinerary_days"
@@ -139,6 +143,10 @@ class Booking(Base):
     price = Column(Float, default=0.0)
     status = Column(Enum(BookingStatus), default=BookingStatus.PENDING, index=True)
     booking_date = Column(DateTime, default=datetime.utcnow)
+    payment_provider = Column(String(30), nullable=True)
+    payment_transaction_id = Column(String(120), nullable=True, index=True)
+    paid_at = Column(DateTime, nullable=True)
+    voucher_code = Column(String(120), nullable=True, index=True)
     details = Column(JSON, default=dict)
 
     trip = relationship("Trip", back_populates="bookings")
@@ -188,3 +196,18 @@ class TripExpense(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     trip = relationship("Trip", back_populates="expenses")
+
+class ActivityVote(Base):
+    """A member's up/down vote for one itinerary item."""
+    __tablename__ = "activity_votes"
+    __table_args__ = (UniqueConstraint("trip_id", "item_id", "user_id", name="uq_activity_vote_member"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    trip_id = Column(Integer, ForeignKey("trips.id", ondelete="CASCADE"), nullable=False, index=True)
+    item_id = Column(Integer, ForeignKey("itinerary_items.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    value = Column(Integer, nullable=False)  # 1 or -1
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    trip = relationship("Trip", back_populates="votes")

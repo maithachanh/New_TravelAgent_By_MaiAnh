@@ -1,4 +1,4 @@
-import concurrent.futures
+import asyncio
 import re
 from datetime import datetime, timedelta
 from typing import Dict, Any, List
@@ -10,6 +10,7 @@ from app.services.geo_service import geo_service, haversine_km
 from app.services.currency_service import currency_service
 from app.services.request_parser import classify_intent, parse_travel_request
 from app.services.llm_service import llm_service
+from app.services.weather_service import weather_service
 
 # 1. User Request Analyzer Node
 def user_request_analyzer_node(state: TravelAgentState) -> Dict[str, Any]:
@@ -168,29 +169,42 @@ def restaurant_search_node(state: TravelAgentState) -> Dict[str, Any]:
     )
     return {"restaurant_results": restaurants}
 
-# Concurrent Multi-Agent Search Node
-def parallel_search_node(state: TravelAgentState) -> Dict[str, Any]:
-    """
-    Executes Flight, Hotel, Activity, and Restaurant searches concurrently
-    using ThreadPoolExecutor, cutting multi-agent search latency by ~70%.
-    """
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        future_fl = executor.submit(flight_search_node, state)
-        future_ht = executor.submit(hotel_search_node, state)
-        future_act = executor.submit(activity_search_node, state)
-        future_res = executor.submit(restaurant_search_node, state)
+async def search_aggregator_node(state: TravelAgentState) -> Dict[str, Any]:
+    """Run independent supplier searches together without blocking the graph.
 
-        flights = future_fl.result().get("flight_results", [])
-        hotels = future_ht.result().get("hotel_results", [])
-        activities = future_act.result().get("activity_results", [])
-        restaurants = future_res.result().get("restaurant_results", [])
+    Providers are currently synchronous HTTP adapters. ``asyncio.to_thread``
+    gives each one an isolated worker while preserving their existing tool
+    interfaces; a future async provider can be dropped in without changing the
+    graph contract.  ``gather`` also makes the slowest supplier, rather than
+    the sum of four suppliers, determine planning latency.
+    """
+    flight_task = asyncio.create_task(asyncio.to_thread(flight_search_node, state))
+    hotel_task = asyncio.create_task(asyncio.to_thread(hotel_search_node, state))
+    activity_task = asyncio.create_task(asyncio.to_thread(activity_search_node, state))
+    restaurant_task = asyncio.create_task(asyncio.to_thread(restaurant_search_node, state))
 
+    flights, hotels, activities, restaurants = await asyncio.gather(
+        flight_task,
+        hotel_task,
+        activity_task,
+        restaurant_task,
+    )
     return {
-        "flight_results": flights,
-        "hotel_results": hotels,
-        "activity_results": activities,
-        "restaurant_results": restaurants
+        "flight_results": flights.get("flight_results", []),
+        "hotel_results": hotels.get("hotel_results", []),
+        "activity_results": activities.get("activity_results", []),
+        "restaurant_results": restaurants.get("restaurant_results", []),
     }
+
+
+def parallel_search_node(state: TravelAgentState) -> Dict[str, Any]:
+    """Synchronous LangGraph adapter for the asynchronous aggregator.
+
+    Keeping this boundary synchronous preserves the public ``invoke`` API used
+    by scripts and integrations. FastAPI can migrate to ``ainvoke`` later
+    without changing any result shape.
+    """
+    return asyncio.run(search_aggregator_node(state))
 
 def _calculate_flight_duration(origin: str, destination: str) -> int:
     """Calculate realistic flight duration in minutes based on real geo distance."""
@@ -803,10 +817,19 @@ def critique_reviewer_node(state: TravelAgentState) -> Dict[str, Any]:
     total_km = 0.0
     day_count = len(opt_days) or 1
     total_activities = 0
+    daily_loads: List[Dict[str, Any]] = []
 
     for day in opt_days:
         items = day.get("items", [])
-        total_activities += len([it for it in items if it.get("item_type") not in ["FLIGHT", "HOTEL"]])
+        heavy_activities = [
+            item for item in items
+            if item.get("item_type") not in {
+                "FLIGHT", "HOTEL", "HOTEL_CHECKIN", "HOTEL_CHECKOUT",
+                "BREAKFAST", "LUNCH", "DINNER", "RESTAURANT", "TRANSPORT",
+            }
+        ]
+        total_activities += len(heavy_activities)
+        day_km = 0.0
         for i in range(len(items) - 1):
             it1 = items[i]
             it2 = items[i + 1]
@@ -814,9 +837,15 @@ def critique_reviewer_node(state: TravelAgentState) -> Dict[str, Any]:
             lat2, lon2 = it2.get("latitude"), it2.get("longitude")
             if lat1 and lon1 and lat2 and lon2:
                 dist = haversine_km(lat1, lon1, lat2, lon2)
-                total_km += min(dist, 12.0)
+                day_km += min(dist, 12.0)
             else:
-                total_km += 1.5
+                day_km += 1.5
+        total_km += day_km
+        daily_loads.append({
+            "day_number": day.get("day_number"),
+            "walking_km": round(day_km, 1),
+            "heavy_activities": len(heavy_activities),
+        })
 
     avg_km_day = total_km / day_count
     avg_act_day = total_activities / day_count
@@ -833,8 +862,17 @@ def critique_reviewer_node(state: TravelAgentState) -> Dict[str, Any]:
         pacing_label = "Khám phá Chuyên sâu & Năng động (High Intensity)"
         pacing_desc = "Lịch trình dày đặc trải nghiệm, dành cho du khách năng động muốn tối ưu hóa từng giờ khám phá."
 
-    curr_month = datetime.now().month
+    # Use the requested month rather than the server's current month.  This
+    # matters when a user plans a future season (for example Phú Quốc in Aug).
+    curr_month = int(req.get("travel_month") or datetime.now().month)
     warnings = []
+    for load in daily_loads:
+        if load["walking_km"] > 12 or load["heavy_activities"] > 4:
+            warnings.append(
+                f"Ngày {load['day_number']} di chuyển khá nhiều "
+                f"(~{load['walking_km']} km, {load['heavy_activities']} hoạt động nặng). "
+                "Bạn có muốn đổi một điểm tham quan thành ngồi cà phê ngắm cảnh không?"
+            )
     if code in ["VN", "TH", "MY", "PH", "ID"]:
         if 5 <= curr_month <= 10:
             season_advisory = f"Mùa hè - mưa nhiệt đới tại {city_village}. Thường có mưa rào ngắn buổi chiều tối, ban ngày nắng ráo."
@@ -862,6 +900,30 @@ def critique_reviewer_node(state: TravelAgentState) -> Dict[str, Any]:
     else:
         season_advisory = f"Khí hậu thuận lợi để trải nghiệm các điểm đến biểu tượng tại {city_village}."
 
+    forecast = weather_service.get_forecast(
+        dest_an.get("latitude"),
+        dest_an.get("longitude"),
+        [str(day.get("date")) for day in opt_days if day.get("date")],
+    )
+    seasonal = weather_service.seasonal_advisory(code, city_village, curr_month)
+    backup_suggestions: List[str] = []
+    if forecast.get("is_live"):
+        risky_days = [
+            day for day in forecast.get("days", [])
+            if day.get("severe") or day.get("rain_probability", 0) >= 0.65
+            or day.get("condition") in {"rain", "drizzle", "snow"}
+        ]
+        if risky_days:
+            dates = ", ".join(day["date"] for day in risky_days)
+            warnings.append(f"Dự báo OpenWeather cho {dates} có mưa/thời tiết xấu; hãy ưu tiên lịch trình trong nhà.")
+            backup_suggestions = weather_service.backup_suggestions(city_village)
+        else:
+            season_advisory = "Dự báo OpenWeather trong các ngày có dữ liệu chưa ghi nhận mưa lớn. " + season_advisory
+    elif seasonal["risky"]:
+        warnings.append(seasonal["message"])
+        backup_suggestions = weather_service.backup_suggestions(city_village)
+        season_advisory = seasonal["message"]
+
     packing_tips = [
         f"Giày thể thao êm chân chuyên dụng (dự kiến di chuyển ~{avg_km_day:.1f} km/ngày)",
         "Bộ sạc đa năng Universal Adapter tương thích chuẩn ổ cắm quốc tế",
@@ -882,7 +944,10 @@ def critique_reviewer_node(state: TravelAgentState) -> Dict[str, Any]:
         "pacing_description": pacing_desc,
         "total_walking_km": round(total_km, 1),
         "avg_daily_walking_km": round(avg_km_day, 1),
+        "daily_loads": daily_loads,
         "season_advisory": season_advisory,
+        "weather": forecast,
+        "backup_suggestions": backup_suggestions,
         "warnings": warnings,
         "packing_tips": packing_tips,
         "health_tips": health_tips

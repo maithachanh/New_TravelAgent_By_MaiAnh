@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
@@ -17,6 +17,32 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+def apply_compatible_schema_migrations():
+    """Apply additive SQLite migrations for developer installations.
+
+    Production PostgreSQL should use the deployment migration system, while
+    this keeps existing local ``travel_agent.db`` files compatible after a
+    pull without requiring the user to delete travel data.
+    """
+    if not db_url.startswith("sqlite"):
+        return
+    additions = {
+        "payment_provider": "VARCHAR(30)",
+        "payment_transaction_id": "VARCHAR(120)",
+        "paid_at": "DATETIME",
+        "voucher_code": "VARCHAR(120)",
+        "share_token": "VARCHAR(80)",
+    }
+    with engine.begin() as connection:
+        columns = {row[1] for row in connection.execute(text("PRAGMA table_info(bookings)"))}
+        for name, definition in additions.items():
+            if name not in columns:
+                connection.execute(text(f"ALTER TABLE bookings ADD COLUMN {name} {definition}"))
+        trip_columns = {row[1] for row in connection.execute(text("PRAGMA table_info(trips)"))}
+        for name, definition in {"share_token": "VARCHAR(80)"}.items():
+            if name not in trip_columns:
+                connection.execute(text(f"ALTER TABLE trips ADD COLUMN {name} {definition}"))
 
 def get_db():
     db = SessionLocal()

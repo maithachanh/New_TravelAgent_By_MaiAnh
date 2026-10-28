@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.core.config import settings
-from app.core.database import engine, Base, init_db_defaults
+from app.core.database import engine, Base, init_db_defaults, apply_compatible_schema_migrations
 from app.api import (
     auth,
     destinations,
@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize DB Tables and default records
 Base.metadata.create_all(bind=engine)
+apply_compatible_schema_migrations()
 init_db_defaults()
 
 app = FastAPI(

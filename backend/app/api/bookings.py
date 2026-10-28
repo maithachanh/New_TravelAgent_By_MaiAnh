@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
@@ -8,6 +8,7 @@ from app.core.database import get_db
 from app.models.models import Booking, BookingStatus, User, Trip
 from app.api.auth import get_current_user_optional
 from app.agent.tools.registry import tool_registry
+from app.services.payment_service import payment_service
 
 router = APIRouter(prefix="/bookings", tags=["Booking Management (Human-in-the-loop)"])
 
@@ -56,7 +57,7 @@ def book_flight(req: FlightBookingRequest, current_user: User = Depends(get_curr
         category="flight",
         booking_reference=ref,
         price=req.price,
-        status=BookingStatus.CONFIRMED,
+        status=BookingStatus.PENDING,
         details={
             "flight_number": req.flight_number,
             "airline": req.airline,
@@ -81,7 +82,7 @@ def book_hotel(req: HotelBookingRequest, current_user: User = Depends(get_curren
         category="hotel",
         booking_reference=ref,
         price=req.price,
-        status=BookingStatus.CONFIRMED,
+        status=BookingStatus.PENDING,
         details={
             "hotel_name": req.hotel_name,
             "city": req.city,
@@ -105,7 +106,7 @@ def book_activity(req: ActivityBookingRequest, current_user: User = Depends(get_
         category="activity",
         booking_reference=ref,
         price=req.price,
-        status=BookingStatus.CONFIRMED,
+        status=BookingStatus.PENDING,
         details={
             "activity_name": req.activity_name,
             "location": req.location,
@@ -127,7 +128,7 @@ def book_restaurant(req: RestaurantBookingRequest, current_user: User = Depends(
         category="restaurant",
         booking_reference=ref,
         price=req.price,
-        status=BookingStatus.CONFIRMED,
+        status=BookingStatus.PENDING,
         details={
             "restaurant_name": req.restaurant_name,
             "city": req.city,
@@ -250,6 +251,65 @@ def checkout_and_pay(
         raise HTTPException(status_code=400, detail="Không tìm thấy dịch vụ nào cần thanh toán.")
 
     method = (req.payment_method if req else "VNPAY").upper()
+    try:
+        checkout = payment_service.start_checkout(
+            bookings_to_pay, method, req.return_url if req else None
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    # Real gateways only create a session here. A verified webhook is required
+    # before a live booking can leave PENDING.
+    if checkout["mode"] == "live":
+        for booking in bookings_to_pay:
+            details = dict(booking.details or {})
+            details["payment"] = {
+                "transaction_id": checkout["transaction_id"],
+                "method": checkout["provider"],
+                "status": "PENDING_GATEWAY_CONFIRMATION",
+                "provider_session_id": checkout.get("provider_session_id"),
+            }
+            booking.details = details
+            booking.payment_provider = checkout["provider"]
+            booking.payment_transaction_id = checkout["transaction_id"]
+        db.commit()
+        return {
+            "success": True, "status": "PENDING", "mode": "live",
+            "transaction_id": checkout["transaction_id"],
+            "payment_method": checkout["provider"], "total_amount": checkout["amount"],
+            "currency": "VND", "checkout_url": checkout["checkout_url"],
+            "message": "Payment session created; booking stays pending until the gateway confirms it.",
+        }
+
+    # Explicit development sandbox: useful for local demos, never advertised
+    # as a provider payment. It emulates a verified event and issues a QR code.
+    timestamp = datetime.utcnow()
+    voucher_code = checkout["voucher_code"]
+    receipt_items = []
+    for booking in bookings_to_pay:
+        booking.status = BookingStatus.CONFIRMED
+        booking.payment_provider = checkout["provider"]
+        booking.payment_transaction_id = checkout["transaction_id"]
+        booking.paid_at = timestamp
+        booking.voucher_code = voucher_code
+        details = dict(booking.details or {})
+        details["payment"] = {
+            "transaction_id": checkout["transaction_id"], "method": checkout["provider"],
+            "paid_at": timestamp.isoformat(), "amount": booking.price,
+            "voucher_code": voucher_code, "mode": "sandbox",
+        }
+        booking.details = details
+        receipt_items.append({"booking_id": booking.id, "service_name": booking.service_name, "category": booking.category, "price": booking.price, "reference": booking.booking_reference})
+    db.commit()
+    qr_image_url = f"https://img.vietqr.io/image/970422-190365789123-compact2.png?amount={int(checkout['amount'])}&addInfo={checkout['transaction_id']}&accountName=AI%20TRAVEL%20AGENT"
+    return {
+        "success": True, "status": "CONFIRMED", "mode": "sandbox",
+        "transaction_id": checkout["transaction_id"], "payment_method": checkout["provider"],
+        "total_amount": checkout["amount"], "currency": "VND", "paid_at": timestamp.isoformat(),
+        "voucher_code": voucher_code, "qr_code_url": qr_image_url,
+        "confirmed_items_count": len(bookings_to_pay), "receipt_items": receipt_items,
+        "message": "Sandbox payment confirmed; no live gateway charge was made.",
+    }
     total_amount = sum(b.price for b in bookings_to_pay)
     txn_id = f"TXN-{method}-{uuid.uuid4().hex[:8].upper()}"
     timestamp = datetime.utcnow().isoformat()
@@ -296,3 +356,43 @@ def checkout_and_pay(
         "receipt_items": receipt_items,
         "status": "CONFIRMED"
     }
+
+
+@router.post("/webhooks/stripe")
+async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
+    """Settle a Stripe checkout only after validating its signed event."""
+    body = await request.body()
+    signature = request.headers.get("stripe-signature", "")
+    if not payment_service.verify_stripe_signature(body, signature):
+        raise HTTPException(status_code=400, detail="Invalid Stripe webhook signature")
+    try:
+        payload = await request.json()
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid webhook payload") from exc
+    if payload.get("type") != "checkout.session.completed":
+        return {"received": True, "updated": 0}
+
+    session = payload.get("data", {}).get("object", {})
+    metadata = session.get("metadata", {})
+    transaction_id = metadata.get("transaction_id")
+    booking_ids = [int(value) for value in metadata.get("booking_ids", "").split(",") if value.isdigit()]
+    if not transaction_id or not booking_ids:
+        raise HTTPException(status_code=400, detail="Webhook is missing travel booking metadata")
+
+    bookings = db.query(Booking).filter(Booking.id.in_(booking_ids)).all()
+    now = datetime.utcnow()
+    voucher_code = f"VOUCHER-{uuid.uuid4().hex[:10].upper()}"
+    for booking in bookings:
+        booking.status = BookingStatus.PAID
+        booking.payment_provider = "STRIPE"
+        booking.payment_transaction_id = transaction_id
+        booking.paid_at = now
+        booking.voucher_code = voucher_code
+        details = dict(booking.details or {})
+        details["payment"] = {
+            "transaction_id": transaction_id, "method": "STRIPE", "paid_at": now.isoformat(),
+            "voucher_code": voucher_code, "provider_session_id": session.get("id"), "status": "PAID",
+        }
+        booking.details = details
+    db.commit()
+    return {"received": True, "updated": len(bookings), "status": "PAID"}

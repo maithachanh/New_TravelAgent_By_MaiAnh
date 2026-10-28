@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 from app.agent.tools.base import BaseFlightTool, BaseHotelTool, BaseRestaurantTool, BaseActivityTool
 from app.services.geo_service import geo_service
 from app.services.currency_service import currency_service
+from app.services.commercial_providers import commercial_provider_service
 
 # Regional airline routes
 INTERNATIONAL_AIRLINES_BY_REGION = {
@@ -234,36 +235,38 @@ import urllib.error
 logger = logging.getLogger(__name__)
 
 def _fetch_live_flight_offers(origin: str, destination: str, departure_date: Optional[str] = None, travelers: int = 1) -> Optional[List[Dict[str, Any]]]:
-    """Attempts live GDS/OTA flight search (Amadeus / Duffel / Skyscanner) if API credentials exist."""
-    amadeus_key = os.getenv("AMADEUS_API_KEY") or os.getenv("AMADEUS_CLIENT_ID")
-    duffel_token = os.getenv("DUFFEL_API_KEY") or os.getenv("DUFFEL_TOKEN")
-    
-    if not (amadeus_key or duffel_token):
+    """Get credential-gated Duffel/Amadeus offers, normalized for the planner."""
+    offers = commercial_provider_service.search_flights(origin, destination, departure_date, travelers)
+    if not offers:
         return None
-        
-    try:
-        # Standardized mock-ready live adapter connector
-        logger.info(f"Connecting to live Flight Distribution System for route {origin} -> {destination}")
-        # When live credentials are provided in production, issue HTTP request to GDS endpoint
-        # Fallback to None if not configured or network unreachable
-        return None
-    except Exception as e:
-        logger.warning(f"Live flight API query failed: {e}. Falling back to universal synthesis.")
-        return None
+    return [{
+        **offer,
+        "price_per_person": round(float(offer.get("price_total") or 0) / max(1, travelers), 2),
+        "departure_time": str(offer.get("departure") or ""),
+        "arrival_time": str(offer.get("arrival") or ""),
+        "duration_minutes": 0,
+    } for offer in offers]
 
 def _fetch_live_hotel_offers(city: str, check_in: Optional[str] = None, check_out: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
-    """Attempts live Booking.com / Agoda / RapidAPI search if credentials exist."""
-    rapidapi_key = os.getenv("BOOKING_COM_API_KEY") or os.getenv("RAPIDAPI_KEY")
-    if not rapidapi_key:
-        return None
-    try:
-        logger.info(f"Connecting to live Booking.com / RapidAPI feed for {city}")
-        return None
-    except Exception as e:
-        logger.warning(f"Live hotel API query failed: {e}. Falling back to universal synthesis.")
-        return None
+    """Get approved Booking/Agoda partner offers when a partner feed is configured."""
+    return commercial_provider_service.search_hotels(city, check_in, check_out)
 
 def _fetch_live_places_activities(city: str, lat: float, lon: float) -> Optional[List[Dict[str, Any]]]:
+    places = commercial_provider_service.search_places(
+        f"tourist attractions in {city}", lat, lon, "attraction"
+    )
+    if places:
+        return [{
+            **place,
+            "price": 150000.0,
+            "currency": "VND",
+            "duration_minutes": 120,
+            "description": f"Google Places venue rated {place.get('rating', 'N/A')} stars.",
+        } for place in places]
+    # The legacy Places endpoint below is deliberately skipped.  Google Places
+    # API (New) above is the supported integration and safely returns None
+    # when no server-side API key has been configured.
+    return None
     """Attempts Google Places or Foursquare API for real-time venue search."""
     google_key = os.getenv("GOOGLE_PLACES_API_KEY") or os.getenv("GOOGLE_MAPS_API_KEY")
     if not google_key:
@@ -443,6 +446,18 @@ class UniversalRestaurantProvider(BaseRestaurantTool):
         lat = geo["latitude"]
         lon = geo["longitude"]
         c_lower = c_name.lower().strip()
+
+        live_places = commercial_provider_service.search_places(
+            f"best restaurants in {c_name}", lat, lon, "restaurant"
+        )
+        if live_places:
+            return [{
+                **place,
+                "cuisine": ", ".join(cuisine_types or []) or "Local dining",
+                "price_avg": 0.0,
+                "currency": "VND",
+                "specialty": "See verified Google Places listing and current opening hours.",
+            } for place in live_places]
 
         # Base price per meal
         if code in ["CH", "NO", "IS"]:

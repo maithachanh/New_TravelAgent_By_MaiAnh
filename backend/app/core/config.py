@@ -16,8 +16,26 @@ class Settings(BaseSettings):
     
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    
+    EMBEDDING_PROVIDER: str = os.getenv("EMBEDDING_PROVIDER", "auto")
+    BGE_M3_MODEL: str = os.getenv("BGE_M3_MODEL", "BAAI/bge-m3")
     CHROMA_DB_DIR: str = os.getenv("CHROMA_DB_DIR", "./chroma_storage")
+
+    # Live supplier and payment adapters are opt-in.  Without credentials the
+    # UI remains in clearly labelled quote/sandbox mode; it never presents a
+    # simulated provider response as a confirmed commercial booking.
+    DUFFEL_ACCESS_TOKEN: str = os.getenv("DUFFEL_ACCESS_TOKEN", "")
+    AMADEUS_CLIENT_ID: str = os.getenv("AMADEUS_CLIENT_ID", "")
+    AMADEUS_CLIENT_SECRET: str = os.getenv("AMADEUS_CLIENT_SECRET", "")
+    GOOGLE_PLACES_API_KEY: str = os.getenv("GOOGLE_PLACES_API_KEY", "")
+    OPENWEATHER_API_KEY: str = os.getenv("OPENWEATHER_API_KEY", "")
+    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    VNPAY_TMN_CODE: str = os.getenv("VNPAY_TMN_CODE", "")
+    VNPAY_HASH_SECRET: str = os.getenv("VNPAY_HASH_SECRET", "")
+    MOMO_PARTNER_CODE: str = os.getenv("MOMO_PARTNER_CODE", "")
+    MOMO_ACCESS_KEY: str = os.getenv("MOMO_ACCESS_KEY", "")
+    MOMO_SECRET_KEY: str = os.getenv("MOMO_SECRET_KEY", "")
+    PAYMENT_SANDBOX: bool = os.getenv("PAYMENT_SANDBOX", "true").lower() == "true"
     
     # Allowed CORS Origins for Web, Mobile, and local dev
     CORS_ORIGINS: list[str] = [
